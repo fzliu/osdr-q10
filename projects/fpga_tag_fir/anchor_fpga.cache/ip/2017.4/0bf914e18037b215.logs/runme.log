@@ -1,0 +1,347 @@
+
+*** Running vivado
+    with args -log math_add_64.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source math_add_64.tcl
+
+
+****** Vivado v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source math_add_64.tcl -notrace
+Command: synth_design -top math_add_64 -part xc7k160tfbg676-2 -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7k160t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7k160t'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 15285 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1298.527 ; gain = 82.996 ; free physical = 6512 ; free virtual = 9792
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'math_add_64' [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_add_64/synth/math_add_64.vhd:69]
+	Parameter C_VERBOSITY bound to: 0 - type: integer 
+	Parameter C_XDEVICEFAMILY bound to: kintex7 - type: string 
+	Parameter C_IMPLEMENTATION bound to: 0 - type: integer 
+	Parameter C_A_WIDTH bound to: 64 - type: integer 
+	Parameter C_B_WIDTH bound to: 64 - type: integer 
+	Parameter C_OUT_WIDTH bound to: 64 - type: integer 
+	Parameter C_CE_OVERRIDES_SCLR bound to: 0 - type: integer 
+	Parameter C_A_TYPE bound to: 0 - type: integer 
+	Parameter C_B_TYPE bound to: 0 - type: integer 
+	Parameter C_LATENCY bound to: 2 - type: integer 
+	Parameter C_ADD_MODE bound to: 0 - type: integer 
+	Parameter C_B_CONSTANT bound to: 0 - type: integer 
+	Parameter C_B_VALUE bound to: 0000000000000000000000000000000000000000000000000000000000000000 - type: string 
+	Parameter C_AINIT_VAL bound to: 0 - type: string 
+	Parameter C_SINIT_VAL bound to: 0 - type: string 
+	Parameter C_CE_OVERRIDES_BYPASS bound to: 1 - type: integer 
+	Parameter C_BYPASS_LOW bound to: 0 - type: integer 
+	Parameter C_SCLR_OVERRIDES_SSET bound to: 1 - type: integer 
+	Parameter C_HAS_C_IN bound to: 0 - type: integer 
+	Parameter C_HAS_C_OUT bound to: 0 - type: integer 
+	Parameter C_BORROW_LOW bound to: 1 - type: integer 
+	Parameter C_HAS_CE bound to: 0 - type: integer 
+	Parameter C_HAS_BYPASS bound to: 0 - type: integer 
+	Parameter C_HAS_SCLR bound to: 1 - type: integer 
+	Parameter C_HAS_SSET bound to: 0 - type: integer 
+	Parameter C_HAS_SINIT bound to: 0 - type: integer 
+INFO: [Synth 8-3491] module 'c_addsub_v12_0_11' declared at '/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_add_64/hdl/c_addsub_v12_0_vh_rfs.vhd:7026' bound to instance 'U0' of component 'c_addsub_v12_0_11' [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_add_64/synth/math_add_64.vhd:136]
+INFO: [Synth 8-256] done synthesizing module 'math_add_64' (7#1) [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_add_64/synth/math_add_64.vhd:69]
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv has unconnected port CE
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv has unconnected port AINIT
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv has unconnected port ACLR
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv has unconnected port ASET
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv has unconnected port SINIT
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv has unconnected port SSET
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv__parameterized1 has unconnected port CE
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv__parameterized1 has unconnected port AINIT
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv__parameterized1 has unconnected port ACLR
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv__parameterized1 has unconnected port ASET
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv__parameterized1 has unconnected port SINIT
+WARNING: [Synth 8-3331] design c_reg_fd_v12_0_4_viv__parameterized1 has unconnected port SSET
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[31]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[30]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[29]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[28]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[27]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[26]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[25]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[24]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[23]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[22]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[21]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[20]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[19]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[18]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[17]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[16]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[15]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[14]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[13]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[12]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[11]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[10]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[9]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[8]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[7]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[6]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[5]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[4]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[3]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[2]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[1]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port b[0]
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port add
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port ce
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port bypass
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port sset
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized3 has unconnected port sinit
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized1 has unconnected port add
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized1 has unconnected port c_in
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized1 has unconnected port ce
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized1 has unconnected port bypass
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized1 has unconnected port sset
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy__parameterized1 has unconnected port sinit
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy has unconnected port add
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy has unconnected port c_in
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy has unconnected port ce
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy has unconnected port bypass
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy has unconnected port sset
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_lut6_legacy has unconnected port sinit
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port add
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port c_in
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port b_in
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port bypass
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port aclr
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port aset
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port ainit
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port sset
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port sinit
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port a_signed
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_legacy has unconnected port b_signed
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_viv has unconnected port C_IN
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 1347.059 ; gain = 131.527 ; free physical = 6394 ; free virtual = 9677
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 1347.059 ; gain = 131.527 ; free physical = 6386 ; free virtual = 9668
+---------------------------------------------------------------------------------
+INFO: [Netlist 29-17] Analyzing 191 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Device 21-403] Loading part xc7k160tfbg676-2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_add_64/math_add_64_ooc.xdc] for cell 'U0'
+Finished Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_add_64/math_add_64_ooc.xdc] for cell 'U0'
+Parsing XDC File [/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_add_64_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_add_64_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 1725.848 ; gain = 0.000 ; free physical = 5722 ; free virtual = 9046
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:41 ; elapsed = 00:01:04 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5758 ; free virtual = 9083
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7k160tfbg676-2
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:41 ; elapsed = 00:01:04 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5758 ; free virtual = 9082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property DONT_TOUCH = true for U0. (constraint file  /home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_add_64_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:41 ; elapsed = 00:01:04 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5759 ; free virtual = 9084
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:42 ; elapsed = 00:01:04 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5768 ; free virtual = 9093
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 600 (col length:100)
+BRAMs: 650 (col length: RAMB18 100 RAMB36 50)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_viv has unconnected port ADD
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_viv has unconnected port C_IN
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_viv has unconnected port CE
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_viv has unconnected port BYPASS
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_viv has unconnected port SSET
+WARNING: [Synth 8-3331] design c_addsub_v12_0_11_viv has unconnected port SINIT
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:42 ; elapsed = 00:01:05 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5758 ; free virtual = 9083
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:51 ; elapsed = 00:01:18 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5425 ; free virtual = 8759
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:51 ; elapsed = 00:01:18 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5425 ; free virtual = 8758
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:51 ; elapsed = 00:01:18 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5424 ; free virtual = 8757
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5422 ; free virtual = 8755
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5422 ; free virtual = 8755
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5422 ; free virtual = 8755
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5422 ; free virtual = 8755
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5421 ; free virtual = 8755
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5421 ; free virtual = 8755
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+------+------+
+|      |Cell  |Count |
++------+------+------+
+|1     |LUT2  |    64|
+|2     |MUXCY |    94|
+|3     |XORCY |    96|
+|4     |FDRE  |   129|
++------+------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5421 ; free virtual = 8755
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 6 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:38 ; elapsed = 00:00:46 . Memory (MB): peak = 1725.848 ; gain = 131.527 ; free physical = 5476 ; free virtual = 8809
+Synthesis Optimization Complete : Time (s): cpu = 00:00:52 ; elapsed = 00:01:19 . Memory (MB): peak = 1725.848 ; gain = 510.316 ; free physical = 5478 ; free virtual = 8812
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 190 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 24 instances were transformed.
+  (MUXCY,XORCY) => CARRY4: 24 instances
+
+INFO: [Common 17-83] Releasing license: Synthesis
+16 Infos, 79 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:55 ; elapsed = 00:01:20 . Memory (MB): peak = 1725.848 ; gain = 535.145 ; free physical = 5397 ; free virtual = 8731
+INFO: [Common 17-1381] The checkpoint '/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_add_64_synth_1/math_add_64.dcp' has been generated.

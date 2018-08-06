@@ -1,0 +1,20 @@
+[2018.03.04 22:56:34] [0096m.22s.195ms] [0] WELCOME
+[2018.03.04 22:56:34] [0096m.22s.197ms] [1] iCDB Project Backup ver.2.202, 88Zh1V4+7Fzqu6g9/cuD/w, build:7609897 created 2017-06-23 16:20:58, sources stamp:88Zh1V4+7Fzqu6g9/cuD/w
+[2018.03.04 22:56:34] [0096m.22s.197ms] [1] Copyright 2017 Mentor Graphics Corporation.  All Rights Reserved.
+[2018.03.04 22:56:34] [0096m.22s.197ms] [1] Base flow version [VX.2.2]
+[2018.03.04 22:56:34] [0096m.22s.197ms] [1] Install Id [1589114], Flow Id [X-ENTP VX.2.2], Full Flow Name [Xpedition Enterprise X-ENTP VX.2.2], Exact Access Date [2017/05/01]
+[2018.03.04 22:56:34] [0096m.22s.198ms] [1] Machine [ORION-SERVER]  IP [127.0.0.1,192.168.100.15]  User [Frank]  PID [10596]
+[2018.03.04 22:56:34] [0096m.22s.198ms] [1] Operating system [Microsoft , 64-bit (build 9200)]
+[2018.03.04 22:56:34] [0096m.22s.199ms] [1] Current working dir [\\ORION-SERVER\design\anchor\alpha]
+[2018.03.04 22:56:34] [0096m.22s.199ms] [1] PATH [C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\bin;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\lib;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\bin;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\lib;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\bin;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\lib;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\bin;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\lib;C:\\MentorGraphics\\EEVX.2.2\\SDD_HOME\common\win64\bin;C:\\MentorGraphics\\EEVX.2.2\\SDD_HOME\common\win64\lib;C:\\MentorGraphics\\EEVX.2.2\\MGC_HOME.ixw\bin;C:\\MentorGraphics\\EEVX.2.2\\MGC_HOME.ixw\lib;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\bin;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\lib;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\bin;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\lib;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Users\Frank\AppData\Local\Microsoft\WindowsApps;]
+[2018.03.04 22:56:34] [0096m.22s.199ms] [1] SDD_HOME [C:\MentorGraphics\EEVX.2.2\SDD_HOME] on file system [NTFS]
+[2018.03.04 22:56:34] [0096m.22s.199ms] [1] SDD_PLATFORM [win64]
+[2018.03.04 22:56:34] [0096m.22s.199ms] [1] WDIR [C:\MentorGraphics\WDIR\EEVX.2.2;C:\MentorGraphics\EEVX.2.2\SDD_HOME\standard;]
+[2018.03.04 22:56:34] [0096m.22s.199ms] [1] Local iCDB working dir [C:\MentorGraphics\WDIR\EEVX.2.2\iCDB] on file system [NTFS]
+[2018.03.04 22:56:34] [0096m.22s.202ms] [0] Single file [\\ORION-SERVER\design\anchor\alpha\database\icdb.dat] size [3230336 (3.1 MB)]
+[2018.03.04 22:56:34] [0096m.22s.210ms] [1] Single file [\\ORION-SERVER\design\anchor\alpha\database\icdb.dat] opened in read-write mode
+[2018.03.04 22:56:34] [0096m.22s.223ms] [0] Single file [\\ORION-SERVER\design\anchor\alpha\database\icdb.dat] closed with size [3230336 (3.1 MB)]
+[2018.03.04 22:56:34] [0096m.22s.231ms] [3] SingleFile: Modification time set for file [\\ORION-SERVER\design\anchor\alpha\database\icdb.dat]
+[2018.03.04 22:56:34] [0096m.22s.231ms] [0] iCDB database timestamp updated
+[2018.03.04 22:56:34] [0096m.22s.231ms] [0] DONE
+[2018.03.04 22:56:34] [0096m.22s.231ms] [0] .

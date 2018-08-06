@@ -1,0 +1,620 @@
+
+*** Running vivado
+    with args -log axis_xcorr_tag_0.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source axis_xcorr_tag_0.tcl
+
+
+****** Vivado v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source axis_xcorr_tag_0.tcl -notrace
+Command: synth_design -top axis_xcorr_tag_0 -part xc7k160tfbg676-2 -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7k160t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7k160t'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 15292 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:13 ; elapsed = 00:00:17 . Memory (MB): peak = 1298.531 ; gain = 82.996 ; free physical = 6376 ; free virtual = 9658
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'axis_xcorr_tag_0' [/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/synth/axis_xcorr_tag_0.vhd:71]
+	Parameter C_XDEVICEFAMILY bound to: kintex7 - type: string 
+	Parameter C_ELABORATION_DIR bound to: ./ - type: string 
+	Parameter C_COMPONENT_NAME bound to: axis_xcorr_tag_0 - type: string 
+	Parameter C_COEF_FILE bound to: axis_xcorr_tag_0.mif - type: string 
+	Parameter C_COEF_FILE_LINES bound to: 640 - type: integer 
+	Parameter C_FILTER_TYPE bound to: 0 - type: integer 
+	Parameter C_INTERP_RATE bound to: 1 - type: integer 
+	Parameter C_DECIM_RATE bound to: 1 - type: integer 
+	Parameter C_ZERO_PACKING_FACTOR bound to: 1 - type: integer 
+	Parameter C_SYMMETRY bound to: 0 - type: integer 
+	Parameter C_NUM_FILTS bound to: 1 - type: integer 
+	Parameter C_NUM_TAPS bound to: 640 - type: integer 
+	Parameter C_NUM_CHANNELS bound to: 1 - type: integer 
+	Parameter C_CHANNEL_PATTERN bound to: fixed - type: string 
+	Parameter C_ROUND_MODE bound to: 0 - type: integer 
+	Parameter C_COEF_RELOAD bound to: 0 - type: integer 
+	Parameter C_NUM_RELOAD_SLOTS bound to: 1 - type: integer 
+	Parameter C_COL_MODE bound to: 1 - type: integer 
+	Parameter C_COL_PIPE_LEN bound to: 4 - type: integer 
+	Parameter C_COL_CONFIG bound to: 1 - type: string 
+	Parameter C_OPTIMIZATION bound to: 2046 - type: integer 
+	Parameter C_DATA_PATH_WIDTHS bound to: 12,12,12,12,12,12,12,12 - type: string 
+	Parameter C_DATA_IP_PATH_WIDTHS bound to: 12,12,12,12,12,12,12,12 - type: string 
+	Parameter C_DATA_PX_PATH_WIDTHS bound to: 12,12,12,12,12,12,12,12 - type: string 
+	Parameter C_DATA_WIDTH bound to: 12 - type: integer 
+	Parameter C_COEF_PATH_WIDTHS bound to: 12,12,12,12,12,12,12,12 - type: string 
+	Parameter C_COEF_WIDTH bound to: 12 - type: integer 
+	Parameter C_DATA_PATH_SRC bound to: 0,1,2,3,4,5,6,7 - type: string 
+	Parameter C_COEF_PATH_SRC bound to: 0,0,0,0,0,0,0,0 - type: string 
+	Parameter C_PX_PATH_SRC bound to: 0,1,2,3,4,5,6,7 - type: string 
+	Parameter C_DATA_PATH_SIGN bound to: 0,0,0,0,0,0,0,0 - type: string 
+	Parameter C_COEF_PATH_SIGN bound to: 0,0,0,0,0,0,0,0 - type: string 
+	Parameter C_ACCUM_PATH_WIDTHS bound to: 32,32,32,32,32,32,32,32 - type: string 
+	Parameter C_OUTPUT_WIDTH bound to: 32 - type: integer 
+	Parameter C_OUTPUT_PATH_WIDTHS bound to: 32,32,32,32,32,32,32,32 - type: string 
+	Parameter C_ACCUM_OP_PATH_WIDTHS bound to: 32,32,32,32,32,32,32,32 - type: string 
+	Parameter C_EXT_MULT_CNFG bound to: none - type: string 
+	Parameter C_DATA_PATH_PSAMP_SRC bound to: 0 - type: string 
+	Parameter C_OP_PATH_PSAMP_SRC bound to: 0 - type: string 
+	Parameter C_NUM_MADDS bound to: 1 - type: integer 
+	Parameter C_OPT_MADDS bound to: none - type: string 
+	Parameter C_OVERSAMPLING_RATE bound to: 640 - type: integer 
+	Parameter C_INPUT_RATE bound to: 640 - type: integer 
+	Parameter C_OUTPUT_RATE bound to: 640 - type: integer 
+	Parameter C_DATA_MEMTYPE bound to: 1 - type: integer 
+	Parameter C_COEF_MEMTYPE bound to: 2 - type: integer 
+	Parameter C_IPBUFF_MEMTYPE bound to: 0 - type: integer 
+	Parameter C_OPBUFF_MEMTYPE bound to: 0 - type: integer 
+	Parameter C_DATAPATH_MEMTYPE bound to: 0 - type: integer 
+	Parameter C_MEM_ARRANGEMENT bound to: 2 - type: integer 
+	Parameter C_DATA_MEM_PACKING bound to: 0 - type: integer 
+	Parameter C_COEF_MEM_PACKING bound to: 0 - type: integer 
+	Parameter C_FILTS_PACKED bound to: 0 - type: integer 
+	Parameter C_LATENCY bound to: 649 - type: integer 
+	Parameter C_HAS_ARESETn bound to: 0 - type: integer 
+	Parameter C_HAS_ACLKEN bound to: 0 - type: integer 
+	Parameter C_DATA_HAS_TLAST bound to: 0 - type: integer 
+	Parameter C_S_DATA_HAS_FIFO bound to: 1 - type: integer 
+	Parameter C_S_DATA_HAS_TUSER bound to: 0 - type: integer 
+	Parameter C_S_DATA_TDATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_S_DATA_TUSER_WIDTH bound to: 1 - type: integer 
+	Parameter C_M_DATA_HAS_TREADY bound to: 1 - type: integer 
+	Parameter C_M_DATA_HAS_TUSER bound to: 0 - type: integer 
+	Parameter C_M_DATA_TDATA_WIDTH bound to: 256 - type: integer 
+	Parameter C_M_DATA_TUSER_WIDTH bound to: 1 - type: integer 
+	Parameter C_HAS_CONFIG_CHANNEL bound to: 0 - type: integer 
+	Parameter C_CONFIG_SYNC_MODE bound to: 0 - type: integer 
+	Parameter C_CONFIG_PACKET_SIZE bound to: 0 - type: integer 
+	Parameter C_CONFIG_TDATA_WIDTH bound to: 1 - type: integer 
+	Parameter C_RELOAD_TDATA_WIDTH bound to: 1 - type: integer 
+INFO: [Synth 8-3491] module 'fir_compiler_v7_2_10' declared at '/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/hdl/fir_compiler_v7_2_vh_rfs.vhd:61141' bound to instance 'U0' of component 'fir_compiler_v7_2_10' [/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/synth/axis_xcorr_tag_0.vhd:200]
+WARNING: [Synth 8-5858] RAM p_path_out_reg from Abstract Data Type (record/struct) for this pattern/configuration is not supported. This will most likely be implemented in registers
+INFO: [Synth 8-256] done synthesizing module 'axis_xcorr_tag_0' (13#1) [/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/synth/axis_xcorr_tag_0.vhd:71]
+WARNING: [Synth 8-3331] design cntrl_delay has unconnected port CE
+WARNING: [Synth 8-3331] design cntrl_delay has unconnected port SCLR
+WARNING: [Synth 8-3331] design cntrl_delay has unconnected port CLK
+WARNING: [Synth 8-3331] design delay__parameterized8 has unconnected port WE
+WARNING: [Synth 8-3331] design delay__parameterized8 has unconnected port CE
+WARNING: [Synth 8-3331] design delay__parameterized8 has unconnected port SCLR
+WARNING: [Synth 8-3331] design delay__parameterized8 has unconnected port SCLR_ALT
+WARNING: [Synth 8-3331] design delay__parameterized8 has unconnected port CLK
+WARNING: [Synth 8-3331] design calc__parameterized6 has unconnected port PRE_ADDSUB
+WARNING: [Synth 8-3331] design calc__parameterized6 has unconnected port PRE_ADD_BYPASS
+WARNING: [Synth 8-3331] design calc__parameterized6 has unconnected port CED
+WARNING: [Synth 8-3331] design delay__parameterized9 has unconnected port SCLR_ALT
+WARNING: [Synth 8-3331] design delay__parameterized7 has unconnected port WE
+WARNING: [Synth 8-3331] design delay__parameterized7 has unconnected port CE
+WARNING: [Synth 8-3331] design delay__parameterized7 has unconnected port SCLR
+WARNING: [Synth 8-3331] design delay__parameterized7 has unconnected port SCLR_ALT
+WARNING: [Synth 8-3331] design delay__parameterized7 has unconnected port CLK
+WARNING: [Synth 8-3331] design delay__parameterized6 has unconnected port SCLR_ALT
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port POUT[casc][52]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port POUT[casc][51]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port POUT[casc][50]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port POUT[casc][49]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port POUT[casc][48]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][47]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][46]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][45]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][44]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][43]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][42]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][41]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][40]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][39]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][38]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][37]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][36]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][35]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][34]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][33]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][32]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][31]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][30]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][29]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][28]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][27]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][26]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][25]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][24]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][23]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][22]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][21]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][20]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][19]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][18]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][17]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][16]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][15]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][14]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][13]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][12]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][11]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][10]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][9]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][8]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][7]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][6]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][5]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][4]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][3]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][2]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][1]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[fab][0]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[casc][52]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[casc][51]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[casc][50]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[casc][49]
+WARNING: [Synth 8-3331] design addsub_mult_accum__parameterized6 has unconnected port PIN[casc][48]
+WARNING: [Synth 8-3331] design sp_mem has unconnected port SCLR
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[9]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[8]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[7]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[6]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[5]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[4]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[3]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[2]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[1]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port ADDRB[0]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[11]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[10]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[9]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[8]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[7]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[6]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[5]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[4]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[3]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[2]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[1]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port DINB[0]
+WARNING: [Synth 8-3331] design filt_mem has unconnected port WEB
+INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:29 ; elapsed = 00:00:36 . Memory (MB): peak = 1425.062 ; gain = 209.527 ; free physical = 6104 ; free virtual = 9410
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:29 ; elapsed = 00:00:36 . Memory (MB): peak = 1425.062 ; gain = 209.527 ; free physical = 6106 ; free virtual = 9411
+---------------------------------------------------------------------------------
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Device 21-403] Loading part xc7k160tfbg676-2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/axis_xcorr_tag_0_ooc.xdc] for cell 'U0'
+Finished Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/axis_xcorr_tag_0_ooc.xdc] for cell 'U0'
+Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/constraints/fir_compiler_v7_2.xdc] for cell 'U0'
+Finished Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/xcorr/xilinx/axis_xcorr_tag_0/constraints/fir_compiler_v7_2.xdc] for cell 'U0'
+Parsing XDC File [/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/axis_xcorr_tag_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/axis_xcorr_tag_0_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.11 . Memory (MB): peak = 1717.227 ; gain = 0.000 ; free physical = 5504 ; free virtual = 8837
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:57 ; elapsed = 00:01:23 . Memory (MB): peak = 1717.227 ; gain = 501.691 ; free physical = 5937 ; free virtual = 9277
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7k160tfbg676-2
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:57 ; elapsed = 00:01:23 . Memory (MB): peak = 1717.227 ; gain = 501.691 ; free physical = 5937 ; free virtual = 9277
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property DONT_TOUCH = true for U0. (constraint file  /home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/axis_xcorr_tag_0_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:57 ; elapsed = 00:01:24 . Memory (MB): peak = 1717.227 ; gain = 501.691 ; free physical = 5940 ; free virtual = 9280
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5542] Attribute ram_style/rom_style = distributed specified for ROM  "rom". This will be implemented in logic
+INFO: [Synth 8-5546] ROM "add" won't be mapped to RAM because it is too sparse
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:58 ; elapsed = 00:01:25 . Memory (MB): peak = 1717.227 ; gain = 501.691 ; free physical = 5952 ; free virtual = 9291
+---------------------------------------------------------------------------------
+INFO: [Synth 8-223] decloning instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_cntrl_signals[4].i_delay' (delay__parameterized4) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_cntrl_signals[5].i_delay'
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 600 (col length:100)
+BRAMs: 650 (col length: RAMB18 100 RAMB36 50)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5542] Attribute ram_style/rom_style = distributed specified for ROM  "p_0_out". This will be implemented in logic
+INFO: [Synth 8-5546] ROM "g_single_rate.i_single_rate/add" won't be mapped to RAM because it is too sparse
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.flush_data_reg) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][9]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][8]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][7]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][6]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][3]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][1]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_address_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_cntrl_signals[4].i_delay/gen_dly.gen_regs.delay_bus_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_cntrl_signals[4].i_delay/gen_dly.gen_regs.delay_bus_reg[1][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_cntrl_signals[2].i_delay/gen_dly.gen_regs.delay_bus_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_cntrl_signals[2].i_delay/gen_dly.gen_regs.delay_bus_reg[1][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][9]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][8]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][7]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][6]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][3]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][1]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_address_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][9]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][8]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][7]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][6]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][3]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][1]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_address_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][9]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][8]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][7]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][6]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][3]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][1]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_address_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][9]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][8]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][7]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][6]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][3]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][1]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_address_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][9]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][8]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][7]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][6]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][3]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][1]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_address_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][9]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][8]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][7]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][6]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][3]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][1]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_address_reg[0][0]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_cntrl_pipe.path_cntrl_reg[0][2]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_cntrl_pipe.path_cntrl_reg[0][4]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3332] Sequential element (g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_cntrl_pipe.path_cntrl_reg[0][5]) is unused and will be removed from module fir_compiler_v7_2_10_viv.
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[0].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[1].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[2].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[3].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[4].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[5].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[2]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[3]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[4]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[6]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[7]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[8]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[9]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[10]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[6].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]' (FDRE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_paths[7].g_smac.i_maccum/i_coefin_int/gen_reg.d_reg_reg[11]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[3]' (FDE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[5]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[6]' (FDE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[7]' (FDE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[9]' (FDE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[0]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[0]' (FDE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[1]'
+INFO: [Synth 8-3886] merging instance 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[1]' (FDE) to 'U0/i_synth/g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[2]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (U0/i_synth/\g_single_rate.i_single_rate/g_semi_parallel_and_smac.g_smac_cntrl.accum_opcode_reg[2] )
+INFO: [Synth 8-3332] Sequential element (rd_avail_2_reg) is unused and will be removed from module glb_srl_fifo.
+INFO: [Common 17-14] Message 'Synth 8-3332' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:04 ; elapsed = 00:01:31 . Memory (MB): peak = 1717.227 ; gain = 501.691 ; free physical = 6563 ; free virtual = 9905
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:15 ; elapsed = 00:01:46 . Memory (MB): peak = 1717.227 ; gain = 501.691 ; free physical = 6299 ; free virtual = 9640
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:16 ; elapsed = 00:01:47 . Memory (MB): peak = 1738.258 ; gain = 522.723 ; free physical = 6295 ; free virtual = 9637
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:17 ; elapsed = 00:01:48 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6266 ; free virtual = 9608
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:18 ; elapsed = 00:01:49 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6281 ; free virtual = 9623
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:18 ; elapsed = 00:01:49 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6280 ; free virtual = 9622
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:18 ; elapsed = 00:01:49 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6273 ; free virtual = 9615
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:18 ; elapsed = 00:01:49 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6273 ; free virtual = 9616
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:18 ; elapsed = 00:01:49 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6269 ; free virtual = 9611
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:18 ; elapsed = 00:01:49 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6267 ; free virtual = 9610
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-----------+------+
+|      |Cell       |Count |
++------+-----------+------+
+|1     |CARRY4     |     3|
+|2     |DSP48E1    |     8|
+|3     |LUT1       |     3|
+|4     |LUT2       |    17|
+|5     |LUT3       |     5|
+|6     |LUT4       |     9|
+|7     |LUT5       |    19|
+|8     |LUT6       |   143|
+|9     |MUXF7      |    60|
+|10    |RAMB18E1_1 |     8|
+|11    |SRL16E     |   461|
+|12    |FDRE       |   713|
++------+-----------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:18 ; elapsed = 00:01:49 . Memory (MB): peak = 1742.266 ; gain = 526.730 ; free physical = 6267 ; free virtual = 9610
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 67 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:02 ; elapsed = 00:01:15 . Memory (MB): peak = 1742.266 ; gain = 234.566 ; free physical = 6318 ; free virtual = 9661
+Synthesis Optimization Complete : Time (s): cpu = 00:01:18 ; elapsed = 00:01:50 . Memory (MB): peak = 1742.273 ; gain = 526.730 ; free physical = 6318 ; free virtual = 9660
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 79 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+214 Infos, 101 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:21 ; elapsed = 00:01:51 . Memory (MB): peak = 1774.281 ; gain = 583.574 ; free physical = 6374 ; free virtual = 9717
+INFO: [Common 17-1381] The checkpoint '/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/axis_xcorr_tag_0_synth_1/axis_xcorr_tag_0.dcp' has been generated.

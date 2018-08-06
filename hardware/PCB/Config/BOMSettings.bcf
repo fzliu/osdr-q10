@@ -1,0 +1,60 @@
+.FILETYPE BOM_SETTINGS
+.VERSION "EE2007.1"
+.CREATOR "Mentor Graphics Corporation"
+.DATE "Tuesday, April 24, 2018 04:09 PM"
+
+.BOMFileName "\\\\ORION-SERVER\\design\\anchor\\alpha\\Anchor_PCB\\Output\\BOM\\Anchor.bom"
+
+.EPComponents No
+
+.PartNumber Yes
+..ItemNumber "ITEM_NUMBER" 
+...Selected Yes
+..PartName "COMPANY PART NO" 
+...Selected Yes
+..Geometry "GEOMETRY" 
+...Selected Yes
+..Count "COUNT" 
+...Selected Yes
+..Description "DESCRIPTION" 
+...Selected Yes
+..ReferenceName "REFERENCE NAME" 
+...Selected Yes
+..Comment "COMMENT" 
+...Selected Yes
+
+.ReferenceDesignator Yes
+..ItemNumber "ITEM_NUMBER" 
+...Selected Yes
+..PartName "COMPANY PART NO" 
+...Selected Yes
+..Geometry "GEOMETRY" 
+...Selected Yes
+..Description "DESCRIPTION" 
+...Selected Yes
+..ReferenceName "REFERENCE NAME" 
+...Selected Yes
+..Comment "COMMENT" 
+...Selected Yes
+
+.Properties 5
+..Prop "Component Layer" 
+...Selected No
+..Prop "Desc" 
+...Selected No
+..Prop "gtech part name" 
+...Selected No
+..Prop "gtech part number" 
+...Selected No
+..Prop "Type" 
+...Selected No
+
+.AllComponents Yes
+.CommonComponents No
+.SelectVariant ""
+
+.AppendSuffix Yes
+
+.MechanicalCells Yes
+
+.UserProperties No

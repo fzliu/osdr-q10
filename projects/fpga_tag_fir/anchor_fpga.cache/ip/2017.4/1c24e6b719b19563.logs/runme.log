@@ -1,0 +1,304 @@
+
+*** Running vivado
+    with args -log math_mult_32.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source math_mult_32.tcl
+
+
+****** Vivado v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source math_mult_32.tcl -notrace
+Command: synth_design -top math_mult_32 -part xc7k160tfbg676-2 -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7k160t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7k160t'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 15405 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 1297.527 ; gain = 81.996 ; free physical = 6464 ; free virtual = 9746
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'math_mult_32' [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/synth/math_mult_32.vhd:69]
+WARNING: [Synth 8-5640] Port 'zero_detect' is missing in component declaration [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/synth/math_mult_32.vhd:72]
+WARNING: [Synth 8-5640] Port 'pcasc' is missing in component declaration [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/synth/math_mult_32.vhd:72]
+	Parameter C_VERBOSITY bound to: 0 - type: integer 
+	Parameter C_MODEL_TYPE bound to: 0 - type: integer 
+	Parameter C_OPTIMIZE_GOAL bound to: 1 - type: integer 
+	Parameter C_XDEVICEFAMILY bound to: kintex7 - type: string 
+	Parameter C_HAS_CE bound to: 0 - type: integer 
+	Parameter C_HAS_SCLR bound to: 1 - type: integer 
+	Parameter C_LATENCY bound to: 2 - type: integer 
+	Parameter C_A_WIDTH bound to: 32 - type: integer 
+	Parameter C_A_TYPE bound to: 0 - type: integer 
+	Parameter C_B_WIDTH bound to: 32 - type: integer 
+	Parameter C_B_TYPE bound to: 0 - type: integer 
+	Parameter C_OUT_HIGH bound to: 63 - type: integer 
+	Parameter C_OUT_LOW bound to: 0 - type: integer 
+	Parameter C_MULT_TYPE bound to: 1 - type: integer 
+	Parameter C_CE_OVERRIDES_SCLR bound to: 0 - type: integer 
+	Parameter C_CCM_IMP bound to: 0 - type: integer 
+	Parameter C_B_VALUE bound to: 10000001 - type: string 
+	Parameter C_HAS_ZERO_DETECT bound to: 0 - type: integer 
+	Parameter C_ROUND_OUTPUT bound to: 0 - type: integer 
+	Parameter C_ROUND_PT bound to: 0 - type: integer 
+INFO: [Synth 8-3491] module 'mult_gen_v12_0_13' declared at '/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/hdl/mult_gen_v12_0_vh_rfs.vhd:21013' bound to instance 'U0' of component 'mult_gen_v12_0_13' [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/synth/math_mult_32.vhd:123]
+INFO: [Synth 8-256] done synthesizing module 'math_mult_32' (6#1) [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/synth/math_mult_32.vhd:69]
+WARNING: [Synth 8-3331] design delay_line__parameterized3 has unconnected port CLK
+WARNING: [Synth 8-3331] design delay_line__parameterized3 has unconnected port CE
+WARNING: [Synth 8-3331] design delay_line__parameterized3 has unconnected port SCLR
+WARNING: [Synth 8-3331] design delay_line__parameterized2 has unconnected port CE
+WARNING: [Synth 8-3331] design delay_line__parameterized1 has unconnected port CLK
+WARNING: [Synth 8-3331] design delay_line__parameterized1 has unconnected port CE
+WARNING: [Synth 8-3331] design delay_line__parameterized1 has unconnected port SCLR
+WARNING: [Synth 8-3331] design delay_line__parameterized0 has unconnected port CLK
+WARNING: [Synth 8-3331] design delay_line__parameterized0 has unconnected port CE
+WARNING: [Synth 8-3331] design delay_line__parameterized0 has unconnected port SCLR
+WARNING: [Synth 8-3331] design delay_line has unconnected port CLK
+WARNING: [Synth 8-3331] design delay_line has unconnected port CE
+WARNING: [Synth 8-3331] design delay_line has unconnected port SCLR
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[24]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[23]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[22]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[21]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[20]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[19]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[18]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[17]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[16]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[15]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[14]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[13]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[12]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[11]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[10]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[9]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[8]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[7]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[6]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[5]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[4]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[3]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[2]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[1]
+WARNING: [Synth 8-3331] design dsp has unconnected port D_PORT[0]
+WARNING: [Synth 8-3331] design dsp has unconnected port CARRY_IN
+WARNING: [Synth 8-3331] design mult_gen_v12_0_13_viv has unconnected port CE
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:16 ; elapsed = 00:00:19 . Memory (MB): peak = 1354.059 ; gain = 138.527 ; free physical = 6362 ; free virtual = 9647
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:16 ; elapsed = 00:00:20 . Memory (MB): peak = 1354.059 ; gain = 138.527 ; free physical = 6356 ; free virtual = 9642
+---------------------------------------------------------------------------------
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Device 21-403] Loading part xc7k160tfbg676-2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/math_mult_32_ooc.xdc] for cell 'U0'
+Finished Parsing XDC File [/home/fzliu/orion/code/orion-anchor/firmware/fpga/util/math/xilinx/math_mult_32/math_mult_32_ooc.xdc] for cell 'U0'
+Parsing XDC File [/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_mult_32_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_mult_32_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 1659.824 ; gain = 0.000 ; free physical = 5689 ; free virtual = 9013
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:42 ; elapsed = 00:01:05 . Memory (MB): peak = 1659.824 ; gain = 444.293 ; free physical = 5714 ; free virtual = 9047
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7k160tfbg676-2
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:42 ; elapsed = 00:01:05 . Memory (MB): peak = 1659.824 ; gain = 444.293 ; free physical = 5714 ; free virtual = 9047
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property DONT_TOUCH = true for U0. (constraint file  /home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_mult_32_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:42 ; elapsed = 00:01:05 . Memory (MB): peak = 1659.824 ; gain = 444.293 ; free physical = 5716 ; free virtual = 9049
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:42 ; elapsed = 00:01:05 . Memory (MB): peak = 1659.824 ; gain = 444.293 ; free physical = 5710 ; free virtual = 9043
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 600 (col length:100)
+BRAMs: 650 (col length: RAMB18 100 RAMB36 50)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3331] design mult_gen_v12_0_13_viv has unconnected port CE
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:42 ; elapsed = 00:01:05 . Memory (MB): peak = 1659.824 ; gain = 444.293 ; free physical = 5693 ; free virtual = 9026
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:54 ; elapsed = 00:01:21 . Memory (MB): peak = 1688.809 ; gain = 473.277 ; free physical = 5342 ; free virtual = 8677
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:54 ; elapsed = 00:01:21 . Memory (MB): peak = 1689.809 ; gain = 474.277 ; free physical = 5354 ; free virtual = 8690
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:54 ; elapsed = 00:01:21 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5360 ; free virtual = 8699
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:55 ; elapsed = 00:01:22 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5937 ; free virtual = 9277
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:55 ; elapsed = 00:01:22 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5937 ; free virtual = 9277
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:55 ; elapsed = 00:01:22 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5940 ; free virtual = 9280
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:55 ; elapsed = 00:01:22 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5940 ; free virtual = 9280
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:55 ; elapsed = 00:01:22 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5940 ; free virtual = 9280
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:55 ; elapsed = 00:01:22 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5939 ; free virtual = 9279
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+----------+------+
+|      |Cell      |Count |
++------+----------+------+
+|1     |DSP48E1   |     2|
+|2     |DSP48E1_1 |     1|
+|3     |DSP48E1_2 |     1|
+|4     |FDRE      |    34|
++------+----------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:55 ; elapsed = 00:01:22 . Memory (MB): peak = 1709.840 ; gain = 494.309 ; free physical = 5939 ; free virtual = 9279
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 1 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:41 ; elapsed = 00:00:49 . Memory (MB): peak = 1709.840 ; gain = 188.543 ; free physical = 6006 ; free virtual = 9346
+Synthesis Optimization Complete : Time (s): cpu = 00:00:55 ; elapsed = 00:01:23 . Memory (MB): peak = 1709.848 ; gain = 494.309 ; free physical = 6006 ; free virtual = 9346
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+16 Infos, 43 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:57 ; elapsed = 00:01:24 . Memory (MB): peak = 1709.848 ; gain = 519.145 ; free physical = 6001 ; free virtual = 9341
+INFO: [Common 17-1381] The checkpoint '/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_fir/anchor_fpga.runs/math_mult_32_synth_1/math_mult_32.dcp' has been generated.
