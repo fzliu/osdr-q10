@@ -34,8 +34,6 @@ module axis_to_mem #(
 
 ) (
 
-  `include "log2_func.v"
-
   // core interface
 
   input             clk,
@@ -126,7 +124,7 @@ module axis_to_mem #(
     .READ_RESET_VALUE_B ("0"),
     .READ_LATENCY_B (1),
     .WRITE_MODE_B ("read_first")
-  ) dist_ram_tag_data (
+  ) xpm_memory_sdpram (
     .sleep (1'b0),
     .clka (clk),
     .ena (1'b1),

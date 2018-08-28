@@ -75,7 +75,7 @@ module axis_peak_detn #(
   genvar i;
   for (i = 0; i < 4; i = i + 1) begin : has_peak_gen
     localparam i0 = i * CHANNEL_WIDTH;
-    localparam i1 = i * CHANNEL_WIDTH + WC;
+    localparam i1 = i0 + WC;
 
     always @(posedge clk) begin
       if (s_axis_tvalid) begin

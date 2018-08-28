@@ -57,15 +57,17 @@ module math_cabs # (
 
   // multply_a_a
 
-  math_mult_32 multply1 (
-    .A(a),
-    .B(a),
-    .P(P1)
+  math_mult_32 #()
+  math_mult_32_0 (
+    .A (a),
+    .B (a),
+    .P (P1)
   );
 
   // multply_b_b
 
-  math_mult_32 multply2 (
+  math_mult_32 #()
+  math_mult_32_1 (
      .A (b),
      .B (b),
      .P (P2)
@@ -77,7 +79,7 @@ module math_cabs # (
   assign add_b = P2;
 
   math_add_96 #()
-  add (
+  math_add_96 (
     .clk (clk),
     .dina (add_a),
     .dinb (add_b),
@@ -96,7 +98,7 @@ module math_cabs # (
     .DIN_DECI_WIDTH ( 0),
     .DOUT_WIDTH (10),
     .DOUT_DECI_WIDTH (4)
-  ) log2 (
+  ) math_log2 (
     .DIN(S),
     .clk(clk),
     .DOUT(log_out)

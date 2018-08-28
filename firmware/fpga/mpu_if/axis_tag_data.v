@@ -104,14 +104,14 @@ module axis_tag_data #(
 
   // output value
 
-  integer n;
+  integer n; 
   always @* begin
-    for (n = 0; n < WORDS_PER_DOUT; n = n + 1) begin
-      mem_word = 'b0;
+    mem_word = 'b0;
+    for (n = 0; n < WORDS_PER_DOUT; n = n + 1'b1) begin   
       if (virt_addr[WS:0] == n)
-        mem_word = mem_dout[n*N0+15:n*N0];
+        mem_word = mem_dout[n * OUT_WIDTH + WO -: OUT_WIDTH];
     end
-  end
+  end 
 
   always @(posedge clk) begin
     if (rst | (virt_tagn > NT)) begin

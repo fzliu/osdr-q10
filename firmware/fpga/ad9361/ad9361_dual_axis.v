@@ -16,6 +16,7 @@ module ad9361_dual_axis #(
   // parameters
 
   parameter   INDEP_CLOCKS = 0,
+  parameter   REVERSE_DATA = 0,
   parameter   USE_AXIS_TLAST = 0,
   parameter   AXIS_BURST_LENGTH = 512,
 
@@ -88,6 +89,9 @@ module ad9361_dual_axis #(
     end
   end
 
+  generate
+  if (REVERSE_DATA == 0) begin
+
   always @(posedge data_clk) begin
     data_packed[11:0] <= data_q3;
     data_packed[27:16] <= data_i3;
@@ -98,6 +102,22 @@ module ad9361_dual_axis #(
     data_packed[107:96] <= data_q0;
     data_packed[123:112] <= data_i0;
   end
+
+  end else begin
+
+  always @(posedge data_clk) begin
+    data_packed[11:0] <= data_i0;
+    data_packed[27:16] <= data_q0;
+    data_packed[43:32] <= data_i1;
+    data_packed[59:48] <= data_q1;
+    data_packed[75:64] <= data_i2;
+    data_packed[91:80] <= data_q2;
+    data_packed[107:96] <= data_i3;
+    data_packed[123:112] <= data_q3;
+  end
+
+  end
+  endgenerate
 
   generate
   if (INDEP_CLOCKS == 0) begin

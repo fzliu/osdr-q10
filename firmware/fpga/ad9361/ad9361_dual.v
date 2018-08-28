@@ -14,6 +14,7 @@ module ad9361_dual #(
   parameter   DEVICE_TYPE = "7SERIES",
   parameter   REALTIME_ENABLE = 1,
   parameter   INDEP_CLOCKS = 0,
+  parameter   REVERSE_DATA = 0,
   parameter   USE_AXIS_TLAST = 0,
   parameter   SAMP_FILT_ENABLE = 1
 
@@ -63,8 +64,10 @@ module ad9361_dual #(
   input             b_spi_do,
   output            b_spi_cs,
 
-  // microprocessor interface (spi)
+  // microprocessor interface
 
+  input             reset_a,
+  input             reset_b,
   input             spi_sck,
   input             spi_mosi,
   output            spi_miso,
@@ -122,7 +125,6 @@ module ad9361_dual #(
     .rx_frame_in (a_rx_frame_in),
     .rx_data_p0 (a_rx_data_p0),
     .rx_data_p1 (a_rx_data_p1),
-    .resetb (a_resetb),
     .enable (a_enable),
     .txnrx (a_txnrx),
     .data_clk (a_data_clk),
@@ -133,6 +135,8 @@ module ad9361_dual #(
     .data_i1 (data_i1),
     .data_q1 (data_q1)
   );
+
+  assign a_resetb = reset_a;
 
   // receive_b
 
@@ -147,7 +151,6 @@ module ad9361_dual #(
     .rx_frame_in (b_rx_frame_in),
     .rx_data_p0 (b_rx_data_p0),
     .rx_data_p1 (b_rx_data_p1),
-    .resetb (b_resetb),
     .enable (b_enable),
     .txnrx (b_txnrx),
     .data_clk (b_data_clk),
@@ -158,6 +161,8 @@ module ad9361_dual #(
     .data_i1 (data_i3),
     .data_q1 (data_q3)
   );
+
+  assign b_resetb = reset_b;
 
   // spi
 
@@ -184,7 +189,7 @@ module ad9361_dual #(
   if (SAMP_FILT_ENABLE == 1) begin
 
     ad9361_samp_filt #(
-      .DATA_MODULUS_MIN (50),
+      .DATA_MODULUS_MIN (20),
       .NUM_REGS (3),
       .NUM_REGS_DELAY (26),
       .ABS_WIDTH (16)
@@ -239,6 +244,7 @@ module ad9361_dual #(
 
   ad9361_dual_axis #(
     .INDEP_CLOCKS (INDEP_CLOCKS),
+    .REVERSE_DATA (REVERSE_DATA),
     .USE_AXIS_TLAST (USE_AXIS_TLAST)
   ) ad9361_dual_axis (
     .data_clk (clk),

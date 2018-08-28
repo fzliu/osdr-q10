@@ -10,7 +10,7 @@ module ad9361_samp_filt #(
 
   // parameters
 
-  parameter   DATA_MODULUS_MIN = 50,
+  parameter   DATA_MODULUS_MIN = 20,
   parameter   NUM_REGS = 3,
   parameter   NUM_REGS_DELAY = 26,
   parameter   ABS_WIDTH = 16,
@@ -92,7 +92,7 @@ module ad9361_samp_filt #(
 
   assign data_i0_out = data_out_iq[95:84];
   assign data_q0_out = data_out_iq[83:72];
-  assign data_i1_out = data_out_iq[71:12];
+  assign data_i1_out = data_out_iq[71:60];
   assign data_q1_out = data_out_iq[59:48];
   assign data_i2_out = data_out_iq[47:36];
   assign data_q2_out = data_out_iq[35:24];

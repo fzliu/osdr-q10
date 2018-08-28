@@ -21,13 +21,15 @@ module axis_cabs_all #(
   localparam  WORD_WIDTH = CHANNEL_WIDTH / 2,
   localparam  DATA_WIDTH = CHANNEL_WIDTH * 4,
   localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH,
+  localparam  OUTPUT_WIDTH = 2 * PACKED_WIDTH,
 
   // bit width parameters
 
   localparam  NT = NUM_TAGS - 1,
   localparam  WW = WORD_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
-  localparam  WP = PACKED_WIDTH - 1
+  localparam  WP = PACKED_WIDTH - 1,
+  localparam  WO = OUTPUT_WIDTH - 1
 
 ) (
 
@@ -56,14 +58,13 @@ module axis_cabs_all #(
   wire              fanin_valid;
   wire    [ WD:0]   fanin_data;
   wire    [ NT:0]   fanin_chan;
-
   wire              fanin_valid_d;
   wire    [ WD:0]   fanin_data_d;
   wire    [ NT:0]   fanin_chan_d;
-
   wire    [ WD:0]   cabs_dout;
 
   wire              fanout_ready;
+  wire    [ WO:0]   fanout_data;
 
   // axi-stream fan-in
 
@@ -88,7 +89,7 @@ module axis_cabs_all #(
 
   generate
   genvar i;
-  for (i = 0; i < 4; i = i + 1) begin
+  for (i = 0; i < 4; i = i + 1) begin : math_cabs_gen
     localparam i_beg = i * CHANNEL_WIDTH;
     localparam i_end = i_beg + WW;
     localparam q_beg = i_end + 1;
@@ -104,7 +105,6 @@ module axis_cabs_all #(
       .dinb (fanin_data[q_end:q_beg]),
       .dout (cabs_dout [q_end:i_beg])
     );
-
   end
   endgenerate
 
@@ -135,9 +135,26 @@ module axis_cabs_all #(
     .s_axis_tlast ('b0),
     .m_axis_tvalid (m_axis_tvalid),
     .m_axis_tready (m_axis_tready),
-    .m_axis_tdata ({m_axis_tdata, m_axis_tdata_abs}),
+    .m_axis_tdata (fanout_data),
     .m_axis_tlast ()
   );
+
+  // split output data
+
+  generate
+  genvar j;
+  for (j = 0; j < NUM_TAGS; j = j + 1) begin : dout_gen
+    localparam j0 = j * DATA_WIDTH;
+    localparam j1 = j0 + WD;
+    localparam J0 = 2 * j0;
+    localparam J1 = J0 + WD;
+    localparam J2 = J1 + 1;
+    localparam J3 = J2 + WD;
+
+    assign m_axis_tdata_abs[j1:j0] = fanout_data[J1:J0];
+    assign m_axis_tdata[j1:j0] = fanout_data[J3:J2];
+  end
+  endgenerate
 
 endmodule
 
