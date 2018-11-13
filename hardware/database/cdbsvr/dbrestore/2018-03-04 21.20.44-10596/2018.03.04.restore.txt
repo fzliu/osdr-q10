@@ -1,0 +1,31 @@
+[2018.03.04 21:20:44] [0000m.31s.921ms] [0] WELCOME
+[2018.03.04 21:20:44] [0000m.31s.924ms] [1] iCDB Project Backup ver.2.202, 88Zh1V4+7Fzqu6g9/cuD/w, build:7609897 created 2017-06-23 16:20:58, sources stamp:88Zh1V4+7Fzqu6g9/cuD/w
+[2018.03.04 21:20:44] [0000m.31s.924ms] [1] Copyright 2017 Mentor Graphics Corporation.  All Rights Reserved.
+[2018.03.04 21:20:44] [0000m.31s.924ms] [1] Base flow version [VX.2.2]
+[2018.03.04 21:20:44] [0000m.31s.924ms] [1] Install Id [1589114], Flow Id [X-ENTP VX.2.2], Full Flow Name [Xpedition Enterprise X-ENTP VX.2.2], Exact Access Date [2017/05/01]
+[2018.03.04 21:20:44] [0000m.31s.925ms] [1] Machine [ORION-SERVER]  IP [127.0.0.1,192.168.100.15]  User [Frank]  PID [10596]
+[2018.03.04 21:20:44] [0000m.31s.925ms] [1] Operating system [Microsoft , 64-bit (build 9200)]
+[2018.03.04 21:20:44] [0000m.31s.925ms] [1] Current working dir [\\ORION-SERVER\design\anchor\alpha]
+[2018.03.04 21:20:44] [0000m.31s.926ms] [1] PATH [C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\bin;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\lib;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\bin;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\lib;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\bin;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\lib;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\bin;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\lib;C:\\MentorGraphics\\EEVX.2.2\\SDD_HOME\common\win64\bin;C:\\MentorGraphics\\EEVX.2.2\\SDD_HOME\common\win64\lib;C:\\MentorGraphics\\EEVX.2.2\\MGC_HOME.ixw\bin;C:\\MentorGraphics\\EEVX.2.2\\MGC_HOME.ixw\lib;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\bin;C:\MentorGraphics\EEVX.2.2\SDD_HOME\common\win64\lib;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\bin;C:\MentorGraphics\EEVX.2.2\MGC_HOME.ixw\lib;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Users\Frank\AppData\Local\Microsoft\WindowsApps;]
+[2018.03.04 21:20:44] [0000m.31s.926ms] [1] SDD_HOME [C:\MentorGraphics\EEVX.2.2\SDD_HOME] on file system [NTFS]
+[2018.03.04 21:20:44] [0000m.31s.926ms] [1] SDD_PLATFORM [win64]
+[2018.03.04 21:20:44] [0000m.31s.926ms] [1] WDIR [C:\MentorGraphics\WDIR\EEVX.2.2;C:\MentorGraphics\EEVX.2.2\SDD_HOME\standard;]
+[2018.03.04 21:20:44] [0000m.31s.926ms] [1] Local iCDB working dir [C:\MentorGraphics\WDIR\EEVX.2.2\iCDB] on file system [NTFS]
+[2018.03.04 21:20:44] [0000m.31s.926ms] [0] iCDB database restored from backup: \\ORION-SERVER\design\anchor\alpha\ProjectBackup\backups\2018-03-04 21.19.20 - user.zip
+[2018.03.04 21:20:44] [0000m.31s.927ms] [0] Creation time: 2018-03-04 21.19.20
+[2018.03.04 21:20:44] [0000m.31s.927ms] [0] Type: User
+[2018.03.04 21:20:44] [0000m.31s.928ms] [0] Backup file size: 3 744 851 bytes (3.6 MB)
+[2018.03.04 21:20:44] [0000m.31s.928ms] [0] Backup GUID: 6196-20da-3770-77cb-852f-b9ad-52fb-9a50-d878-86c6-107c-bd1c
+[2018.03.04 21:20:44] [0000m.31s.928ms] [0] Creator: iCDB Server (2018-03-04 20.33.55-9272)
+[2018.03.04 21:20:44] [0000m.31s.928ms] [0] Application name: Xpedition Designer
+[2018.03.04 21:20:44] [0000m.31s.928ms] [0] User name: Frank
+[2018.03.04 21:20:44] [0000m.31s.928ms] [0] Machine name: ORION-SERVER
+[2018.03.04 21:20:44] [0000m.31s.928ms] [0] Description: replace backup
+[2018.03.04 21:20:44] [0000m.31s.929ms] [0] Full Flow Name: Xpedition Enterprise X-ENTP VX.2.2
+[2018.03.04 21:20:44] [0000m.31s.929ms] [0] Flow Id: EEVX.2.2
+[2018.03.04 21:20:44] [0000m.31s.929ms] [0] Install Id: 1589114
+[2018.03.04 21:20:44] [0000m.31s.929ms] [0] Build Id: 7609897
+[2018.03.04 21:20:44] [0000m.31s.929ms] [0] iCDB Version: 3300
+[2018.03.04 21:20:44] [0000m.31s.930ms] [0] iCDB database file size: 3 230 016 bytes (3.1 MB)
+[2018.03.04 21:20:44] [0000m.31s.933ms] [0] DONE
+[2018.03.04 21:20:44] [0000m.31s.933ms] [0] .

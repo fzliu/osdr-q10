@@ -1,0 +1,30 @@
+SECTION Content
+LIST Layout
+VALUE "Anchor"
+ENDLIST
+KEY BorderSymbols ".\borders.ini"
+KEY BusContents ".\busconts.ini"
+KEY HdlUtilsConfig ".\hdlutils.ini"
+KEY PCB_Anchor ".\PCB"
+KEY PinComponents ".\speccomp.ini"
+KEY Prj ".\orion_anchor.prj"
+KEY iCDB ".\database"
+ENDSECTION
+SECTION Location
+KEY ContentRoot "."
+ENDSECTION
+SECTION Properties
+KEY AppName "iCDB Project Backup"
+KEY CreationTime "2018-08-06 09.20.15"
+KEY Creator "iCDB Project Backup (2018-08-06 09.19.16-8340)"
+KEY Description "Periodic backup."
+KEY FlowId "EEVX.2.2"
+KEY FullFlowName "Xpedition Enterprise X-ENTP VX.2.2; Xpedition Enterprise X-ENTP VX.2.2 - Update 5"
+KEY GBSBuildId "7609897"
+KEY GBSInstallId "1589114; 1650599"
+KEY GUID "b3fc-51f4-f150-29d6-f42a-76b4-52a7-6b50-d35a-86c6-10ac-bd1c"
+KEY IcdbVersion "3300"
+KEY MachineName "ORION-SERVER"
+KEY Type "user"
+KEY UserName "Frank"
+ENDSECTION

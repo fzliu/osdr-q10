@@ -1,3 +1,3 @@
 # orion-anchor
 
-Orion anchor hardware design files, MCU firmware, and FPGA HDL.
+Orion anchor hardware design files, MPU firmware, and FPGA HDL.

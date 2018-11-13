@@ -1,0 +1,11 @@
+.FILETYPE LAYER_STACKUP_SETTINGS
+.VERSION "VX2.1"
+.CREATOR "Mentor Graphics Corporation"
+.DATE "Friday April 20 15:32:41 2018"
+
+.LayerStackup
+  ..FontName    "std-proportional"
+  ..FontSize     1000000
+  ..PenWidth 100000
+  ..IncludeMaster 1
+  ..MultipleUserLayers 0
