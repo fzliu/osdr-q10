@@ -109,12 +109,12 @@ AD9361_InitParam default_init_param = {
 	0,		//ensm_enable_txnrx_control_enable *** adi,ensm-enable-txnrx-control-enable
 	/* LO Control */
 	2508000000UL,	//rx_synthesizer_frequency_hz *** adi,rx-synthesizer-frequency-hz
-	902000000UL,	//tx_synthesizer_frequency_hz *** adi,tx-synthesizer-frequency-hz
+	902000000UL,	//tx_synthesizer_frequency_hz *** adi,tx-synthesizer-frequency-hz	
 	/* Rate & BW Control */
-	{1200000000, 400000000, 200000000, 100000000, 50000000, 50000000},	// rx_path_clock_frequencies[6] *** adi,rx-path-clock-frequencies
-	{1200000000, 200000000, 200000000, 100000000, 50000000, 50000000},	// tx_path_clock_frequencies[6] *** adi,tx-path-clock-frequencies
-	47279100,	//rf_rx_bandwidth_hz *** adi,rf-rx-bandwidth-hz
-	200000,	//rf_tx_bandwidth_hz *** adi,rf-tx-bandwidth-hz
+	{1272000000, 636000000, 212000000, 106000000, 53000000, 53000000},	// rx_path_clock_frequencies[6] *** adi,rx-path-clock-frequencies
+	{1272000000, 318000000, 106000000, 53000000, 53000000, 53000000},	// tx_path_clock_frequencies[6] *** adi,tx-path-clock-frequencies
+	56000000,//rf_rx_bandwidth_hz *** adi,rf-rx-bandwidth-hz
+	200000,//rf_tx_bandwidth_hz *** adi,rf-tx-bandwidth-hz	
 	/* RF Port Control */
 	0,		//rx_rf_port_input_select *** adi,rx-rf-port-input-select
 	0,		//tx_rf_port_input_select *** adi,tx-rf-port-input-select
@@ -319,25 +319,25 @@ AD9361_RXFIRConfig rx_fir_config = {	// BPF PASSBAND 3/20 fs to 1/4 fs
 	3, // rx
 	0, // rx_gain
 	1, // rx_dec
-	{189, -73, 65, -50, 26, 5, -43, 86, 
-	-134, 183, -230, 269, -298, 310, -302, 271, 
-	-212, 126, -12, -127, 287, -462, 644, -820, 
-	980, -1110, 1195, -1219, 1167, -1021, 765, -381, 
-	-152, 859, -1775, 2964, -4436, 6305, -9428, 23415, 
-	23415, -9428, 6305, -4436, 2964, -1775, 859, -152, 
-	-381, 765, -1021, 1167, -1219, 1195, -1110, 980, 
-	-820, 644, -462, 287, -127, -12, 126, -212, 
-	271, -302, 310, -298, 269, -230, 183, -134, 
-	86, -43, 5, 26, -50, 65, -73, 189, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0}, // rx_coef[128]
-	80, // rx_coef_size
-	{0, 0, 0, 0, 0, 0}, //rx_path_clks[6]
-	0 // rx_bandwidth
+	{469, -118, 93, -67, 42, -19, -2, 24, 
+	-46, 69, -93, 118, -143, 166, -189, 210, 
+	-228, 244, -255, 261, -262, 257, -245, 226, 
+	-200, 167, -126, 77, -22, -40, 107, -180, 
+	256, -335, 415, -495, 573, -647, 715, -775, 
+	825, -862, 885, -891, 877, -842, 782, -695, 
+	579, -430, 245, -20, -250, 571, -952, 1404, 
+	-1945, 2598, -3403, 4430, -5703, 7384, -10420, 22787, 
+	24366, -9461, 6941, -5467, 4290, -3325, 2563, -1939, 
+	1417, -977, 604, -287, 19, 206, -392, 543, 
+	-662, 752, -816, 855, -872, 871, -851, 817, 
+	-771, 714, -649, 577, -501, 423, -344, 266, 
+	-190, 118, -50, -12, 67, -116, 158, -192, 
+	219, -239, 252, -258, 258, -253, 243, -229, 
+	211, -191, 168, -146, 121, -97, 73, -51, 
+	28, -6, -15, 38, -64, 91, -117, 483}, // rx_coef[128]
+	 128, // rx_coef_size
+	 {0, 0, 0, 0, 0, 0}, //rx_path_clks[6]
+	 0 // rx_bandwidth
 };
 
 AD9361_TXFIRConfig tx_fir_config = {	// BPF PASSBAND 3/20 fs to 1/4 fs
@@ -364,6 +364,7 @@ AD9361_TXFIRConfig tx_fir_config = {	// BPF PASSBAND 3/20 fs to 1/4 fs
 	 {0, 0, 0, 0, 0, 0}, // tx_path_clks[6]
 	 0 // tx_bandwidth
 };
+
 struct ad9361_rf_phy *ad9361_phy;
 #ifdef FMCOMMS5
 struct ad9361_rf_phy *ad9361_phy_b;
@@ -379,7 +380,7 @@ void ad9361_mode_alert(struct ad9361_rf_phy *phy) {
 	mdelay(1000);	
 }
 
-void ad9361_mode_rx(struct ad9361_rf_phy *phy) {
+void ad9361_mode_rx(struct ad9361_rf_phy *phy, int gain) {
 	uint32_t ensm_mode;
 
 	ad9361_set_en_state_machine_mode(phy, ENSM_MODE_RX);
@@ -401,15 +402,55 @@ void ad9361_mode_rx(struct ad9361_rf_phy *phy) {
 	ad9361_set_rx_gain_control_mode(phy, 1, 0);
 
 	/* set rx0 gain */
-	ad9361_set_rx_rf_gain(phy, 0, 40);  // 72
+	ad9361_set_rx_rf_gain(phy, 0, gain);  // 72
 	/* set rx1 gain */
-	ad9361_set_rx_rf_gain(phy, 1, 40);	
+	ad9361_set_rx_rf_gain(phy, 1, gain);	
 }
-/***************************************************************************//**
+/******************************************************************************
  * @brief main
 *******************************************************************************/
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv)
+{ 
+    int ch;
+    double param;
+    int gain = 40;
+    char mode[10] = "rx";
+
+    printf("\r\nConfiguring AD9361\r\n");
+
+    while ((ch = getopt(argc, argv, "m:f:b:g:h")) != -1) {
+        switch (ch) {
+        	case 'm':
+        		sscanf(optarg, "%s", mode);
+        		break;
+            case 'f':
+                sscanf(optarg, "%lf", &param);
+                default_init_param.rx_synthesizer_frequency_hz = param * 1000000;
+                break;
+            case 'b':
+                sscanf(optarg, "%lf", &param);
+                default_init_param.rf_rx_bandwidth_hz = param * 1000000;
+                break;            
+            case 'g':
+            	sscanf(optarg, "%d", &gain);
+            	break;    
+            case 'h':
+            case '?':
+                printf("\r\nUsage: network [options] \r\n");
+                printf("    -h  this help \r\n");
+                printf("    -m  set mode rx or alert \r\n");
+                printf("    -f  set rx center frequency(Mhz) \r\n");
+                printf("    -b  set rx bandwidth(Mhz) \r\n");
+                printf("    -g  set rx gain(dB) \r\n");
+                printf("\r\n");
+                return -1;
+        }
+    }
+
+    printf("frequency = %lluHz \r\n", default_init_param.rx_synthesizer_frequency_hz);    
+    printf("bandwidth = %dHz \r\n", default_init_param.rf_rx_bandwidth_hz);    
+    printf("gain = %ddB \r\n", gain);
+
 	// NOTE: The user has to choose the GPIO numbers according to desired
 	// carrier board.
 	default_init_param.gpio_resetb = GPIO_RESET_PIN;
@@ -458,72 +499,63 @@ int main(int argc, char** argv)
 	ad9361_set_rx_fir_config(ad9361_phy_b, rx_fir_config);
 #endif
 
-#if 0
-	ad9361_set_rx_rf_bandwidth(ad9361_phy, 50000000);  // 200000
+    /*
+    ad9361_set_rx_rf_bandwidth(ad9361_phy, 50000000);  // 200000
 	ad9361_set_rx_sampling_freq(ad9361_phy, 50000000);   // 30720000
 
 	ad9361_set_rx_rf_bandwidth(ad9361_phy_b, 50000000);
 	ad9361_set_rx_sampling_freq(ad9361_phy_b, 50000000);   
-#endif
+    */
 
 #ifdef FMCOMMS5
 	ad9361_do_mcs(ad9361_phy, ad9361_phy_b);
 #endif	
 
-	if (argc > 1) {
-		if (0 == strcmp(argv[1], "alert")) {
-			ad9361_mode_alert(ad9361_phy);
+	if (0 == strcmp(mode, "alert")) {
+		ad9361_mode_alert(ad9361_phy);
 
 #ifdef FMCOMMS5
-			ad9361_mode_alert(ad9361_phy_b);
+		ad9361_mode_alert(ad9361_phy_b);
 #endif
-		} else if (0 == strcmp(argv[1], "rx")) {
-			ad9361_mode_rx(ad9361_phy);
+	} else if (0 == strcmp(mode, "rx")) {
+		ad9361_mode_rx(ad9361_phy, gain);
 
 #ifdef FMCOMMS5
-			ad9361_mode_rx(ad9361_phy_b);
+		ad9361_mode_rx(ad9361_phy_b, gain);
 #endif
-		} else if (0 == strcmp(argv[1], "help")) {
-			printf("--help \n");
-			printf("--rx  set rx mode \n");
-			printf("--wait  set wait mode \n");
-			printf("--console  set & get ad9361 param \n");
-		} else if (0 == strcmp(argv[1], "console")) {
+	} else {
+		printf("mode: %s incorrect \r\n", mode);
+	}
 
 #ifdef CONSOLE_COMMANDS
-			get_help(NULL, 0);
+	get_help(NULL, 0);
 
-			while(1)
+	while(1)
+	{
+		console_get_command(received_cmd);
+		invalid_cmd = 0;
+		for(cmd = 0; cmd < cmd_no; cmd++)
+		{
+			param_no = 0;
+			cmd_type = console_check_commands(received_cmd, cmd_list[cmd].name,
+											  param, &param_no);
+			if(cmd_type == UNKNOWN_CMD)
 			{
-				console_get_command(received_cmd);
-				invalid_cmd = 0;
-				for(cmd = 0; cmd < cmd_no; cmd++)
-				{
-					param_no = 0;
-					cmd_type = console_check_commands(received_cmd, cmd_list[cmd].name,
-													  param, &param_no);
-					if(cmd_type == UNKNOWN_CMD)
-					{
-						invalid_cmd++;
-					}
-					else
-					{
-						cmd_list[cmd].function(param, param_no);
-					}
-				}
-				if(invalid_cmd == cmd_no)
-				{
-					console_print("Invalid command!\n");
-				}
+				invalid_cmd++;
 			}
+			else
+			{
+				cmd_list[cmd].function(param, param_no);
+			}
+		}
+		if(invalid_cmd == cmd_no)
+		{
+			console_print("Invalid command!\n");
+		}
+	}
 #endif	
 
-		} else {
-			printf("param error \n");
-		}
-	}	
-
-	printf("Done.\n");
+	printf("Done \r\n");
 
 	return 0;
 }

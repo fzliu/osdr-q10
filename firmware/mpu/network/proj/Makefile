@@ -12,7 +12,8 @@ SRC_FUNC = ${wildcard  ${FUNC_DIR}/*.c}
 OBJ_USER = ${patsubst %.c,${OBJ_DIR}/%.o,$(notdir ${SRC_USER})}
 OBJ_FUNC = ${patsubst %.c,${OBJ_DIR}/%.o,$(notdir ${SRC_FUNC})}
 
-TARGET=${BIN_DIR}/main
+TARGET=${BIN_DIR}/network
+# CC=gcc
 CC=arm-none-linux-gnueabi-gcc
 CCFLAGS=-g -Wall ${INC_DIR} -std=gnu99
 

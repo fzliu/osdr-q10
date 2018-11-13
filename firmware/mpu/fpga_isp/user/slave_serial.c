@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 
     int fpga_fd = fpga_init();
 
-    fpga_led(0);
+    //fpga_led(0);
 
     int fd = open(file_name, O_RDONLY);
     if (fd < 0) {
@@ -129,9 +129,14 @@ int main(int argc, char** argv)
     xil_printf(stderr, "Downloading Bitstream to target FPGA \n\r");
 #endif // VERBOSE
 
+    fprintf(stderr, "                      ]\r[");
     for (i = 0; i < bits_size; i += BLOCK_LEN){
 
         spi_write_then_read(fpga_fd, (uint8_t *)(bits_start + i), BLOCK_LEN, NULL, 0);
+
+        if (((i / BLOCK_LEN) % (bits_size / BLOCK_LEN / 20)) == 0) {
+            fprintf(stderr, "=");
+        }
 
         if ((gpio_get_value(GPIO_INIT) == 0) && ((i % 10) == 0)) {
 #ifdef VERBOSE
@@ -169,7 +174,7 @@ int main(int argc, char** argv)
     xil_printf(stderr, "\n\rDownloading Complete\n\r");
 #endif // VERBOSE
 
-    fpga_led(1);
+    //fpga_led(1);
 
     fpga_close(fpga_fd);
     
