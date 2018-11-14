@@ -190,8 +190,8 @@ module ad9361_dual #(
 
     ad9361_samp_filt #(
       .DATA_MODULUS_MIN (20),
-      .NUM_REGS (3),
-      .NUM_REGS_DELAY (26),
+      .LOG2_FILTER_LENGTH (3),
+      .NUM_DELAY (26),
       .ABS_WIDTH (16)
     ) ad9361_samp_filt (
       .clk (clk),

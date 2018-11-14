@@ -90,6 +90,8 @@ module anchor_top #(
 
   // microprocessor interface (control)
 
+  input             reset_a,
+  input             reset_b,
   input             sync_in,
 
   // microprocessor interface (comms)
@@ -193,6 +195,8 @@ module anchor_top #(
     .b_spi_di (b_spi_di),
     .b_spi_do (b_spi_do),
     .b_spi_cs (b_spi_cs),
+    .reset_a (reset_a),
+    .reset_b (reset_b),
     .spi_sck (spi_sck),
     .spi_mosi (spi_mosi),
     .spi_miso (spi_miso),
@@ -215,6 +219,7 @@ module anchor_top #(
   ) axis_xcorr_all (
     .in_clk (d_clk),
     .clk (c_clk),
+    .rst (rst)，
     .s_axis_tvalid (xcorr_axis_tvalid),
     .s_axis_tready (xcorr_axis_tready),
     .s_axis_tdata (xcorr_axis_tdata),

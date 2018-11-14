@@ -10,12 +10,12 @@ module ad9361_samp_filt #(
 
   // parameters
 
-  parameter   DATA_MODULUS_MIN = 20,
-  parameter   NUM_REGS = 3,
-  parameter   NUM_REGS_DELAY = 26,
   parameter   ABS_WIDTH = 16,
+  parameter   NUM_DELAY = 26,
+  parameter   DATA_PASS_VALUE = 20,
+  parameter   LOG2_FILTER_LENGTH = 3,
 
-  // local parameters
+  // bit width parameters
 
   localparam  N0 = NUM_REGS - 1,
   localparam  N1 = ABS_WIDTH - 1,
@@ -26,54 +26,54 @@ module ad9361_samp_filt #(
 
   // core interface
 
-  input           clk,
-  input           rst,
+  input             clk,
+  input             rst,
 
   // input interface
 
-  input           valid_0_in,
-  input   [11:0]  data_i0_in,
-  input   [11:0]  data_q0_in,
-  input           valid_1_in,
-  input   [11:0]  data_i1_in,
-  input   [11:0]  data_q1_in,
-  input           valid_2_in,
-  input   [11:0]  data_i2_in,
-  input   [11:0]  data_q2_in,
-  input           valid_3_in,
-  input   [11:0]  data_i3_in,
-  input   [11:0]  data_q3_in,
+  input             valid_0_in,
+  input   [ 11:0]   data_i0_in,
+  input   [ 11:0]   data_q0_in,
+  input             valid_1_in,
+  input   [ 11:0]   data_i1_in,
+  input   [ 11:0]   data_q1_in,
+  input             valid_2_in,
+  input   [ 11:0]   data_i2_in,
+  input   [ 11:0]   data_q2_in,
+  input             valid_3_in,
+  input   [ 11:0]   data_i3_in,
+  input   [ 11:0]   data_q3_in,
 
   // output interface
 
-  output          valid_0_out,
-  output  [11:0]  data_i0_out,
-  output  [11:0]  data_q0_out,
-  output          valid_1_out,
-  output  [11:0]  data_i1_out,
-  output  [11:0]  data_q1_out,
-  output          valid_2_out,
-  output  [11:0]  data_i2_out,
-  output  [11:0]  data_q2_out,
-  output          valid_3_out,
-  output  [11:0]  data_i3_out,
-  output  [11:0]  data_q3_out
+  output            valid_0_out,
+  output  [ 11:0]   data_i0_out,
+  output  [ 11:0]   data_q0_out,
+  output            valid_1_out,
+  output  [ 11:0]   data_i1_out,
+  output  [ 11:0]   data_q1_out,
+  output            valid_2_out,
+  output  [ 11:0]   data_i2_out,
+  output  [ 11:0]   data_q2_out,
+  output            valid_3_out,
+  output  [ 11:0]   data_i3_out,
+  output  [ 11:0]   data_q3_out
 
 );
 
   // internal signals
 
-  wire    [ 3:0]  valid_in;
-  wire    [95:0]  data_iq;
-  wire    [95:0]  data_out_iq;
+  wire    [  3:0]   valid_in;
+  wire    [ 95:0]   data_iq;
+  wire    [ 95:0]   data_out_iq;
 
-  wire    [N2:0]  abs_dout;
+  wire    [ N2:0]   abs_dout;
 
-  wire    [N2:0]  avg_dout;
+  wire    [ N2:0]   avg_dout;
 
   // internal registers
 
-  reg     [ 3:0]  valid_out;
+  reg     [  3:0]   valid_out;
 
   assign data_iq = {data_i0_in, data_q0_in,
                     data_i1_in, data_q1_in,
@@ -110,7 +110,7 @@ module ad9361_samp_filt #(
     always @(posedge clk) begin
       if (rst) begin
         valid_out[i] <= 1'b0;
-      end else if ((avg_dout[I0:J0] > DATA_MODULUS_MIN) && valid_in[i]) begin
+      end else if ((avg_dout[I0:J0] > DATA_PASS_VALUE) && valid_in[i]) begin
         valid_out[i] <= 1'b1;
       end else begin
         valid_out[i] <= 1'b0;
@@ -123,7 +123,7 @@ module ad9361_samp_filt #(
 
   shift_reg #(
     .WIDTH (96),
-    .DEPTH (NUM_REGS_DELAY)
+    .DEPTH (NUM_DELAY)
   ) shift_reg_iq (
     .clk (clk),
     .ena (1'b1),
@@ -158,7 +158,7 @@ module ad9361_samp_filt #(
 
     filt_boxcar #(
       .DATA_WIDTH (ABS_WIDTH),
-      .FILTER_POWER (NUM_REGS)
+      .FILTER_POWER (LOG2_FILTER_LENGTH)
     ) filt_boxcar (
       .clk (clk),
       .rst (rst),
