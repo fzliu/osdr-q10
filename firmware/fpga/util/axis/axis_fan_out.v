@@ -14,7 +14,7 @@ module axis_fan_out #(
 
   // parameters
 
-  parameter   NUM_FANOUT= 6,
+  parameter   NUM_FANOUT = 6,
   parameter   DATA_WIDTH = 256,
 
   // derived parameters
@@ -24,7 +24,7 @@ module axis_fan_out #(
 
   // bit width parameters
 
-  localparam  W0 = NUM_FANOUT - 1,
+  localparam  NF = NUM_FANOUT - 1,
   localparam  WD = DATA_WIDTH - 1,
   localparam  WP = PACKED_WIDTH - 1,
   localparam  WS = SELECT_WIDTH - 1
@@ -41,15 +41,15 @@ module axis_fan_out #(
   input             s_axis_tvalid,
   output            s_axis_tready,
   input   [ WD:0]   s_axis_tdata,
-  input   [ W0:0]   s_axis_tuser,
+  input   [ NF:0]   s_axis_tuser,
   input             s_axis_tlast,
 
   // master interace
 
-  output  [ W0:0]   m_axis_tvalid,
-  input   [ W0:0]   m_axis_tready,
+  output  [ NF:0]   m_axis_tvalid,
+  input   [ NF:0]   m_axis_tready,
   output  [ WP:0]   m_axis_tdata,
-  output  [ W0:0]   m_axis_tlast
+  output  [ NF:0]   m_axis_tlast
 
 );
 
@@ -57,26 +57,13 @@ module axis_fan_out #(
 
   // internal registers
 
-  reg     [ W0:0]   m_axis_tvalid_reg;
+  reg     [ NF:0]   m_axis_tvalid_reg;
   reg     [ WP:0]   m_axis_tdata_reg;
-  reg     [ W0:0]   m_axis_tlast_reg;
-
-  // internal signals
-
-  wire    [ WS:0]   chan_num;
+  reg     [ NF:0]   m_axis_tlast_reg;
 
   // slave interface
 
-  assign s_axis_tready = m_axis_tready[chan_num];
-
-  // channel selection
-
-  oh_to_bin #(
-    .WIDTH_IN (NUM_FANOUT)
-  ) oh_to_bin (
-    .oh (s_axis_tuser),
-    .bin (chan_num)
-  );
+  assign s_axis_tready = m_axis_tready[s_axis_tuser];
 
   // master interface
 
@@ -86,11 +73,11 @@ module axis_fan_out #(
     localparam i0 = i * DATA_WIDTH;
     localparam i1 = i * DATA_WIDTH + WD;
     always @(posedge clk) begin
-      if (rst | ~s_axis_tvalid | (i != chan_num)) begin
+      if (rst | ~s_axis_tvalid | (i != s_axis_tuser)) begin
         m_axis_tvalid_reg[i] <= 'b0;
         m_axis_tdata_reg[i1:i0] <= 'b0;
         m_axis_tlast_reg[i] <= 'b0;
-      end else if ((i == chan_num) & s_axis_tready) begin
+      end else if ((i == s_axis_tuser) & s_axis_tready) begin
         m_axis_tvalid_reg[i] <= s_axis_tvalid;
         m_axis_tdata_reg[i1:i0] <= s_axis_tdata;
         m_axis_tlast_reg[i] <= s_axis_tlast;

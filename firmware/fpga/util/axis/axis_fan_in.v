@@ -8,7 +8,7 @@
 //
 // enable  :  N/A
 // reset   :  active-high
-// latency :  1 cycle
+// latency :  2 cycles
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -22,14 +22,12 @@ module axis_fan_in #(
   // derived parameters
 
   localparam  PACKED_WIDTH = NUM_FANIN * DATA_WIDTH,
-  localparam  SELECT_WIDTH = log2(NUM_FANIN - 1),
 
   // bit width parameters
 
-  localparam  W0 = NUM_FANIN - 1,
+  localparam  NF = NUM_FANIN - 1,
   localparam  WD = DATA_WIDTH - 1,
-  localparam  WP = PACKED_WIDTH - 1,
-  localparam  WS = SELECT_WIDTH - 1
+  localparam  WP = PACKED_WIDTH - 1
 
 ) (
 
@@ -40,17 +38,17 @@ module axis_fan_in #(
 
   // slave interface
 
-  input   [ W0:0]   s_axis_tvalid,
-  output  [ W0:0]   s_axis_tready,
+  input   [ NF:0]   s_axis_tvalid,
+  output  [ NF:0]   s_axis_tready,
   input   [ WP:0]   s_axis_tdata,
-  input   [ W0:0]   s_axis_tlast,
+  input   [ NF:0]   s_axis_tlast,
 
   // master interface
 
   output            m_axis_tvalid,
   input             m_axis_tready,
   output  [ WD:0]   m_axis_tdata,
-  output  [ W0:0]   m_axis_tuser,
+  output  [ NF:0]   m_axis_tuser,
   output            m_axis_tlast
 
 );
@@ -59,18 +57,19 @@ module axis_fan_in #(
 
   // internal registers
 
+  reg     [ NF:0]   chan_sel = 'b0;
+
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
-  reg     [ W0:0]   m_axis_tuser_reg = 'b0;
+  reg     [ NF:0]   m_axis_tuser_reg = 'b0;
   reg               m_axis_tlast_reg = 'b0;
 
   // internal signals
 
-  wire    [ WD:0]   s_axis_tdata_unpack[0:W0];
+  wire    [ WD:0]   s_axis_tdata_unpack [0:NF];
 
-  wire    [ W0:0]   chan_prio;
-  wire    [ W0:0]   chan_sel;
-  wire    [ WS:0]   chan_num;
+  wire    [ NF:0]   chan_prio;
+  wire    [ NF:0]   chan_num;
 
   wire              in_valid;
   wire    [ WD:0]   in_data;
@@ -89,18 +88,27 @@ module axis_fan_in #(
 
   assign s_axis_tready = m_axis_tready ? chan_sel : 'b0;
 
-  // channel selection
-
-  assign chan_prio[0] = 1'b1;
-  assign chan_sel[0] = s_axis_tvalid[0];
+  // fan-in priority encoder
 
   generate
   genvar j;
-  for (j = 1; j < NUM_FANIN; j = j + 1) begin : chan_prio_gen
-    assign chan_prio[j] = ~|s_axis_tvalid[j-1:0];
-    assign chan_sel[j] = chan_prio[j] ? s_axis_tvalid[j] : 1'b0;
+  for (j = 0; j < NUM_FANIN; j = j + 1) begin : chan_prio_gen
+    assign chan_prio[j] = (j == 0) ? 1'b1 : ~|s_axis_tvalid[j-1:0];
+    always @(posedge clk) begin
+      if (rst) begin
+        chan_sel[j] <= 1'b0;
+      end else if (in_valid) begin
+        chan_sel[j] <= chan_sel[j];
+      end else if (chan_prio[j]) begin
+        chan_sel[j] <= s_axis_tvalid[j];
+      end else begin
+        chan_sel[j] <= 1'b0;
+      end
+    end
   end
   endgenerate
+
+  // channel selection
 
   oh_to_bin #(
     .WIDTH_IN (NUM_FANIN)
@@ -145,4 +153,3 @@ endmodule
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-

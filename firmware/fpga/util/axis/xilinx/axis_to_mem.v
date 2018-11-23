@@ -20,6 +20,7 @@ module axis_to_mem #(
   parameter   MEMORY_TYPE = "distributed",
   parameter   MEMORY_DEPTH = 32,
   parameter   DATA_WIDTH = 32,
+  parameter   READ_LATENCY = 1,
 
   // derived parameters
 
@@ -122,7 +123,7 @@ module axis_to_mem #(
     .READ_DATA_WIDTH_B (DATA_WIDTH),
     .ADDR_WIDTH_B (ADDR_WIDTH),
     .READ_RESET_VALUE_B ("0"),
-    .READ_LATENCY_B (1),
+    .READ_LATENCY_B (READ_LATENCY),
     .WRITE_MODE_B ("read_first")
   ) xpm_memory_sdpram (
     .sleep (1'b0),

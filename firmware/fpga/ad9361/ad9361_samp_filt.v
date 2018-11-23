@@ -27,7 +27,6 @@ module ad9361_samp_filt #(
   // core interface
 
   input             clk,
-  input             rst,
 
   // input interface
 
@@ -73,7 +72,9 @@ module ad9361_samp_filt #(
 
   // internal registers
 
-  reg     [  3:0]   valid_out;
+  reg     [  3:0]   valid_out = 'b0;
+
+  // pack and unpack data
 
   assign data_iq = {data_i0_in, data_q0_in,
                     data_i1_in, data_q1_in,
@@ -108,9 +109,7 @@ module ad9361_samp_filt #(
     localparam I0 = (4 - i) * ABS_WIDTH - 1;
     localparam J0 = (3 - i) * ABS_WIDTH;
     always @(posedge clk) begin
-      if (rst) begin
-        valid_out[i] <= 1'b0;
-      end else if ((avg_dout[I0:J0] > DATA_PASS_VALUE) && valid_in[i]) begin
+      if ((avg_dout[I0:J0] > DATA_PASS_VALUE) & valid_in[i]) begin
         valid_out[i] <= 1'b1;
       end else begin
         valid_out[i] <= 1'b0;
@@ -148,7 +147,6 @@ module ad9361_samp_filt #(
       .DOUT_WIDTH (ABS_WIDTH)
     ) math_cabs (
       .clk (clk),
-      .rst (rst),
       .dina (data_iq[I0:J0]),
       .dinb (data_iq[I1:J1]),
       .dout (abs_dout[I2:J2])
@@ -161,7 +159,6 @@ module ad9361_samp_filt #(
       .FILTER_POWER (LOG2_FILTER_LENGTH)
     ) filt_boxcar (
       .clk (clk),
-      .rst (rst),
       .data_in (abs_dout[I2:J2]),
       .avg_out (avg_dout[I2:J2])
     );

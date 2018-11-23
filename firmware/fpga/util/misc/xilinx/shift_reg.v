@@ -3,6 +3,7 @@
 // Engineer: Frank Liu
 //
 // Description: Parameterizable shift register utility, Xilinx devices.
+// DEPTH = 0 implies a 1-cycle shift register.
 //
 // enable  :  active-high
 // reset   :  N/A
@@ -16,11 +17,11 @@ module shift_reg #(
   // parameters
 
   parameter   WIDTH = 1,
-  parameter   DEPTH = 10,
+  parameter   DEPTH = 7,
 
   // derived parameters
 
-  localparam  NUM_CASCADE = (DEPTH - 1) / 32,
+  localparam  NUM_CASCADE = DEPTH / 32,
   localparam  DEPTH_LAST  = DEPTH - NUM_CASCADE * 32,
 
   // bit width parameters
@@ -44,7 +45,7 @@ module shift_reg #(
 
   // internal signals
 
-  wire    [ W1:0]   shift[W0:0];
+  wire    [ W1:0]   shift [W0:0];
 
   // shift register implementation
 
@@ -56,33 +57,53 @@ module shift_reg #(
 
     assign shift[i][W1] = din[i];
 
-    // srl32 shift
+    // use SRL16 for short shift registers
 
-    for (j = 0; j < NUM_CASCADE; j = j + 1) begin : srl32_shift
-      SRLC32E #(
-        .INIT (32'b0)
-      ) SRLC32E_inst (
-        .Q (),
-        .Q31 (shift[i][j]),
-        .A (5'd31),
+    if (DEPTH < 16) begin
+
+      // single SRL16 for short shift registers
+
+      SRL16E #(
+        .INIT(16'h0000)
+      ) SRL16E_inst (
+        .Q (dout[i]),
+        .A0 (DEPTH[0]),
+        .A1 (DEPTH[1]),
+        .A2 (DEPTH[2]),
+        .A3 (DEPTH[3]),
         .CE (ena),
         .CLK (clk),
-        .D (shift[i][j+1])
+        .D (shift[i][0])
       );
+
+    end else begin
+
+      // cascade SRL32 for long shift registers
+
+      for (j = 0; j < NUM_CASCADE; j = j + 1) begin : srl32_shift
+        SRLC32E #(
+          .INIT (32'h00000000)
+        ) SRLC32E_inst (
+          .Q (),
+          .Q31 (shift[i][j]),
+          .A (5'd31),
+          .CE (ena),
+          .CLK (clk),
+          .D (shift[i][j+1])
+        );
+      end
+      SRLC32E #(
+        .INIT (32'h00000000)
+      ) SRLC32E_inst (
+        .Q (dout[i]),
+        .Q31 (),
+        .A (DEPTH_LAST),
+        .CE (ena),
+        .CLK (clk),
+        .D (shift[i][0])
+      );
+
     end
-
-    // final shift register LUT
-
-    SRLC32E #(
-      .INIT (32'b0)
-    ) SRLC32E_inst (
-      .Q (dout[i]),
-      .Q31 (),
-      .A (DEPTH_LAST - 1),
-      .CE (ena),
-      .CLK (clk),
-      .D (shift[i][0])
-    );
 
   end
   endgenerate

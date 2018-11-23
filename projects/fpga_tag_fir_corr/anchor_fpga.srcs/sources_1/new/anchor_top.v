@@ -20,11 +20,12 @@ module anchor_top #(
   parameter           NUM_TAGS = 40,
   parameter           WORD_WIDTH = 32,
   parameter           BURST_LENGTH = 32,
-  parameter           PEAK_THRESHOLD = 1024,
+  parameter           PEAK_THRESH_MULT = 8,
 
   // derived parameters
 
-  localparam          DATA_WIDTH = WORD_WIDTH * 2 * 4,
+  localparam          CHANNEL_WIDTH = WORD_WIDTH * 2,
+  localparam          DATA_WIDTH = CHANNEL_WIDTH * 4,
   localparam          PACKED_WIDTH = NUM_TAGS * DATA_WIDTH,
 
   // bit width parameters
@@ -96,9 +97,9 @@ module anchor_top #(
 
   // microprocessor interface (comms)
 
-  input             ebi_ren,
-  input   [ 19:0]   ebi_addr,
-  output  [ 15:0]   ebi_data
+  input             ebi_nrde,
+  output  [ 15:0]   ebi_data,
+  output            ready
 
 );
 
@@ -170,7 +171,6 @@ module anchor_top #(
     .USE_AXIS_TLAST (0)
   ) ad9361_dual (
     .clk (d_clk),
-    .rst (rst),
     .a_rx_clk_in (a_rx_clk_in),
     .a_rx_frame_in (a_rx_frame_in),
     .a_rx_data_p0 (a_rx_data_p0),
@@ -209,17 +209,48 @@ module anchor_top #(
     .m_axis_tdata (xcorr_axis_tdata)
   );
 
+  // clock conversion
+
+
+
+  generate
+  genvar i;
+  for (i = 0; i < NUM_TAGS; i = i + 1) begin : top_gen
+
+    // perform cross-correlation
+
+    axis_bit_corr #(
+
+    ) axis_bit_corr (
+
+    );
+
+    // absolute value computation
+
+    axis_cabs_serial #(
+
+    ) axis_cabs_serial (
+
+    );
+
+    // peak detection
+
+    // microprocessor interface
+
+  end
+  endgenerate
+
   // mass cross-correlation
 
   axis_xcorr_all #(
     .NUM_TAGS (NUM_TAGS),
-    .S_TDATA_WIDTH (128),
-    .M_TDATA_WIDTH (DATA_WIDTH),
+    .INPUT_WIDTH (128),
+    .OUTPUT_WIDTH (DATA_WIDTH),
     .DISABLE_MASK (~TAG_ENABLE)
   ) axis_xcorr_all (
     .in_clk (d_clk),
     .clk (c_clk),
-    .rst (rst)，
+    .rst (rst),
     .s_axis_tvalid (xcorr_axis_tvalid),
     .s_axis_tready (xcorr_axis_tready),
     .s_axis_tdata (xcorr_axis_tdata),
@@ -228,11 +259,11 @@ module anchor_top #(
     .m_axis_tdata (cabs_axis_tdata)
   );
 
-  // absval computation
+  // absolute value computation
 
   axis_cabs_all #(
     .NUM_TAGS (NUM_TAGS),
-    .CHANNEL_WIDTH (WORD_WIDTH * 2)
+    .CHANNEL_WIDTH (CHANNEL_WIDTH)
   ) axis_cabs_all (
     .clk (c_clk),
     .rst (rst),
@@ -245,13 +276,13 @@ module anchor_top #(
     .m_axis_tdata_abs (peak_axis_tdata_abs)
   );
 
-  // parallel tag processing
+  // peak detection and microprocessor interface
 
   axis_peak_all #(
     .NUM_TAGS (NUM_TAGS),
     .BURST_LENGTH (BURST_LENGTH),
-    .PEAK_THRESHOLD (PEAK_THRESHOLD),
-    .CHANNEL_WIDTH (WORD_WIDTH * 2)
+    .CHANNEL_WIDTH (CHANNEL_WIDTH),
+    .PEAK_THRESH_MULT (PEAK_THRESH_MULT)
   ) axis_peak_all (
     .in_clk (c_clk),
     .clk (m_clk),
@@ -268,20 +299,20 @@ module anchor_top #(
 
   // microprocessor interface
 
-  axis_tag_data #(
+  tag_data_buff #(
     .NUM_TAGS (NUM_TAGS),
     .BURST_LENGTH (BURST_LENGTH),
     .CHANNEL_WIDTH (WORD_WIDTH * 2),
     .OUT_WIDTH (16)
-  ) axis_tag_data (
+  ) tag_data_buff (
     .clk (m_clk),
     .rst (rst),
     .s_axis_tvalid (dout_axis_tvalid),
     .s_axis_tready (dout_axis_tready),
     .s_axis_tdata (dout_axis_tdata),
     .s_axis_tlast ({NUM_TAGS{1'b0}}),
-    .virt_tagn (ebi_addr[19:12]),
-    .virt_addr (ebi_addr[11:0]),
+    .rd_ena (ebi_nrde),
+    .ready (ready),
     .data_out (ebi_data)
   );
 

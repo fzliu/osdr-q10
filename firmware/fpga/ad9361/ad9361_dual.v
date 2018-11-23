@@ -23,7 +23,6 @@ module ad9361_dual #(
   // core interface
 
   input             clk,
-  input             rst,
 
   // physical interface (receive_a)
 
@@ -120,7 +119,6 @@ module ad9361_dual #(
     .REALTIME_ENABLE (REALTIME_ENABLE)
   ) ad9361_cmos_if_a (
     .clk (clk),
-    .rst (rst),
     .rx_clk_in (a_rx_clk_in),
     .rx_frame_in (a_rx_frame_in),
     .rx_data_p0 (a_rx_data_p0),
@@ -146,7 +144,6 @@ module ad9361_dual #(
     .REALTIME_ENABLE (REALTIME_ENABLE)
   ) ad9361_cmos_if_b (
     .clk (clk),
-    .rst (rst),
     .rx_clk_in (b_rx_clk_in),
     .rx_frame_in (b_rx_frame_in),
     .rx_data_p0 (b_rx_data_p0),
@@ -195,7 +192,6 @@ module ad9361_dual #(
       .ABS_WIDTH (16)
     ) ad9361_samp_filt (
       .clk (clk),
-      .rst (rst),
       .valid_0_in (valid_0),
       .data_i0_in (data_i0),
       .data_q0_in (data_q0),

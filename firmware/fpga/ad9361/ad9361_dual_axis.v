@@ -92,29 +92,29 @@ module ad9361_dual_axis #(
   generate
   if (REVERSE_DATA == 0) begin
 
-  always @(posedge data_clk) begin
-    data_packed[11:0] <= data_q3;
-    data_packed[27:16] <= data_i3;
-    data_packed[43:32] <= data_q2;
-    data_packed[59:48] <= data_i2;
-    data_packed[75:64] <= data_q1;
-    data_packed[91:80] <= data_i1;
-    data_packed[107:96] <= data_q0;
-    data_packed[123:112] <= data_i0;
-  end
+    always @(posedge data_clk) begin
+      data_packed[15:0] <= {{4{data_q3[11]}}, data_q3}; // axi spec: sign extend
+      data_packed[31:16] <= {{4{data_i3[11]}}, data_i3};
+      data_packed[47:32] <= {{4{data_q2[11]}}, data_q2};
+      data_packed[63:48] <= {{4{data_i2[11]}}, data_i2};
+      data_packed[79:64] <= {{4{data_q1[11]}}, data_q1};
+      data_packed[95:80] <= {{4{data_i1[11]}}, data_i1};
+      data_packed[111:96] <= {{4{data_q0[11]}}, data_q0};
+      data_packed[127:112] <= {{4{data_i0[11]}}, data_i0};
+    end
 
   end else begin
 
-  always @(posedge data_clk) begin
-    data_packed[11:0] <= data_i0;
-    data_packed[27:16] <= data_q0;
-    data_packed[43:32] <= data_i1;
-    data_packed[59:48] <= data_q1;
-    data_packed[75:64] <= data_i2;
-    data_packed[91:80] <= data_q2;
-    data_packed[107:96] <= data_i3;
-    data_packed[123:112] <= data_q3;
-  end
+    always @(posedge data_clk) begin
+      data_packed[15:0] <= {{4{data_i0[11]}}, data_i0};
+      data_packed[31:16] <= {{4{data_q0[11]}}, data_q0};
+      data_packed[47:32] <= {{4{data_i1[11]}}, data_i1};
+      data_packed[63:48] <= {{4{data_q1[11]}}, data_q1};
+      data_packed[79:64] <= {{4{data_i2[11]}}, data_i2};
+      data_packed[95:80] <= {{4{data_q2[11]}}, data_q2};
+      data_packed[111:96] <= {{4{data_i3[11]}}, data_i3};
+      data_packed[127:112] <= {{4{data_q3[11]}}, data_q3};
+    end
 
   end
   endgenerate
@@ -172,21 +172,21 @@ module ad9361_dual_axis #(
   generate
   if (USE_AXIS_TLAST == 0) begin
 
-  assign m_axis_tlast = 1'b0;
+    assign m_axis_tlast = 1'b0;
 
   end else begin
 
-  assign m_axis_end_burst = (m_axis_count == AXIS_BURST_LENGTH - 1);
+    assign m_axis_end_burst = (m_axis_count == AXIS_BURST_LENGTH - 1);
 
-  always @(posedge m_axis_clk) begin
-    casez ({m_axis_frame, m_axis_end_burst})
-      2'b11: m_axis_count <= {COUNT_WIDTH{1'b0}};
-      2'b10: m_axis_count <= m_axis_count + 1'b1;
-      default: m_axis_count <= m_axis_count;
-    endcase
-  end
+    always @(posedge m_axis_clk) begin
+      casez ({m_axis_frame, m_axis_end_burst})
+        2'b11: m_axis_count <= {COUNT_WIDTH{1'b0}};
+        2'b10: m_axis_count <= m_axis_count + 1'b1;
+        default: m_axis_count <= m_axis_count;
+      endcase
+    end
 
-  assign m_axis_tlast = m_axis_tvalid & m_axis_end_burst;
+    assign m_axis_tlast = m_axis_tvalid & m_axis_end_burst;
 
   end
   endgenerate

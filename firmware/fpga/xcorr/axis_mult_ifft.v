@@ -2,7 +2,7 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: FFT-based cross-correlation top-level module. Unused for now.
+// Description: FFT-based cross-correlation top-level module.
 //
 // Revision: N/A
 // Additional Comments:

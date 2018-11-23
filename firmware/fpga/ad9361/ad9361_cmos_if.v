@@ -34,7 +34,6 @@ module ad9361_cmos_if #(
   // core interface
 
   input             clk,
-  input             rst,
 
   // physical interface
 
@@ -84,7 +83,7 @@ module ad9361_cmos_if #(
   reg     [ 11:0]   data_q1_reg = 'b0;
 
   reg               enable_reg = 'b0;
-  reg     [ W0:0]   rt_count = 'b0;
+  reg     [ W0:0]   rt_count = COUNT_MAX;
 
   // set module clock
 
@@ -221,10 +220,7 @@ module ad9361_cmos_if #(
   end else begin
 
   always @(posedge rx_clk) begin
-    if (rst) begin
-      rt_count <= COUNT_MAX;
-      enable_reg <= 1'b0;
-    end else if (rt_count > 1'b0) begin
+    if (rt_count > 1'b0) begin
       rt_count <= rt_count - 1'b1;
       enable_reg <= (rt_count > ENABLE_CYCLES);
     end else begin

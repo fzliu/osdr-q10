@@ -11,41 +11,41 @@ module axis_xcorr_all #(
   // parameters
 
   parameter           NUM_TAGS = 40,
-  parameter           FIFO_DEPTH = 2048,
-  parameter           S_TDATA_WIDTH = 128,
-  parameter           M_TDATA_WIDTH = 256,
+  parameter           FIFO_DEPTH = 16384,
+  parameter           INPUT_WIDTH = 128,
+  parameter           OUTPUT_WIDTH = 256,
 
   // derived parameters
 
-  localparam          M_TOTAL_WIDTH = NUM_TAGS * M_TDATA_WIDTH,
+  localparam          TOTAL_WIDTH = NUM_TAGS * OUTPUT_WIDTH,
 
   // bit width parameters
 
-  localparam          N0 = NUM_TAGS - 1,
-  localparam          N1 = S_TDATA_WIDTH - 1,
-  localparam          N2 = M_TOTAL_WIDTH - 1,
+  localparam          NT = NUM_TAGS - 1,
+  localparam          WI = INPUT_WIDTH - 1,
+  localparam          WT = TOTAL_WIDTH - 1,
 
-  parameter   [N0:0]  DISABLE_MASK = {NUM_TAGS{1'b0}}
+  parameter   [NT:0]  DISABLE_MASK = {NUM_TAGS{1'b0}}
 
 ) (
 
   // core interface
 
   input             in_clk,
+  input             in_rst,
   input             clk,
-  input             rst,
 
   // slave interface
 
   input             s_axis_tvalid,
   output            s_axis_tready,
-  input   [ N1:0]   s_axis_tdata,
+  input   [ WI:0]   s_axis_tdata,
 
   // master interface
 
-  output  [ N0:0]   m_axis_tvalid,
-  input   [ N0:0]   m_axis_tready,
-  output  [ N2:0]   m_axis_tdata
+  output  [ NT:0]   m_axis_tvalid,
+  input   [ NT:0]   m_axis_tready,
+  output  [ WT:0]   m_axis_tdata
 
 );
 
@@ -59,9 +59,9 @@ module axis_xcorr_all #(
   wire              fifo_empty;
   wire              fifo_write;
   wire              fifo_read;
-  wire    [ N1:0]   fifo_din;
-  wire    [ N1:0]   fifo_dout;
-  wire    [ N0:0]   fir_ready;
+  wire    [ WI:0]   fifo_din;
+  wire    [ WI:0]   fifo_dout;
+  wire    [ NT:0]   fir_ready;
 
   // input FIFO queue
 
@@ -70,17 +70,17 @@ module axis_xcorr_all #(
     .ECC_MODE ("no_ecc"),
     .RELATED_CLOCKS (0),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
-    .WRITE_DATA_WIDTH (S_TDATA_WIDTH),
+    .WRITE_INPUT_WIDTH (INPUT_WIDTH),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
     .READ_MODE ("fwft"),
     .FIFO_READ_LATENCY (0),
-    .READ_DATA_WIDTH (128),
+    .READ_INPUT_WIDTH (128),
     .DOUT_RESET_VALUE ("0"),
     .CDC_SYNC_STAGES (3),
     .WAKEUP_TIME (0)
   ) axis_sample_fifo (
-    .rst (rst),
+    .rst (in_rst),
     .wr_clk (in_clk),
     .wr_en (fifo_write),
     .din (fifo_din),
@@ -133,7 +133,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[0] = 1'b1;
   assign m_axis_tvalid[0] = 1'b0;
-  assign m_axis_tdata[255:0] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[255:0] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -158,7 +158,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[1] = 1'b1;
   assign m_axis_tvalid[1] = 1'b0;
-  assign m_axis_tdata[511:256] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[511:256] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -183,7 +183,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[2] = 1'b1;
   assign m_axis_tvalid[2] = 1'b0;
-  assign m_axis_tdata[767:512] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[767:512] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -208,7 +208,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[3] = 1'b1;
   assign m_axis_tvalid[3] = 1'b0;
-  assign m_axis_tdata[1023:768] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[1023:768] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -233,7 +233,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[4] = 1'b1;
   assign m_axis_tvalid[4] = 1'b0;
-  assign m_axis_tdata[1279:1024] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[1279:1024] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -258,7 +258,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[5] = 1'b1;
   assign m_axis_tvalid[5] = 1'b0;
-  assign m_axis_tdata[1535:1280] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[1535:1280] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -283,7 +283,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[6] = 1'b1;
   assign m_axis_tvalid[6] = 1'b0;
-  assign m_axis_tdata[1791:1536] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[1791:1536] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -308,7 +308,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[7] = 1'b1;
   assign m_axis_tvalid[7] = 1'b0;
-  assign m_axis_tdata[2047:1792] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[2047:1792] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -333,7 +333,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[8] = 1'b1;
   assign m_axis_tvalid[8] = 1'b0;
-  assign m_axis_tdata[2303:2048] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[2303:2048] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -358,7 +358,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[9] = 1'b1;
   assign m_axis_tvalid[9] = 1'b0;
-  assign m_axis_tdata[2559:2304] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[2559:2304] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -383,7 +383,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[10] = 1'b1;
   assign m_axis_tvalid[10] = 1'b0;
-  assign m_axis_tdata[2815:2560] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[2815:2560] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -408,7 +408,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[11] = 1'b1;
   assign m_axis_tvalid[11] = 1'b0;
-  assign m_axis_tdata[3071:2816] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[3071:2816] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -433,7 +433,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[12] = 1'b1;
   assign m_axis_tvalid[12] = 1'b0;
-  assign m_axis_tdata[3327:3072] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[3327:3072] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -458,7 +458,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[13] = 1'b1;
   assign m_axis_tvalid[13] = 1'b0;
-  assign m_axis_tdata[3583:3328] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[3583:3328] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -483,7 +483,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[14] = 1'b1;
   assign m_axis_tvalid[14] = 1'b0;
-  assign m_axis_tdata[3839:3584] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[3839:3584] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -508,7 +508,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[15] = 1'b1;
   assign m_axis_tvalid[15] = 1'b0;
-  assign m_axis_tdata[4095:3840] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[4095:3840] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -533,7 +533,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[16] = 1'b1;
   assign m_axis_tvalid[16] = 1'b0;
-  assign m_axis_tdata[4351:4096] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[4351:4096] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -558,7 +558,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[17] = 1'b1;
   assign m_axis_tvalid[17] = 1'b0;
-  assign m_axis_tdata[4607:4352] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[4607:4352] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -583,7 +583,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[18] = 1'b1;
   assign m_axis_tvalid[18] = 1'b0;
-  assign m_axis_tdata[4863:4608] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[4863:4608] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -608,7 +608,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[19] = 1'b1;
   assign m_axis_tvalid[19] = 1'b0;
-  assign m_axis_tdata[5119:4864] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[5119:4864] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -633,7 +633,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[20] = 1'b1;
   assign m_axis_tvalid[20] = 1'b0;
-  assign m_axis_tdata[5375:5120] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[5375:5120] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -658,7 +658,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[21] = 1'b1;
   assign m_axis_tvalid[21] = 1'b0;
-  assign m_axis_tdata[5631:5376] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[5631:5376] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -683,7 +683,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[22] = 1'b1;
   assign m_axis_tvalid[22] = 1'b0;
-  assign m_axis_tdata[5887:5632] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[5887:5632] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -708,7 +708,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[23] = 1'b1;
   assign m_axis_tvalid[23] = 1'b0;
-  assign m_axis_tdata[6143:5888] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[6143:5888] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -733,7 +733,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[24] = 1'b1;
   assign m_axis_tvalid[24] = 1'b0;
-  assign m_axis_tdata[6399:6144] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[6399:6144] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -758,7 +758,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[25] = 1'b1;
   assign m_axis_tvalid[25] = 1'b0;
-  assign m_axis_tdata[6655:6400] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[6655:6400] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -783,7 +783,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[26] = 1'b1;
   assign m_axis_tvalid[26] = 1'b0;
-  assign m_axis_tdata[6911:6656] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[6911:6656] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -808,7 +808,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[27] = 1'b1;
   assign m_axis_tvalid[27] = 1'b0;
-  assign m_axis_tdata[7167:6912] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[7167:6912] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -833,7 +833,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[28] = 1'b1;
   assign m_axis_tvalid[28] = 1'b0;
-  assign m_axis_tdata[7423:7168] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[7423:7168] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -858,7 +858,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[29] = 1'b1;
   assign m_axis_tvalid[29] = 1'b0;
-  assign m_axis_tdata[7679:7424] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[7679:7424] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -883,7 +883,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[30] = 1'b1;
   assign m_axis_tvalid[30] = 1'b0;
-  assign m_axis_tdata[7935:7680] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[7935:7680] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -908,7 +908,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[31] = 1'b1;
   assign m_axis_tvalid[31] = 1'b0;
-  assign m_axis_tdata[8191:7936] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[8191:7936] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -933,7 +933,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[32] = 1'b1;
   assign m_axis_tvalid[32] = 1'b0;
-  assign m_axis_tdata[8447:8192] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[8447:8192] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -958,7 +958,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[33] = 1'b1;
   assign m_axis_tvalid[33] = 1'b0;
-  assign m_axis_tdata[8703:8448] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[8703:8448] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -983,7 +983,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[34] = 1'b1;
   assign m_axis_tvalid[34] = 1'b0;
-  assign m_axis_tdata[8959:8704] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[8959:8704] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -1008,7 +1008,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[35] = 1'b1;
   assign m_axis_tvalid[35] = 1'b0;
-  assign m_axis_tdata[9215:8960] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[9215:8960] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -1033,7 +1033,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[36] = 1'b1;
   assign m_axis_tvalid[36] = 1'b0;
-  assign m_axis_tdata[9471:9216] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[9471:9216] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -1058,7 +1058,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[37] = 1'b1;
   assign m_axis_tvalid[37] = 1'b0;
-  assign m_axis_tdata[9727:9472] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[9727:9472] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -1083,7 +1083,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[38] = 1'b1;
   assign m_axis_tvalid[38] = 1'b0;
-  assign m_axis_tdata[9983:9728] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[9983:9728] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate
@@ -1108,7 +1108,7 @@ module axis_xcorr_all #(
 
   assign fir_ready[39] = 1'b1;
   assign m_axis_tvalid[39] = 1'b0;
-  assign m_axis_tdata[10239:9984] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[10239:9984] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate

@@ -16,7 +16,7 @@ module axis_clk_conv_fifo #(
   // parameters
 
   parameter   DATA_WIDTH = 256,
-  parameter   FIFO_DEPTH = 6,
+  parameter   FIFO_DEPTH = 16,
 
   // derived parameters
 
@@ -61,15 +61,15 @@ module axis_clk_conv_fifo #(
   wire              fifo_empty;
   wire              fifo_write;
   wire              fifo_read;
-  wire    [ WD:0]   fifo_din;
-  wire    [ WD:0]   fifo_dout;
+  wire    [ WF:0]   fifo_din;
+  wire    [ WF:0]   fifo_dout;
 
   // slave interface
 
-  assign fifo_write = s_axis_valid & s_axis_ready;
-  assign fifo_din = {s_axis_tdata & s_axis_tlast};
+  assign fifo_write = s_axis_tvalid & s_axis_tready;
+  assign fifo_din = {s_axis_tdata, s_axis_tlast};
 
-  assign s_axis_ready = ~fifo_full;
+  assign s_axis_tready = ~fifo_full;
 
   // fifo instantitation
 
@@ -79,11 +79,13 @@ module axis_clk_conv_fifo #(
     .RELATED_CLOCKS (0),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
     .WRITE_DATA_WIDTH (FIFO_WIDTH),
+    .WR_DATA_COUNT_WIDTH (0),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
     .READ_MODE ("fwft"),
     .FIFO_READ_LATENCY (0),
     .READ_DATA_WIDTH (FIFO_WIDTH),
+    .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
     .CDC_SYNC_STAGES (3),
     .WAKEUP_TIME (0)
