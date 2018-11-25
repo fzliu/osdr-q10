@@ -211,7 +211,22 @@ module anchor_top #(
 
   // clock conversion
 
-
+  axis_clk_conv_fifo #(
+    .DATA_WIDTH (INPUT_WIDTH),
+    .FIFO_DEPTH (16)
+  ) axis_clk_conv_fifo (
+    .s_axis_clk (in_clk),
+    .rst (1'b0),
+    .m_axis_clk (clk),
+    .s_axis_tvalid (s_axis_tvalid),
+    .s_axis_tready (s_axis_tready),
+    .s_axis_tdata (s_axis_tdata),
+    .s_axis_tlast (1'b0),
+    .m_axis_tvalid (batch_valid),
+    .m_axis_tready (batch_ready),
+    .m_axis_tdata (batch_data),
+    .m_axis_tlast ()
+  );
 
   generate
   genvar i;

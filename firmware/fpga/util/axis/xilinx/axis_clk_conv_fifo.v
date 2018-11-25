@@ -15,6 +15,7 @@ module axis_clk_conv_fifo #(
 
   // parameters
 
+  parameter   MEMORY_TYPE = "distributed",
   parameter   DATA_WIDTH = 256,
   parameter   FIFO_DEPTH = 16,
 
@@ -74,7 +75,7 @@ module axis_clk_conv_fifo #(
   // fifo instantitation
 
   xpm_fifo_async #(
-    .FIFO_MEMORY_TYPE ("distributed"),
+    .FIFO_MEMORY_TYPE (MEMORY_TYPE),
     .ECC_MODE ("no_ecc"),
     .RELATED_CLOCKS (0),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),

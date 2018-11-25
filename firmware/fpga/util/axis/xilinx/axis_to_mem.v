@@ -137,7 +137,7 @@ module axis_to_mem #(
     .clkb (clk),
     .rstb (rst),
     .enb (1'b1),
-    .regceb (regceb),
+    .regceb (1'b1),
     .addrb (rd_addr),
     .doutb (rd_data),
     .sbiterrb (),
