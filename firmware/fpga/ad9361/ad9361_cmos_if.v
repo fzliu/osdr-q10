@@ -213,21 +213,21 @@ module ad9361_cmos_if #(
   generate
   if (REALTIME_ENABLE == 0) begin
 
-  always @* begin
-    enable_reg = 1'b0;
-  end
+    always @* begin
+      enable_reg = 1'b0;
+    end
 
   end else begin
 
-  always @(posedge rx_clk) begin
-    if (rt_count > 1'b0) begin
-      rt_count <= rt_count - 1'b1;
-      enable_reg <= (rt_count > ENABLE_CYCLES);
-    end else begin
-      rt_count <= rt_count;
-      enable_reg <= 1'b0;
+    always @(posedge rx_clk) begin
+      if (rt_count > 1'b0) begin
+        rt_count <= rt_count - 1'b1;
+        enable_reg <= (rt_count > ENABLE_CYCLES);
+      end else begin
+        rt_count <= rt_count;
+        enable_reg <= 1'b0;
+      end
     end
-  end
 
   end
   endgenerate

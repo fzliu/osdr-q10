@@ -5,11 +5,9 @@
 // Description: AD9361 top-level module. Handles the default dual-AD9361
 // configuration used by the Orion anchor.
 //
-// Revision:
-//
 // enable  :  N/A
-// reset   :  active-high
-// latency :  multiple
+// reset   :  N/A
+// latency :  N/A
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -39,6 +37,7 @@ module anchor_top #(
 
   localparam  NT = NUM_TAGS - 1,
   localparam  WA = SAMPS_WIDTH - 1,
+  localparam  WE = EBI_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
   localparam  WI = INPUT_WIDTH - 1,
   localparam  WP = PACKED_WIDTH - 1
@@ -104,7 +103,7 @@ module anchor_top #(
   // microprocessor interface (comms)
 
   input             ebi_nrde,
-  output  [ 15:0]   ebi_data,
+  output  [ WE:0]   ebi_data,
   output            ready
 
 );
@@ -172,7 +171,7 @@ module anchor_top #(
 
   anchor_clk_gen #()
   anchor_clk_gen (
-    .clk_25M (clk),
+    .clk_xtal (clk),
     .clk_ad9361 (a_data_clk),
     .m_clk (m_clk),
     .c_clk (c_clk),
