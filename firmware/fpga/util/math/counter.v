@@ -2,11 +2,9 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Parameterizable upward counter. Single-cycle latency.
-//
-// Revision: N/A
-// Additional Comments: If WRAPAROUND is set to false, the counter will hold
-// its value once it reaches the maximum.
+// Description: Parameterizable upward counter. Single-cycle latency. If
+// WRAPAROUND is set to false, the counter will hold its value once it reaches
+// the maximum.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +38,7 @@ module counter #(
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal signals
 

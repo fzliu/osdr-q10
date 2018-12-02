@@ -56,7 +56,7 @@ module ad9361_dual_axis #(
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal registers
 

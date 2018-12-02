@@ -41,19 +41,17 @@ module axis_fan_in #(
   input   [ NF:0]   s_axis_tvalid,
   output  [ NF:0]   s_axis_tready,
   input   [ WP:0]   s_axis_tdata,
-  input   [ NF:0]   s_axis_tlast,
 
   // master interface
 
   output            m_axis_tvalid,
   input             m_axis_tready,
   output  [ WD:0]   m_axis_tdata,
-  output  [ NF:0]   m_axis_tuser,
-  output            m_axis_tlast
+  output  [ NF:0]   m_axis_tuser
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal registers
 
@@ -62,7 +60,6 @@ module axis_fan_in #(
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
   reg     [ NF:0]   m_axis_tuser_reg = 'b0;
-  reg               m_axis_tlast_reg = 'b0;
 
   // internal signals
 
@@ -77,12 +74,12 @@ module axis_fan_in #(
 
   // slave interface
 
+  genvar n;
   generate
-  genvar i;
-  for (i = 0; i < NUM_FANIN; i = i + 1) begin : data_unpack_gen
-    localparam i0 = i * DATA_WIDTH;
-    localparam i1 = (i + 1) * DATA_WIDTH - 1;
-    assign s_axis_tdata_unpack[i] = s_axis_tdata[i1:i0];
+  for (n = 0; n < NUM_FANIN; n = n + 1) begin
+    localparam n0 = n * DATA_WIDTH;
+    localparam n1 = n0 + WD;
+    assign s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
   end
   endgenerate
 
@@ -91,18 +88,17 @@ module axis_fan_in #(
   // fan-in priority encoder
 
   generate
-  genvar j;
-  for (j = 0; j < NUM_FANIN; j = j + 1) begin : chan_prio_gen
-    assign chan_prio[j] = (j == 0) ? 1'b1 : ~|s_axis_tvalid[j-1:0];
+  for (n = 0; n < NUM_FANIN; n = n + 1) begin
+    assign chan_prio[n] = (n == 0) ? 1'b1 : ~|s_axis_tvalid[n-1:0];
     always @(posedge clk) begin
       if (rst) begin
-        chan_sel[j] <= 1'b0;
+        chan_sel[n] <= 1'b0;
       end else if (in_valid) begin
-        chan_sel[j] <= chan_sel[j];
-      end else if (chan_prio[j]) begin
-        chan_sel[j] <= s_axis_tvalid[j];
+        chan_sel[n] <= chan_sel[n];
+      end else if (chan_prio[n]) begin
+        chan_sel[n] <= s_axis_tvalid[n];
       end else begin
-        chan_sel[j] <= 1'b0;
+        chan_sel[n] <= 1'b0;
       end
     end
   end
@@ -119,7 +115,6 @@ module axis_fan_in #(
 
   assign in_valid = s_axis_tvalid[chan_num];
   assign in_data = s_axis_tdata_unpack[chan_num];
-  assign in_last = s_axis_tlast[chan_num];
 
   // master interface
 
@@ -128,17 +123,14 @@ module axis_fan_in #(
       m_axis_tvalid_reg <= 'b0;
       m_axis_tdata_reg <= 'b0;
       m_axis_tuser_reg <= 'b0;
-      m_axis_tlast_reg <= 'b0;
     end else if (m_axis_tready) begin
       m_axis_tvalid_reg <= in_valid;
       m_axis_tdata_reg <= in_data;
       m_axis_tuser_reg <= chan_num;
-      m_axis_tlast_reg <= in_last;
     end else begin
       m_axis_tvalid_reg <= m_axis_tvalid;
       m_axis_tdata_reg <= m_axis_tdata;
       m_axis_tuser_reg <= m_axis_tuser;
-      m_axis_tlast_reg <= m_axis_tlast;
     end
   end
 
@@ -147,7 +139,6 @@ module axis_fan_in #(
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
   assign m_axis_tuser = m_axis_tuser_reg;
-  assign m_axis_tlast = m_axis_tlast_reg;
 
 endmodule
 

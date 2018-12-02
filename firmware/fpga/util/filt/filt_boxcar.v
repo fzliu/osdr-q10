@@ -27,8 +27,8 @@ module filt_boxcar #(
 
   // bit width parameters
 
-  localparam  N0 = DATA_WIDTH - 1,
-  localparam  N1 = FILTER_LENGTH - 1
+  localparam  WD = DATA_WIDTH - 1,
+  localparam  LF = FILTER_LENGTH - 1
 
 ) (
 
@@ -39,30 +39,27 @@ module filt_boxcar #(
 
   // data interface
 
-  input   [ N0:0]   data_in,
-  output  [ N0:0]   avg_out
+  input   [ WD:0]   data_in,
+  output  [ WD:0]   avg_out
 
 );
 
   // shift register
 
-  reg     [ N0:0]   shift[N1:0];
+  reg     [ WD:0]   shift [LF:0];
 
   // internal registers
 
-  reg     [ N0:0]   sum_reg;
+  reg     [ WD:0]   sum_reg;
 
   // internal signals
 
-  wire    [ N0:0]   sum_step;
-  wire    [ N0:0]   sum_out;
+  wire    [ WD:0]   sum_step;
+  wire    [ WD:0]   sum_out;
 
   // shift register implementation
 
-  genvar i;
-  generate
-  for (i = 0; i < FILTER_LENGTH; i = i + 1) begin : shift_reg
-
+  for (i = 0; i < FILTER_LENGTH; i = i + 1) begin
     always @(posedge clk) begin
       if (rst) begin
         shift[i] <= {DATA_WIDTH{1'b0}};
@@ -70,9 +67,7 @@ module filt_boxcar #(
         shift[i] <= (i == 0) ? data_in : shift[i-1];
       end
     end
-
   end
-  endgenerate
 
   // boxcar filter implementation
 
@@ -85,11 +80,11 @@ module filt_boxcar #(
   end
 
   assign sum_step = sum_reg + data_in;
-  assign sum_out = sum_step - shift[N1];
+  assign sum_out = sum_step - shift[LF];
 
   // assign output
 
-  assign avg_out = sum_reg[N0] ?
+  assign avg_out = sum_reg[WD] ?
                    -(-sum_reg >> FILTER_POWER) :
                    sum_reg >> FILTER_POWER;
 

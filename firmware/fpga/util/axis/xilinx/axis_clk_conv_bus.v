@@ -17,14 +17,9 @@ module axis_clk_conv_bus #(
 
   parameter   DATA_WIDTH = 32,
 
-  // derived parameters
-
-  parameter   BUS_WIDTH = DATA_WIDTH + 1,
-
   // bit width parameters
 
-  localparam  WD = DATA_WIDTH - 1,
-  localparam  WB = BUS_WIDTH - 1
+  localparam  WD = DATA_WIDTH - 1
 
 ) (
 
@@ -39,24 +34,22 @@ module axis_clk_conv_bus #(
   input             s_axis_tvalid,
   output            s_axis_tready,
   input   [ WD:0]   s_axis_tdata,
-  input             s_axis_tlast,
 
   // memory interface
 
   output            m_axis_tvalid,
   input             m_axis_tready,
-  output  [ WD:0]   m_axis_tdata,
-  output            m_axis_tlast
+  output  [ WD:0]   m_axis_tdata
 
 );
 
   // internal registers
 
-  reg               m_axis_tvalid_reg;
+  reg               m_axis_tvalid_reg = 'b0;
 
-  reg     [ WB:0]   cdc_src_in;
-  reg               cdc_src_send;
-  reg               cdc_dest_ack;
+  reg     [ WD:0]   cdc_src_in = 'b0;
+  reg               cdc_src_send = 'b0;
+  reg               cdc_dest_ack = 'b0;
 
   // internal signals
 
@@ -65,7 +58,7 @@ module axis_clk_conv_bus #(
 
   wire              cdc_src_rcv;
   wire              cdc_dest_req;
-  wire    [ WB:0]   cdc_dest_out;
+  wire    [ WD:0]   cdc_dest_out;
 
   // slave interface
 
@@ -85,7 +78,7 @@ module axis_clk_conv_bus #(
 
   always @(posedge s_axis_clk) begin
     if (s_axis_frame) begin
-      cdc_src_in <= {s_axis_tdata, s_axis_tlast};
+      cdc_src_in <= s_axis_tdata;
     end else begin
       cdc_src_in <= cdc_src_in;
     end
@@ -138,7 +131,7 @@ module axis_clk_conv_bus #(
   end
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
-  assign {m_axis_tdata, m_axis_tlast} = cdc_dest_out;
+  assign m_axis_tdata = cdc_dest_out;
 
 endmodule
 

@@ -51,7 +51,7 @@ module shift_reg #(
 
   generate
   genvar i, j;
-  for (i = 0; i < WIDTH; i = i + 1) begin : shift_reg_gen
+  for (i = 0; i < WIDTH; i = i + 1) begin : shift_gen
 
     // assign input
 

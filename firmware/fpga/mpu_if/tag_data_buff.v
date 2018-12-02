@@ -38,14 +38,14 @@ module tag_data_buff #(
   // core interface
 
   input             clk,
-  input             rst,
 
   // slave interface
 
-  input   [ NT:0]   s_axis_tvalid,
-  output  [ NT:0]   s_axis_tready,
+  input             s_axis_tvalid,
+  output            s_axis_tready,
   input   [ WP:0]   s_axis_tdata,
-  input   [ NT:0]   s_axis_tlast,
+  input   [ NT:0]   s_axis_tuser,
+  input             s_axis_tlast,
 
   // microcontroller interface
 
@@ -55,20 +55,14 @@ module tag_data_buff #(
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal registers
 
   reg               rd_ena_d = 'b0;
-  reg               in_valid_d = 'b0;
+  reg               s_axis_tvalid_d = 'b0;
 
   // internal signals
-
-  wire              in_valid;
-  wire              in_ready;
-  wire    [ WD:0]   in_data;
-  wire    [ NT:0]   in_user;
-  wire              in_last;
 
   wire    [ WP:0]   fifo_din;
   wire              fifo_full;
@@ -76,34 +70,17 @@ module tag_data_buff #(
   wire              fifo_rd_rst_busy;
   wire              fifo_wr_rst_busy;
 
-  // fan-in to a single AXI-stream
+  // slave interface
 
-  assign in_ready = (~in_valid | in_valid) & ~fifo_full;
-
-  axis_fan_in #(
-    .NUM_FANIN (NUM_TAGS),
-    .DATA_WIDTH (DATA_WIDTH)
-  ) axis_fan_in (
-    .clk (clk),
-    .rst (rst),
-    .s_axis_tvalid (s_axis_tvalid),
-    .s_axis_tready (s_axis_tready),
-    .s_axis_tdata (s_axis_tdata),
-    .s_axis_tlast (s_axis_tlast),
-    .m_axis_tvalid (in_valid),
-    .m_axis_tready (in_ready),
-    .m_axis_tdata (in_data),
-    .m_axis_tuser (in_user),
-    .m_axis_tlast (in_last)
-  );
+  assign s_axis_tready = (~s_axis_tvalid | s_axis_tvalid) & ~fifo_full;
 
   // assign FIFO inputs
 
   always @(posedge clk) begin
-    in_valid_d <= in_valid;
+    s_axis_tvalid_d <= s_axis_tvalid;
   end
 
-  assign fifo_din = in_valid ? in_data : in_user;
+  assign fifo_din = s_axis_tvalid ? s_axis_tdata : s_axis_tuser;
 
   // delayed read enable
 
@@ -127,9 +104,9 @@ module tag_data_buff #(
     .WAKEUP_TIME (0)
   ) xpm_fifo_sync (
     .sleep (1'b0),
-    .rst (rst),
+    .rst (1'b0),
     .wr_clk (clk),
-    .wr_en (in_valid | in_valid_d),
+    .wr_en (s_axis_tvalid | s_axis_tvalid_d),
     .din (fifo_din),
     .full (fifo_full),
     .wr_rst_busy (fifo_wr_rst_busy),

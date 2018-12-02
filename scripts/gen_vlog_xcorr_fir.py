@@ -27,18 +27,18 @@ module axis_xcorr_all #(
 
   parameter           NUM_TAGS = $num_tags,
   parameter           FIFO_DEPTH = 2048,
-  parameter           S_TDATA_WIDTH = 128,
-  parameter           M_TDATA_WIDTH = 256,
+  parameter           INPUT_WIDTH = 128,
+  parameter           OUTPUT_WIDTH = 256,
 
   // derived parameters
 
-  localparam          M_TOTAL_WIDTH = NUM_TAGS * M_TDATA_WIDTH,
+  localparam          TOTAL_WIDTH = NUM_TAGS * OUTPUT_WIDTH,
 
   // bit width parameters
 
   localparam          N0 = NUM_TAGS - 1,
-  localparam          N1 = S_TDATA_WIDTH - 1,
-  localparam          N2 = M_TOTAL_WIDTH - 1,
+  localparam          N1 = INPUT_WIDTH - 1,
+  localparam          N2 = TOTAL_WIDTH - 1,
 
   parameter   [N0:0]  DISABLE_MASK = {NUM_TAGS{1'b0}}
 
@@ -85,7 +85,7 @@ module axis_xcorr_all #(
     .ECC_MODE ("no_ecc"),
     .RELATED_CLOCKS (0),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
-    .WRITE_DATA_WIDTH (S_TDATA_WIDTH),
+    .WRITE_DATA_WIDTH (INPUT_WIDTH),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
     .READ_MODE ("fwft"),
@@ -154,7 +154,7 @@ templ_fir_inst = Template("""
 
   assign fir_ready[$inst] = 1'b1;
   assign m_axis_tvalid[$inst] = 1'b0;
-  assign m_axis_tdata[$end:$start] = {M_TDATA_WIDTH{1'b0}};
+  assign m_axis_tdata[$end:$start] = {OUTPUT_WIDTH{1'b0}};
 
   end
   endgenerate

@@ -54,7 +54,7 @@ module axis_to_mem #(
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal registers
 

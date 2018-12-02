@@ -25,7 +25,7 @@ module oh_to_bin #(
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   reg     [ WO:0]   out;
 
@@ -33,8 +33,9 @@ module oh_to_bin #(
   always @* begin
     out = 'b0;
     for (i = 0; i < WIDTH_IN; i = i + 1) begin
-      if (oh[i])
+      if (oh[i]) begin
         out = i;
+      end
     end
   end
 

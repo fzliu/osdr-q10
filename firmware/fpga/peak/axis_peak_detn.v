@@ -2,8 +2,8 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AXI-stream quad-channel peak detector. Uses a simple threshold
-// algorithm for now. The s_axis_tlast signal is ignored.
+// Description: AXI-stream multi-channel peak detector. Uses a simple threshold
+// algorithm to determine peak indices.
 //
 // enable  :  N/A
 // reset   :  active-high
@@ -16,19 +16,21 @@ module axis_peak_detn #(
 
   // parameters
 
-  parameter   BURST_LENGTH = 32,
+  parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 64,
+  parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
 
   // derived parameters
 
-  localparam  DATA_WIDTH = CHANNEL_WIDTH * 4,
+  localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
   localparam  COUNT_WIDTH = log2(BURST_LENGTH),
   localparam  ADDR_WIDTH = log2(BURST_LENGTH - 1),
   localparam  PEAK_THRESH_SHIFT = log2(PEAK_THRESH_MULT - 1),
 
   // bit width parameters
 
+  localparam  NC = NUM_CHANNELS - 1,
   localparam  WC = CHANNEL_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
   localparam  WN = COUNT_WIDTH - 1,
@@ -39,7 +41,6 @@ module axis_peak_detn #(
   // core interface
 
   input             clk,
-  input             rst,
 
   // slave interface
 
@@ -57,7 +58,7 @@ module axis_peak_detn #(
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal registers
 
@@ -69,7 +70,7 @@ module axis_peak_detn #(
 
   // internal signals
 
-  wire    [  3:0]   has_peak;
+  wire    [ NC:0]   has_peak;
   wire    [ WD:0]   data_abs_avg;
   wire    [ WD:0]   s_axis_tdata_abs_d;
 
@@ -85,31 +86,35 @@ module axis_peak_detn #(
     .WIDTH (DATA_WIDTH),
     .DEPTH (BURST_LENGTH / 2)
   ) shift_reg (
-    .clk (rst),
+    .clk (clk),
     .ena (1'b1),
     .din (s_axis_tdata_abs),
     .dout (s_axis_tdata_abs_d)
   );
 
+  genvar n;
   generate
-  genvar i;
-  for (i = 0; i < 4; i = i + 1) begin: boxcar_gen
-    localparam i0 = i * CHANNEL_WIDTH;
-    localparam i1 = i0 + WC;
-
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin : boxcar_gen
+    localparam n0 = n * CHANNEL_WIDTH;
+    localparam n1 = n0 + WC;
     filt_boxcar #(
       .DATA_WIDTH (CHANNEL_WIDTH),
       .FILTER_POWER (ADDR_WIDTH)
     ) filt_boxcar (
       .clk (clk),
-      .rst (rst),
-      .data_in (s_axis_tdata_abs[i1:i0]),
-      .avg_out (data_abs_avg[i1:i0])
+      .rst (1'b0),
+      .data_in (s_axis_tdata_abs[n1:n0]),
+      .avg_out (data_abs_avg[n1:n0])
     );
+  end
+  endgenerate
 
-    assign has_peak[i] = (s_axis_tdata_abs_d[i1:i0] >
-        (data_abs_avg[i1:i0] << PEAK_THRESH_SHIFT));
-
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    localparam n0 = n * CHANNEL_WIDTH;
+    localparam n1 = n0 + WC;
+    assign has_peak[n] = (s_axis_tdata_abs_d[n1:n0] >
+        (data_abs_avg[n1:n0] << PEAK_THRESH_SHIFT));
   end
   endgenerate
 
@@ -119,9 +124,7 @@ module axis_peak_detn #(
   assign mem_addr = (mem_count - 1'b1);
 
   always @(posedge clk) begin
-    if (rst) begin
-      mem_count <= {COUNT_WIDTH{1'b0}};
-    end else if (mem_count > 1'b0) begin
+    if (mem_count > 1'b0) begin
       mem_count <= mem_count - m_axis_frame;
     end else if (|has_peak) begin
       mem_count <= BURST_LENGTH;
@@ -139,7 +142,7 @@ module axis_peak_detn #(
     .READ_LATENCY (0)
   ) axis_to_mem (
     .clk (clk),
-    .rst (rst),
+    .rst (1'b0),
     .s_axis_tvalid (s_axis_tvalid & !mem_ready),
     .s_axis_tready (s_axis_tready),
     .s_axis_tdata (s_axis_tdata),

@@ -2,7 +2,7 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Serializes AXI-stream data and computes complex absolute value.
+// Description: Complex absolute value and serializes it with input data.
 //
 // enable  :  N/A
 // reset   :  N/A
@@ -15,25 +15,23 @@ module axis_cabs_serial #(
 
   // parameters
 
-  parameter   NUM_TAGS = 20,
   parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 64,
+  parameter   CABS_DELAY = 14,
 
   // derived parameters
 
-  localparam  CABS_DELAY = 6,
-  localparam  COUNT_WIDTH = log2(NUM_CHANNELS - 1),
   localparam  WORD_WIDTH = CHANNEL_WIDTH / 2,
-  localparam  DATA_WIDTH = CHANNEL_WIDTH * 4,
+  localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
+  localparam  COUNT_WIDTH = log2(NUM_CHANNELS - 1),
 
   // bit width parameters
 
-  localparam  NT = NUM_TAGS - 1,
   localparam  NC = NUM_CHANNELS - 1,
   localparam  WC = CHANNEL_WIDTH - 1,
-  localparam  WN = COUNT_WIDTH - 1,
   localparam  WW = WORD_WIDTH - 1,
-  localparam  WD = DATA_WIDTH - 1
+  localparam  WD = DATA_WIDTH - 1,
+  localparam  WN = COUNT_WIDTH - 1
 
 ) (
 
@@ -56,38 +54,61 @@ module axis_cabs_serial #(
 
 );
 
+  // internal memories
+
+  reg     [ WC:0]   cabs_mem [0:NC];
+
   // internal registers
 
-  reg     [ WC:0]   m_axis_tdata_abs_unpack [0:NC];
+  reg               batch_done_d = 'b0;
+
+  reg               m_axis_tvalid_reg = 'b0;
+  reg     [ WD:0]   m_axis_tdata_reg = 'b0;
+  reg     [ WD:0]   m_axis_tdata_abs_reg = 'b0;
 
   // internal signals
 
   wire    [ WC:0]   s_axis_tdata_unpack [0:NC];
+  wire              batch_done;
+  wire              s_axis_frame;
 
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
-  wire              batch_done;
+  wire              valid_out;
 
   wire    [ WW:0]   cabs_dina;
   wire    [ WW:0]   cabs_dinb;
-  wire    [ WD:0]   cabs_dout;
+  wire    [ WC:0]   cabs_dout;
+
+  wire    [ WD:0]   data_out;
+  wire    [ WD:0]   data_cabs_out;
+  wire              m_axis_frame;
+
+  // initialize final memory column
+
+  genvar n;
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    initial begin
+      cabs_mem[n] <= 'b0;
+    end
+  end
+  endgenerate
+
+  // unpack/pack data
+
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    localparam n0 = n * CHANNEL_WIDTH;
+    localparam n1 = n0 + WC;
+    assign s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
+  end
+  endgenerate
 
   // slave interface
 
   assign batch_done = (count == NC);
   assign s_axis_tready = m_axis_tready & batch_done;
-
-  // unpack/pack data
-
-  generate
-  genvar i;
-  for (i = 0; i < NC; i = i + 1) begin
-    localparam i0 = i * CHANNEL_WIDTH;
-    localparam i1 = i0 + WC;
-    assign s_axis_tdata_unpack[i] = s_axis_tdata[i1:i0];
-    assign m_axis_tdata_abs[i1:i0] = m_axis_tdata_abs_unpack[i];
-  end
-  endgenerate
 
   // channel counter
 
@@ -97,48 +118,72 @@ module axis_cabs_serial #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .ena (s_axis_tvalid & m_axis_tready),
-    .rst (s_axis_tvalid & s_axis_tready),
+    .ena (s_axis_tvalid),
+    .rst (s_axis_frame),  // bus data is "transferred" upon completion
     .value (count)
   );
 
-  // absolute value instantiation
+  // absolute value module
 
-  math_cabs #(
-    .DIN_WIDTH (WORD_WIDTH),
-    .DOUT_WIDTH (CHANNEL_WIDTH)
-  ) math_cabs (
+  math_cabs_32 #()
+  math_cabs (
     .clk (clk),
-    .dina (s_axis_tdata[count]),
-    .dinb (s_axis_tdata[count]),
+    .dina (s_axis_tdata_unpack[count][WW:0]),
+    .dinb (s_axis_tdata_unpack[count][WC:(WW+1)]),
     .dout (cabs_dout)
   );
 
   shift_reg #(
-    .WIDTH (COUNT_WIDTH),
+    .WIDTH (COUNT_WIDTH + 1),
     .DEPTH (CABS_DELAY)
-  ) shift_reg (
+  ) shift_reg_count (
     .clk (clk),
-    .ena (m_axis_tready),
-    .din (count),
-    .dout (count_out),
+    .ena (1'b1),
+    .din ({count, s_axis_tvalid}),
+    .dout ({count_out, valid_out})
   );
 
-  // master interface
+  // cabs memory
+
+  always @(posedge clk) begin
+    if (valid_out) begin
+      cabs_mem[count_out] <= cabs_dout;
+    end
+  end
+
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin : repack_gen
+    localparam n0 = n * CHANNEL_WIDTH;
+    localparam n1 = n0 + WC;
+    assign data_cabs_out[n1:n0] = cabs_mem[n];
+  end
+  endgenerate
+
+  // align input data with abs data
 
   shift_reg #(
     .WIDTH (DATA_WIDTH + 1),
     .DEPTH (CABS_DELAY + 1)
-  ) shift_reg (
+  ) shift_reg_data (
     .clk (clk),
-    .ena (m_axis_tready),
+    .ena (1'b1),
     .din ({s_axis_tdata, batch_done}),
-    .dout ({m_axis_tdata, m_axis_tvalid})
+    .dout ({data_out, batch_done_d})
   );
 
+  // master interface
+
+  assign m_axis_frame = m_axis_tvalid & m_axis_tready;
+
   always @(posedge clk) begin
-    if (m_axis_tready) begin
-      m_axis_tdata_abs_unpack[count_out] <= cabs_dout;
+    if (m_axis_frame | ~m_axis_tvalid) begin
+      m_axis_tvalid_reg <= batch_done_d;
+      m_axis_tdata_reg <= data_out;
+      m_axis_tdata_abs_reg <= data_cabs_out;
+    end else begin
+      m_axis_tvalid_reg <= m_axis_tvalid;
+      m_axis_tdata_reg <= m_axis_tdata;
+      m_axis_tdata_abs_reg <= m_axis_tdata_abs;
     end
   end
 

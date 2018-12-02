@@ -17,10 +17,10 @@ module ad9361_samp_filt #(
 
   // bit width parameters
 
-  localparam  N0 = NUM_REGS - 1,
+  localparam  N0 = NUM_DELAY - 1,
   localparam  N1 = ABS_WIDTH - 1,
   localparam  N2 = 4 * ABS_WIDTH - 1,
-  localparam  N3 = 4 * NUM_REGS * ABS_WIDTH - 1
+  localparam  N3 = 4 * NUM_DELAY * ABS_WIDTH - 1
 
 ) (
 
@@ -100,19 +100,18 @@ module ad9361_samp_filt #(
   assign data_i3_out = data_out_iq[23:12];
   assign data_q3_out = data_out_iq[11: 0];
 
-  genvar i;
-
   // filter passthrough
 
+  genvar n;
   generate
-  for (i = 0; i < 4; i = i + 1) begin
-    localparam I0 = (4 - i) * ABS_WIDTH - 1;
-    localparam J0 = (3 - i) * ABS_WIDTH;
+  for (n = 0; n < 4; n = n + 1) begin
+    localparam I0 = (4 - n) * ABS_WIDTH - 1;
+    localparam J0 = (3 - n) * ABS_WIDTH;
     always @(posedge clk) begin
-      if ((avg_dout[I0:J0] > DATA_PASS_VALUE) & valid_in[i]) begin
-        valid_out[i] <= 1'b1;
+      if ((avg_dout[I0:J0] > DATA_PASS_VALUE) & valid_in[n]) begin
+        valid_out[n] <= 1'b1;
       end else begin
-        valid_out[i] <= 1'b0;
+        valid_out[n] <= 1'b0;
       end
     end
   end
@@ -130,15 +129,16 @@ module ad9361_samp_filt #(
     .dout (data_out_iq)
   );
 
+  // create one filter per channel
 
   generate
-  for (i = 0; i < 4; i = i + 1) begin
-    localparam I0 = 95 - i * 24;
-    localparam J0 = 84 - i * 24;
-    localparam I1 = 83 - i * 24;
-    localparam J1 = 72 - i * 24;
-    localparam I2 = (4 - i) * ABS_WIDTH - 1;
-    localparam J2 = (3 - i) * ABS_WIDTH;
+  for (n = 0; n < 4; n = n + 1) begin : filt_gen
+    localparam I0 = 95 - n * 24;
+    localparam J0 = 84 - n * 24;
+    localparam I1 = 83 - n * 24;
+    localparam J1 = 72 - n * 24;
+    localparam I2 = (4 - n) * ABS_WIDTH - 1;
+    localparam J2 = (3 - n) * ABS_WIDTH;
 
     // absolute value
 

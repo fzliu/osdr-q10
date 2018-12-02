@@ -45,7 +45,7 @@ module math_mult_35 (
   shift_reg #(
     .WIDTH (17),
     .DEPTH (0)
-  ) shift_reg_dina_l (
+  ) shift_reg_mult_2_a (
     .clk (clk),
     .ena (1'b1),
     .din (dina[16:0]),
@@ -55,7 +55,7 @@ module math_mult_35 (
   shift_reg #(
     .WIDTH (25),
     .DEPTH (1)
-  ) shift_reg_dina_u (
+  ) shift_reg_mult_3_a (
     .clk (clk),
     .ena (1'b1),
     .din (dina[41:17]),
@@ -65,7 +65,7 @@ module math_mult_35 (
   shift_reg #(
     .WIDTH (18),
     .DEPTH (0)
-  ) shift_reg_dinb_u (
+  ) shift_reg_mult_2_b (
     .clk (clk),
     .ena (1'b1),
     .din (dinb[34:17]),

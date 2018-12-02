@@ -48,7 +48,7 @@ module axis_zero_pad #(
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal registers
 

@@ -19,36 +19,29 @@ module axis_clk_conv_fifo #(
   parameter   DATA_WIDTH = 256,
   parameter   FIFO_DEPTH = 16,
 
-  // derived parameters
-
-  localparam  FIFO_WIDTH = DATA_WIDTH + 1,
-
   // bit width parameters
 
-  localparam  WD = DATA_WIDTH - 1,
-  localparam  WF = FIFO_WIDTH - 1
+  localparam  WD = DATA_WIDTH - 1
 
 ) (
 
   // core interface
 
   input             s_axis_clk,
+  input             s_axis_rst,
   input             m_axis_clk,
-  input             rst,
 
   // slave interface
 
   input             s_axis_tvalid,
   output            s_axis_tready,
   input   [ WD:0]   s_axis_tdata,
-  input             s_axis_tlast,
 
   // master interace
 
   output            m_axis_tvalid,
   input             m_axis_tready,
-  output  [ WD:0]   m_axis_tdata,
-  output            m_axis_tlast
+  output  [ WD:0]   m_axis_tdata
 
 );
 
@@ -62,13 +55,13 @@ module axis_clk_conv_fifo #(
   wire              fifo_empty;
   wire              fifo_write;
   wire              fifo_read;
-  wire    [ WF:0]   fifo_din;
-  wire    [ WF:0]   fifo_dout;
+  wire    [ WD:0]   fifo_din;
+  wire    [ WD:0]   fifo_dout;
 
   // slave interface
 
   assign fifo_write = s_axis_tvalid & s_axis_tready;
-  assign fifo_din = {s_axis_tdata, s_axis_tlast};
+  assign fifo_din = s_axis_tdata;
 
   assign s_axis_tready = ~fifo_full;
 
@@ -79,19 +72,19 @@ module axis_clk_conv_fifo #(
     .ECC_MODE ("no_ecc"),
     .RELATED_CLOCKS (0),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
-    .WRITE_DATA_WIDTH (FIFO_WIDTH),
+    .WRITE_DATA_WIDTH (DATA_WIDTH),
     .WR_DATA_COUNT_WIDTH (0),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
     .READ_MODE ("fwft"),
     .FIFO_READ_LATENCY (0),
-    .READ_DATA_WIDTH (FIFO_WIDTH),
+    .READ_DATA_WIDTH (DATA_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
     .CDC_SYNC_STAGES (3),
     .WAKEUP_TIME (0)
   ) axis_sample_fifo (
-    .rst (rst),
+    .rst (s_axis_rst),
     .wr_clk (s_axis_clk),
     .wr_en (fifo_write),
     .din (fifo_din),
@@ -123,7 +116,7 @@ module axis_clk_conv_fifo #(
 
   assign fifo_read = m_axis_tready & m_axis_tvalid;
 
-  assign {m_axis_tdata, m_axis_tlast} = fifo_dout;
+  assign m_axis_tdata = fifo_dout;
   assign m_axis_tvalid = ~fifo_empty;
 
 endmodule

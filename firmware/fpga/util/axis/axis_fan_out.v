@@ -42,24 +42,21 @@ module axis_fan_out #(
   output            s_axis_tready,
   input   [ WD:0]   s_axis_tdata,
   input   [ NF:0]   s_axis_tuser,
-  input             s_axis_tlast,
 
   // master interace
 
   output  [ NF:0]   m_axis_tvalid,
   input   [ NF:0]   m_axis_tready,
-  output  [ WP:0]   m_axis_tdata,
-  output  [ NF:0]   m_axis_tlast
+  output  [ WP:0]   m_axis_tdata
 
 );
 
-  `include "log2_func.v"
+  `include "log2_func.vh"
 
   // internal registers
 
-  reg     [ NF:0]   m_axis_tvalid_reg;
-  reg     [ WP:0]   m_axis_tdata_reg;
-  reg     [ NF:0]   m_axis_tlast_reg;
+  reg     [ NF:0]   m_axis_tvalid_reg = 'b0;
+  reg     [ WP:0]   m_axis_tdata_reg = 'b0;
 
   // slave interface
 
@@ -67,24 +64,21 @@ module axis_fan_out #(
 
   // master interface
 
+  genvar n;
   generate
-  genvar i;
-  for (i = 0; i < NUM_FANOUT; i = i + 1) begin : fanout_gen
-    localparam i0 = i * DATA_WIDTH;
-    localparam i1 = i * DATA_WIDTH + WD;
+  for (n = 0; n < NUM_FANOUT; n = n + 1) begin
+    localparam n0 = n * DATA_WIDTH;
+    localparam n1 = n0 + WD;
     always @(posedge clk) begin
-      if (rst | ~s_axis_tvalid | (i != s_axis_tuser)) begin
-        m_axis_tvalid_reg[i] <= 'b0;
-        m_axis_tdata_reg[i1:i0] <= 'b0;
-        m_axis_tlast_reg[i] <= 'b0;
-      end else if ((i == s_axis_tuser) & s_axis_tready) begin
-        m_axis_tvalid_reg[i] <= s_axis_tvalid;
-        m_axis_tdata_reg[i1:i0] <= s_axis_tdata;
-        m_axis_tlast_reg[i] <= s_axis_tlast;
+      if (rst | ~s_axis_tvalid | (n != s_axis_tuser)) begin
+        m_axis_tvalid_reg[n] <= 'b0;
+        m_axis_tdata_reg[n1:n0] <= 'b0;
+      end else if ((n == s_axis_tuser) & s_axis_tready) begin
+        m_axis_tvalid_reg[n] <= s_axis_tvalid;
+        m_axis_tdata_reg[n1:n0] <= s_axis_tdata;
       end else begin
-        m_axis_tvalid_reg[i] <= m_axis_tvalid[i];
-        m_axis_tdata_reg[i1:i0] <= m_axis_tdata[i1:i0];
-        m_axis_tlast_reg[i] <= m_axis_tlast[i];
+        m_axis_tvalid_reg[n] <= m_axis_tvalid[n];
+        m_axis_tdata_reg[n1:n0] <= m_axis_tdata[n1:n0];
       end
     end
   end
@@ -94,7 +88,6 @@ module axis_fan_out #(
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
-  assign m_axis_tlast = m_axis_tlast_reg;
 
 endmodule
 
