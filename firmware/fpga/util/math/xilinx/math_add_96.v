@@ -149,7 +149,7 @@ module math_add_96 (
     .DREG (0),
     .INMODEREG (0),
     .MREG (0),
-    .OPMODEREG (0),
+    .OPMODEREG (1),
     .PREG (0)
   ) DSP48E1_u (
     .ACOUT (),

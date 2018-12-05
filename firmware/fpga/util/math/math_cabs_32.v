@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Company: 奥新智能
-// Engineer: 耿慧慧
+// Engineer: 耿慧慿
 //
 // Description: The absolute value of the complex number. 14-cycle delay.
 //
@@ -24,8 +24,8 @@ module math_cabs_32 (
 
   // internal signals
 
-  wire     [ 63:0]  P1;
-  wire     [ 63:0]  P2;
+  wire     [ 69:0]  P1;
+  wire     [ 69:0]  P2;
   wire     [ 63:0]  S;
   wire     [ 95:0]  add_a;
   wire     [ 95:0]  add_b;

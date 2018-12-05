@@ -185,7 +185,7 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    assign adder_out[n] = CORRELATORS[CORR_NUM][n] ?
+    assign adder_out[n] = CORRELATORS[n] ?
                           adder_in1[n] + adder_in0 :
                           adder_in1[n] - adder_in0;
   end

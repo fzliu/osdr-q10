@@ -1,0 +1,1220 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.sim/sim_1/behav/modelsim
+vad9361_cmos_if
+Z1 !s10a 1543828825
+Z2 !s110 1543829336
+!i10b 1
+!s100 U5I=5z4HV;]2B3]bNWm_B0
+IaFiI^U2CDaob]d88g?UVT3
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z4 w1543828825
+8../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v
+F../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v
+Z5 F../../../../../../firmware/fpga/include/log2_func.vh
+Z6 L0 13
+Z7 OL;L;10.5;63
+r1
+!s85 0
+31
+Z8 !s108 1543829336.000000
+Z9 !s107 ../../../../../../firmware/fpga/include/sign_ext.vh|..\..\..\..\..\..\firmware\fpga\xcorr\correlators.vh|../../../../../../firmware/fpga/include/log2_func.vh|../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v|../../../../../../firmware/fpga/mpu_if/tag_data_buff.v|../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v|../../../../../../firmware/fpga/util/misc/oh_to_bin.v|../../../../../../firmware/fpga/util/math/math_pow2_12.v|../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v|../../../../../../firmware/fpga/util/math/math_log2_64.v|../../../../../../firmware/fpga/util/math/math_cabs_32.v|../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v|../../../../../../firmware/fpga/util/filt/filt_boxcar.v|../../../../../../firmware/fpga/util/math/counter.v|../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v|../../../../../../firmware/fpga/peak/axis_peak_detn.v|../../../../../../firmware/fpga/util/axis/axis_fan_in.v|../../../../../../firmware/fpga/util/axis/axis_distrib.v|../../../../../../firmware/fpga/util/axis/xilinx/axis_clk_conv_fifo.v|../../../../../../firmware/fpga/peak/axis_cabs_serial.v|../../../../../../firmware/fpga/xcorr/axis_bit_corr.v|../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v|../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v|../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v|../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v|../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v|../../../../../../firmware/fpga/ad9361/ad9361_dual.v|../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v|
+Z10 !s90 -64|-incr|-work|xil_defaultlib|+incdir+../../../../../../firmware/fpga/include|../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v|../../../../../../firmware/fpga/ad9361/ad9361_dual.v|../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v|../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v|../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v|../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v|../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v|../../../../../../firmware/fpga/xcorr/axis_bit_corr.v|../../../../../../firmware/fpga/peak/axis_cabs_serial.v|../../../../../../firmware/fpga/util/axis/xilinx/axis_clk_conv_fifo.v|../../../../../../firmware/fpga/util/axis/axis_distrib.v|../../../../../../firmware/fpga/util/axis/axis_fan_in.v|../../../../../../firmware/fpga/peak/axis_peak_detn.v|../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v|../../../../../../firmware/fpga/util/math/counter.v|../../../../../../firmware/fpga/util/filt/filt_boxcar.v|../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v|../../../../../../firmware/fpga/util/math/math_cabs_32.v|../../../../../../firmware/fpga/util/math/math_log2_64.v|../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v|../../../../../../firmware/fpga/util/math/math_pow2_12.v|../../../../../../firmware/fpga/util/misc/oh_to_bin.v|../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v|../../../../../../firmware/fpga/mpu_if/tag_data_buff.v|../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v|
+!i113 0
+Z11 o-work xil_defaultlib -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z12 !s92 -work xil_defaultlib +incdir+../../../../../../firmware/fpga/include -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z13 tCvgOpt 0
+vad9361_dual
+!s10a 1543891836
+!s110 1543892316
+!i10b 1
+!s100 594A6c6`17=GXcNC_Fa=l2
+IjmPiX[UBM@_SY=Mc[I<;j3
+R3
+R0
+w1543891836
+8../../../../../../firmware/fpga/ad9361/ad9361_dual.v
+F../../../../../../firmware/fpga/ad9361/ad9361_dual.v
+Z14 L0 12
+R7
+r1
+!s85 0
+31
+!s108 1543892316.000000
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vad9361_dual_axis
+R1
+R2
+!i10b 1
+!s100 BNOQfTbcb=DTRHmMVRdnE2
+IaKbaf`0OYg53KU;k;B]aj2
+R3
+R0
+R4
+8../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v
+F../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v
+R5
+Z15 L0 14
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vad9361_dual_spi
+!s10a 1543824689
+R2
+!i10b 1
+!s100 EiEJh^3A7Xi9QEadPGa_W2
+IJ6nI]KzBl<`NEZ1ecLRaR1
+R3
+R0
+w1543824689
+8../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v
+F../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v
+R14
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vad9361_samp_filt
+!s10a 1544000690
+Z16 !s110 1544000788
+!i10b 1
+!s100 mfjie>i?LC_0384YRJ>3g0
+InY>eM2B0jC;1`X[UjeC813
+R3
+R0
+w1544000690
+8../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v
+F../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v
+Z17 F../../../../../../firmware/fpga/include/sign_ext.vh
+L0 9
+R7
+r1
+!s85 0
+31
+Z18 !s108 1544000788.000000
+Z19 !s107 ..\..\..\..\..\..\firmware\fpga\xcorr\correlators.vh|../../../../../../firmware/fpga/include/sign_ext.vh|../../../../../../firmware/fpga/include/log2_func.vh|../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v|../../../../../../firmware/fpga/mpu_if/tag_data_buff.v|../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v|../../../../../../firmware/fpga/util/misc/oh_to_bin.v|../../../../../../firmware/fpga/util/math/math_pow2_12.v|../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v|../../../../../../firmware/fpga/util/math/math_log2_64.v|../../../../../../firmware/fpga/util/math/math_cabs_32.v|../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v|../../../../../../firmware/fpga/util/filt/filt_boxcar.v|../../../../../../firmware/fpga/util/math/counter.v|../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v|../../../../../../firmware/fpga/peak/axis_peak_detn.v|../../../../../../firmware/fpga/util/axis/axis_fan_in.v|../../../../../../firmware/fpga/util/axis/axis_distrib.v|../../../../../../firmware/fpga/util/axis/xilinx/axis_clk_conv_fifo.v|../../../../../../firmware/fpga/peak/axis_cabs_serial.v|../../../../../../firmware/fpga/xcorr/axis_bit_corr.v|../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v|../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v|../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v|../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v|../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v|../../../../../../firmware/fpga/ad9361/ad9361_dual.v|../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v|
+R10
+!i113 0
+R11
+R12
+R13
+vanchor_clk_gen
+!s10a 1543829585
+!s110 1543829609
+!i10b 1
+!s100 76ijOb^OM5SkXP0=Z9G8_1
+IVYW;Ka1oI;^zn<o`i=c]g1
+R3
+R0
+w1543829585
+8../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v
+F../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v
+L0 10
+R7
+r1
+!s85 0
+31
+!s108 1543829609.000000
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vanchor_top
+!s10a 1543887478
+!s110 1543887489
+!i10b 1
+!s100 OGHo4PTe[d1`AMkK;L0Pz3
+IBm1KQh855j0XN;VGCN?L<3
+R3
+R0
+w1543887478
+8../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v
+F../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v
+R15
+R7
+r1
+!s85 0
+31
+!s108 1543887489.000000
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vasym_bwe_bb
+Z20 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
+R2
+!i10b 1
+!s100 hQBn18Vf5mNDoK:a?Yc[l2
+I[znBfK=Ic7SG7Yg2`SJR:1
+R3
+Z21 !s105 xpm_memory_sv_unit
+S1
+R0
+Z22 w1513401010
+Z23 8C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv
+Z24 FC:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv
+L0 6530
+R7
+r1
+!s85 0
+31
+R8
+Z25 !s107 C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv|C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv|C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv|
+Z26 !s90 -64|-incr|-sv|-work|xil_defaultlib|+incdir+../../../../../../firmware/fpga/include|C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv|C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv|C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv|
+!i113 0
+Z27 o-sv -work xil_defaultlib -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z28 !s92 -sv -work xil_defaultlib +incdir+../../../../../../firmware/fpga/include -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R13
+vaxis_bit_corr
+!s10a 1543887145
+!s110 1543887159
+!i10b 1
+!s100 gaKBNTI01DED;?f@9HAgz0
+IgQV:V3z]l?=6OLk=A`:oL1
+R3
+R0
+w1543887145
+8../../../../../../firmware/fpga/xcorr/axis_bit_corr.v
+F../../../../../../firmware/fpga/xcorr/axis_bit_corr.v
+F..\..\..\..\..\..\firmware\fpga\xcorr\correlators.vh
+R5
+R17
+Z29 L0 17
+R7
+r1
+!s85 0
+31
+!s108 1543887159.000000
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vaxis_cabs_serial
+!s10a 1543884906
+!s110 1543885016
+!i10b 1
+!s100 QBzSR8klF6=h>9TCU8]az1
+I?KW6GnC?[hDHfz<KgSJOc1
+R3
+R0
+w1543884906
+8../../../../../../firmware/fpga/peak/axis_cabs_serial.v
+F../../../../../../firmware/fpga/peak/axis_cabs_serial.v
+R5
+R15
+R7
+r1
+!s85 0
+31
+!s108 1543885016.000000
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vaxis_clk_conv_fifo
+R1
+Z30 !s110 1543829337
+!i10b 1
+!s100 B3hB>09`mVeDZbRgcN;J>2
+I6Pga`2[Wm2@@;GjQ9TX^@3
+R3
+R0
+R4
+8../../../../../../firmware/fpga/util/axis/xilinx/axis_clk_conv_fifo.v
+F../../../../../../firmware/fpga/util/axis/xilinx/axis_clk_conv_fifo.v
+R15
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vaxis_distrib
+R1
+R30
+!i10b 1
+!s100 4Hki<5:b]nW8i]fz=@IWb0
+ImVAY=6_Ahb<V8URj:S2@T1
+R3
+R0
+R4
+8../../../../../../firmware/fpga/util/axis/axis_distrib.v
+F../../../../../../firmware/fpga/util/axis/axis_distrib.v
+R5
+Z31 L0 15
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vaxis_fan_in
+R1
+R30
+!i10b 1
+!s100 gWP786>FMML`15;;GmUaZ1
+Ih@n55iE6@ciN6iWL8=>YQ0
+R3
+R0
+R4
+8../../../../../../firmware/fpga/util/axis/axis_fan_in.v
+F../../../../../../firmware/fpga/util/axis/axis_fan_in.v
+R5
+R31
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vaxis_peak_detn
+R1
+R30
+!i10b 1
+!s100 DZk74fDmY7Q9eKKCCkFdc0
+IEI^30Z:8Oc7BNRLHAFkZc1
+R3
+R0
+R4
+8../../../../../../firmware/fpga/peak/axis_peak_detn.v
+F../../../../../../firmware/fpga/peak/axis_peak_detn.v
+R5
+R31
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vaxis_to_mem
+R1
+R30
+!i10b 1
+!s100 :Y<kR^b[ij5Tnl[;gnSEY1
+IQzCHGL;:2hk@CL@72BJgY1
+R3
+R0
+R4
+8../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v
+F../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v
+R5
+L0 16
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vcounter
+R1
+R30
+!i10b 1
+!s100 2k9jXjj:7WH5QjcQInG>;3
+I^Y99FAUBO9:b[z2SE2bnl2
+R3
+R0
+R4
+8../../../../../../firmware/fpga/util/math/counter.v
+F../../../../../../firmware/fpga/util/math/counter.v
+R5
+L0 11
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vfilt_boxcar
+!s10a 1544000492
+R16
+!i10b 1
+!s100 l_DE2hnaM=NZmE59ki8_;0
+I4Scj]MEZT?`Dh60O`J;G<3
+R3
+R0
+w1544000492
+8../../../../../../firmware/fpga/util/filt/filt_boxcar.v
+F../../../../../../firmware/fpga/util/filt/filt_boxcar.v
+R29
+R7
+r1
+!s85 0
+31
+R18
+R19
+R10
+!i113 0
+R11
+R12
+R13
+vglbl
+Z32 !s110 1544000932
+!i10b 1
+!s100 JWZ^meD<P7inSF0<1SiO32
+IAl?5;D^:bf?I5A^M>WzmU1
+R3
+R0
+w1513215259
+8glbl.v
+Fglbl.v
+L0 6
+R7
+r1
+!s85 0
+31
+Z33 !s108 1544000932.000000
+!s107 glbl.v|
+!s90 -work|xil_defaultlib|glbl.v|
+!i113 0
+R11
+R13
+vmath_add_96
+!s10a 1544000522
+R16
+!i10b 1
+!s100 N2XO@[k`i6TUbOgIm9<fo1
+IKYmi2JjkHS:9jC4DF8_7f1
+R3
+R0
+w1544000522
+8../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v
+F../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v
+R14
+R7
+r1
+!s85 0
+31
+R18
+R19
+R10
+!i113 0
+R11
+R12
+R13
+vmath_cabs_32
+!s10a 1544000546
+R16
+!i10b 1
+!s100 ?id``gc3f5S>0Oa;^9B]Y2
+I@bTE8SNJ>8@]PKh[I4A<;1
+R3
+R0
+w1544000546
+8../../../../../../firmware/fpga/util/math/math_cabs_32.v
+F../../../../../../firmware/fpga/util/math/math_cabs_32.v
+R17
+L0 9
+R7
+r1
+!s85 0
+31
+R18
+R19
+R10
+!i113 0
+R11
+R12
+R13
+vmath_log2_64
+!s10a 1544000582
+R16
+!i10b 1
+!s100 M`FRk62idY8ghFb6oKBMi0
+I163Vko<Xlb4K6e_ChED;O1
+R3
+R0
+w1544000582
+8../../../../../../firmware/fpga/util/math/math_log2_64.v
+F../../../../../../firmware/fpga/util/math/math_log2_64.v
+R14
+R7
+r1
+!s85 0
+31
+R18
+R19
+R10
+!i113 0
+R11
+R12
+R13
+vmath_mult_35
+!s10a 1544000606
+R16
+!i10b 1
+!s100 RIB2aANQ]oT`mm4M;Y=300
+IhobMdj<LVH4gb3;a`E<ja3
+R3
+R0
+w1544000606
+8../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v
+F../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v
+R15
+R7
+r1
+!s85 0
+31
+R18
+R19
+R10
+!i113 0
+R11
+R12
+R13
+vmath_pow2_12
+!s10a 1544000647
+R16
+!i10b 1
+!s100 f568f9YJQ6]FLHCXVoB6K2
+I28Oc^6AGJ3jc5<J?@Y4Mf2
+R3
+R0
+w1544000647
+8../../../../../../firmware/fpga/util/math/math_pow2_12.v
+F../../../../../../firmware/fpga/util/math/math_pow2_12.v
+R15
+R7
+r1
+!s85 0
+31
+R18
+R19
+R10
+!i113 0
+R11
+R12
+R13
+vmcu_to_fpga_tb
+R32
+!i10b 1
+!s100 MJg>H?Nee^:WL]9R[E7?11
+IZ^a;_9FDA6iad@j3<joHd2
+R3
+R0
+w1544000919
+8../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v
+F../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v
+L0 23
+R7
+r1
+!s85 0
+31
+R33
+R19
+R10
+!i113 0
+R11
+R12
+R13
+voh_to_bin
+R1
+R30
+!i10b 1
+!s100 fhOERMCfVn`=m4FX2E4Xb0
+IS2:kVoJPX`WX4W=eViDV81
+R3
+R0
+R4
+8../../../../../../firmware/fpga/util/misc/oh_to_bin.v
+F../../../../../../firmware/fpga/util/misc/oh_to_bin.v
+R5
+R6
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vshift_reg
+!s10a 1544000718
+R30
+!i10b 1
+!s100 o=@T5l4<?OS[[7kFgLSIf0
+I6N<DPBSi<3aIm517d@H>F3
+R3
+R0
+R4
+8../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v
+F../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v
+R31
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vtag_data_buff
+R1
+R30
+!i10b 1
+!s100 _:3F@Y^1T@z81UaB@N@Ta2
+ILEiD[RX=OPX@KBCH^SdMG0
+R3
+R0
+R4
+8../../../../../../firmware/fpga/mpu_if/tag_data_buff.v
+F../../../../../../firmware/fpga/mpu_if/tag_data_buff.v
+R5
+R31
+R7
+r1
+!s85 0
+31
+R8
+R9
+R10
+!i113 0
+R11
+R12
+R13
+vxpm_cdc_array_single
+R20
+R2
+!i10b 1
+!s100 ==hYFcK4XQC[DcBPCoS1j2
+IIUBjN0zTfP0cj9F6:7H5G1
+R3
+Z34 !s105 xpm_cdc_sv_unit
+S1
+R0
+R22
+Z35 8C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv
+Z36 FC:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv
+L0 966
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_cdc_async_rst
+R20
+R2
+!i10b 1
+!s100 H366bImg^m5g7:1z7:zRV0
+IQlg0hFI>5Q1g2RE7<QmhQ0
+R3
+R34
+S1
+R0
+R22
+R35
+R36
+L0 1177
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_cdc_gray
+R20
+R2
+!i10b 1
+!s100 b`fTbh]8;>9Db29BhTe`b0
+IEY^Tfo?WgH3O3HHhS:h2l2
+R3
+R34
+S1
+R0
+R22
+R35
+R36
+L0 300
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_cdc_handshake
+R20
+R2
+!i10b 1
+!s100 OhDW=I4kWN1dOK06Dok`l3
+I<5XkV?dgS62LkM0FlLIQl2
+R3
+R34
+S1
+R0
+R22
+R35
+R36
+L0 500
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_cdc_pulse
+R20
+R2
+!i10b 1
+!s100 YN7XgX_RUNAnRBkcS<;S@1
+IbZ?TW7[3bhdZm@QFWfnP92
+R3
+R34
+S1
+R0
+R22
+R35
+R36
+L0 762
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_cdc_single
+R20
+R2
+!i10b 1
+!s100 ?:GHG?]gIjO6C99_S8G_k1
+IR@OWGUHD>5QZGmfRXNA4o1
+R3
+R34
+S1
+R0
+R22
+R35
+R36
+L0 153
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_cdc_sync_rst
+R20
+R2
+!i10b 1
+!s100 VVI7]ka4ZceYK=M[AFH1S1
+IGmJGL>8KUTKFKCJXXoVJo3
+R3
+R34
+S1
+R0
+R22
+R35
+R36
+L0 1045
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_counter_updn
+R20
+R2
+!i10b 1
+!s100 Al:LFW?<=GVJ8fMhb29]m3
+INS7Q4YXBMdm?N]K>LJGk83
+R3
+Z37 !s105 xpm_fifo_sv_unit
+S1
+R0
+R22
+Z38 8C:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv
+Z39 FC:/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv
+L0 1752
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_fifo_async
+R20
+R2
+!i10b 1
+!s100 ^U0bW]>bK7Cok7>A[z[=e0
+IdS88HhJ@^AG_WV^IoabAO2
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 1988
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_fifo_axis
+R20
+R2
+!i10b 1
+!s100 n>g9WiFJULPIF@5S9a_I@1
+I6dKdc4XPbXiMgTVELUf^40
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 2244
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_fifo_base
+R20
+R2
+!i10b 1
+!s100 BKN`PH2dHfE1=n8B`Q;O>0
+ImU@lPB5<RH@K9SFVczR=;3
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 56
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_fifo_reg_bit
+R20
+R2
+!i10b 1
+!s100 i1XPm[F10zX0=Yd8>d3lB3
+I_iYlf>S00mj:LYRB[85R]0
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 1800
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_fifo_reg_vec
+R20
+R2
+!i10b 1
+!s100 9M:dV7zeYZ@hF2@TTIXUI1
+I]Lh=D]45KfJOTa:JV0hb01
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 1778
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_fifo_rst
+R20
+R2
+!i10b 1
+!s100 O[B;UD8[>TOb<2^nK:9^W3
+I2i[CWQ<dUMDjPGYH81Q@g0
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 1609
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_fifo_sync
+R20
+R2
+!i10b 1
+!s100 fcWBG4dbWL@M499DBjdVd2
+I37g[PBUn<XVZ_:SzlkO=B3
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 1845
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_memory_base
+R20
+R2
+!i10b 1
+!s100 `jH3?^3ZGKDmM022:M0nE2
+IN^NlH;N7JePAR2<`8T6>Z1
+R3
+R21
+S1
+R0
+R22
+R23
+R24
+L0 57
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_memory_dpdistram
+R20
+R2
+!i10b 1
+!s100 >HjbL769m8UHOZ^n;C6zZ2
+I]BBO6RM^>`SX716ej4CaX2
+R3
+R21
+S1
+R0
+R22
+R23
+R24
+L0 6589
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_memory_dprom
+R20
+R2
+!i10b 1
+!s100 HT24a5e7iVDX5zaU9CE[90
+IXAb4BJRU_6Q>fI>eUISm^1
+R3
+R21
+S1
+R0
+R22
+R23
+R24
+L0 6723
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_memory_sdpram
+R20
+R2
+!i10b 1
+!s100 1ceS`fF[RWG]0;Af8Sz`N3
+Imlc5kGF_B<ZNFeE2LS8n71
+R3
+R21
+S1
+R0
+R22
+R23
+R24
+L0 6877
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_memory_spram
+R20
+R2
+!i10b 1
+!s100 PR1aUW2GLSzMS;KUXiLIK0
+IZCOSO43:j>L^QlTRI`OhN1
+R3
+R21
+S1
+R0
+R22
+R23
+R24
+L0 7032
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_memory_sprom
+R20
+R2
+!i10b 1
+!s100 I1MgXeL;QEMGE4<2WFg0H2
+IJY_fg]XIo9hB]@Sd@79^O1
+R3
+R21
+S1
+R0
+R22
+R23
+R24
+L0 7178
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_memory_tdpram
+R20
+R2
+!i10b 1
+!s100 YhEXBgbdz`Q7_k;KHZFOC2
+Ic4ijD3hf=P@nDRejACRQJ0
+R3
+R21
+S1
+R0
+R22
+R23
+R24
+L0 7314
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13
+vxpm_reg_pipe_bit
+R20
+R2
+!i10b 1
+!s100 @@g4zRf]_>XI;Mo?g4A@D2
+IH_GHHAA8T8KgID6JJbXKD3
+R3
+R37
+S1
+R0
+R22
+R38
+R39
+L0 1819
+R7
+r1
+!s85 0
+31
+R8
+R25
+R26
+!i113 0
+R27
+R28
+R13

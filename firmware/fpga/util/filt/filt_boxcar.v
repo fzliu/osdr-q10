@@ -50,24 +50,38 @@ module filt_boxcar #(
 
   // internal registers
 
-  reg     [ WD:0]   sum_reg;
+  reg     [ WD:0]   sum_reg = 'b0;
 
   // internal signals
 
   wire    [ WD:0]   sum_step;
   wire    [ WD:0]   sum_out;
 
+  // initialize shift register memory
+
+  genvar n;
+  generate
+  for (n = 0; n < FILTER_LENGTH; n = n + 1) begin
+    initial begin
+      shift[n] = 'b0;
+      sum_reg = 'b0;
+    end
+  end
+  endgenerate
+
   // shift register implementation
 
-  for (i = 0; i < FILTER_LENGTH; i = i + 1) begin
+  generate
+  for (n = 0; n < FILTER_LENGTH; n = n + 1) begin
     always @(posedge clk) begin
       if (rst) begin
-        shift[i] <= {DATA_WIDTH{1'b0}};
+        shift[n] <= {DATA_WIDTH{1'b0}};
       end else begin
-        shift[i] <= (i == 0) ? data_in : shift[i-1];
+        shift[n] <= (n == 0) ? data_in : shift[n-1];
       end
     end
   end
+  endgenerate
 
   // boxcar filter implementation
 

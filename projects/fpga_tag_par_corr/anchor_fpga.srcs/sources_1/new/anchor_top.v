@@ -254,9 +254,9 @@ module anchor_top #(
     .s_axis_tvalid (fifo_axis_tvalid),
     .s_axis_tready (fifo_axis_tready),
     .s_axis_tdata (fifo_axis_tdata),
-    .s_axis_tvalid (distrib_axis_tvalid),
-    .s_axis_tready (distrib_axis_tready),
-    .s_axis_tdata (distrib_axis_tdata)
+    .m_axis_tvalid (distrib_axis_tvalid),
+    .m_axis_tready (distrib_axis_tready),
+    .m_axis_tdata (distrib_axis_tdata)
   );
 
   genvar n;
@@ -345,9 +345,8 @@ module anchor_top #(
 
   tag_data_buff #(
     .NUM_TAGS (NUM_TAGS),
-    .BURST_LENGTH (BURST_LENGTH),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
-    .OUT_WIDTH (EBI_WIDTH)
+    .READ_WIDTH (EBI_WIDTH)
   ) tag_data_buff (
     .clk (c_clk),
     .s_axis_tvalid (fanin_axis_tvalid),

@@ -54,6 +54,8 @@ module axis_cabs_serial #(
 
 );
 
+  `include "log2_func.vh"
+
   // internal memories
 
   reg     [ WC:0]   cabs_mem [0:NC];

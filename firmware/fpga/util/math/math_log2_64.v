@@ -24,12 +24,12 @@ module math_log2_64 (
 
   // Comprises 3 main blocks: priority encoder, barrel shifter, and LUT
 
-  reg       [ 5:0]         priencout1;
-  reg       [ 3:0]         lut_out;
-  reg       [ 5:0]         priencout2;
-  reg       [ 5:0]         priencout3;
-  reg       [59:0]         barrelin ;
-  reg       [ 4:0]         barrelout ;
+  reg       [ 5:0]         priencout1 = 'b0;
+  reg       [ 3:0]         lut_out = 'b0;
+  reg       [ 5:0]         priencout2 = 'b0;
+  reg       [ 5:0]         priencout3 = 'b0;
+  reg       [59:0]         barrelin = 'b0;
+  reg       [ 4:0]         barrelout = 'b0;
 
   assign dout =	{priencout3, lut_out};	// Basic top-level connectivity
 

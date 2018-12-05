@@ -9,12 +9,5 @@
 localparam            CORR_LENGTH = 7,
 localparam            LC = CORR_LENGTH - 1,
 
-localparam  [ LC:0]   CORRELATORS [0:LC] = {
-  {1, 0, 0, 1, 0, 0, 1},
-  {0, 1, 1, 0, 1, 1, 0},
-  {1, 0, 1, 0, 1, 0, 1},
-  {1, 1, 1, 1, 0, 0, 0},
-  {0, 0, 0, 1, 1, 1, 1},
-  {1, 1, 0, 0, 1, 1, 0},
-  {0, 1, 0, 1, 1, 0, 1}
-}
+localparam  [ LC:0]   CORRELATORS = 
+  {1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1}

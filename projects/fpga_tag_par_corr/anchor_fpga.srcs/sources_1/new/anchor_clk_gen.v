@@ -47,7 +47,7 @@ module anchor_clk_gen (
     .CLKOUT1_DUTY_CYCLE (0.500),
     .CLKOUT2_DIVIDE (8),
     .CLKOUT2_PHASE (0),
-    .CLKOUT2_DUTY_CYCLE (0.500),
+    .CLKOUT2_DUTY_CYCLE (0.500)
   ) plle2_base (
     .CLKOUT0 (pll_out[0]),
     .CLKOUT1 (pll_out[1]),

@@ -26,9 +26,9 @@ module math_pow2_12 (
 
   // Comprises 2 main blocks: barrel shifter & LUT
 
-  reg     [ 5:0]   barrelshfcnt;
-  reg     [22:0]   lut_out;
-  reg     [71:0]   dout1;
+  reg     [ 5:0]   barrelshfcnt = 'b0;
+  reg     [22:0]   lut_out = 'b0;
+  reg     [71:0]   dout1 = 'b0;
   wire    [86:0]   tmp1 = ({1'b1, lut_out}  <<  barrelshfcnt);
 
   always @(posedge clk) begin

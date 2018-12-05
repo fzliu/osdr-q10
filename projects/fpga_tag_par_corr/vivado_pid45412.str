@@ -1,0 +1,296 @@
+/*
+
+Xilinx Vivado v2017.4 (64-bit) [Major: 2017, Minor: 4]
+SW Build: 2086221 on Fri Dec 15 20:55:39 MST 2017
+IP Build: 2085800 on Fri Dec 15 22:25:07 MST 2017
+
+Process ID: 45412
+License: Customer
+
+Current time: 	Mon Dec 03 17:21:51 CST 2018
+Time zone: 	China Standard Time (Asia/Shanghai)
+
+OS: Windows 7
+OS Version: 6.1
+OS Architecture: amd64
+Available processors (cores): 2
+
+Screen size: 1920x1080
+Screen resolution (DPI): 96
+Available screens: 1
+Available disk space: 10 GB
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+
+Java version: 	1.8.0_112 64-bit
+Java home: 	C:/Xilinx/Vivado/2017.4/tps/win64/jre
+JVM executable location: 	C:/Xilinx/Vivado/2017.4/tps/win64/jre/bin/java.exe
+
+User name: 	Administrator
+User home directory: C:/Users/Administrator
+User working directory: C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr
+User country: 	CN
+User language: 	zh
+User locale: 	zh_CN
+
+RDI_BASEROOT: C:/Xilinx/Vivado
+HDI_APPROOT: C:/Xilinx/Vivado/2017.4
+RDI_DATADIR: C:/Xilinx/Vivado/2017.4/data
+RDI_BINDIR: C:/Xilinx/Vivado/2017.4/bin
+
+Vivado preferences file location: C:/Users/Administrator/AppData/Roaming/Xilinx/Vivado/2017.4/vivado.xml
+Vivado preferences directory: C:/Users/Administrator/AppData/Roaming/Xilinx/Vivado/2017.4/
+Vivado layouts directory: C:/Users/Administrator/AppData/Roaming/Xilinx/Vivado/2017.4/layouts
+PlanAhead jar file location: 	C:/Xilinx/Vivado/2017.4/lib/classes/planAhead.jar
+Vivado log file location: 	C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/vivado.log
+Vivado journal file location: 	C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/vivado.jou
+Engine tmp dir: 	C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/.Xil/Vivado-45412-jiang-pc
+
+GUI allocated memory:	204 MB
+GUI max memory:		3,052 MB
+Engine allocated memory: 524 MB
+
+Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// TclEventType: PROJECT_OPEN_DIALOG
+// Tcl Message: start_gui 
+// TclEventType: PROJECT_OPEN_DIALOG
+// bs (cj):  Open Project : addNotify
+// Opening Vivado Project: C:\latest_orion-anchor\orion-anchor\projects\fpga_tag_par_corr\anchor_fpga.xpr. Version: Vivado v2017.4 
+// [GUI Memory]: 63 MB (+64103kb) [00:00:07]
+// [Engine Memory]: 483 MB (+355166kb) [00:00:07]
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// Tcl Message: open_project C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.xpr 
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILESET_TARGET_UCF_CHANGE
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_NEW
+// [Engine Memory]: 524 MB (+17805kb) [00:00:10]
+// [GUI Memory]: 67 MB (+571kb) [00:00:11]
+// Tcl Message: open_project C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.xpr 
+// Tcl Message: INFO: [Project 1-313] Project file moved from '/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_par_corr' since last save. 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2017.4/data/ip'. 
+// HMemoryUtils.trashcanNow. Engine heap size: 534 MB. GUI used memory: 42 MB. Current time: 12/3/18 5:21:51 PM CST
+// Project name: anchor_fpga; location: C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr; part: xc7k160tfbg676-2
+// Tcl Message: open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:05 . Memory (MB): peak = 751.637 ; gain = 34.297 
+dismissDialog("Open Project"); // bs (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// Tcl Message: update_compile_order -fileset sources_1 
+// Elapsed time: 101 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Constraints]", 3); // B (D, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 6); // B (D, cj)
+// PAPropertyPanels.initPanels (sim_1) elapsed time: 0.2s
+// [Engine Memory]: 552 MB (+1905kb) [00:01:58]
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true); // B (D, cj) - Node
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true, false, false, false, true, false); // B (D, cj) - Popup Trigger - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Verilog Header]", 8, true); // B (D, cj) - Node
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Verilog Header]", 8); // B (D, cj)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Verilog Header]", 8); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, anchor_top (anchor_top.v)]", 9, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true, false, false, false, true, false); // B (D, cj) - Popup Trigger - Node
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RUN, "Run Simulation"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RESET, "Reset Simulation"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RESET, "Reset Simulation"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RUN, "Run Simulation"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RESET, "Reset Simulation"); // Z (ai, cj)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // Z (ai, cj)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // Z (ai, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_ADD_SOURCES, "Add Sources..."); // ac (ai, cj)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// c (cj): Add Sources: addNotify
+selectButton("NEXT", "Next >"); // JButton (h, c)
+selectButton(PAResourceQtoS.SrcChooserPanel_CREATE_FILE, "Create File"); // a (C, c)
+// F (c): Create Source File: addNotify
+// Elapsed time: 15 seconds
+setText(PAResourceAtoD.CreateSrcFileDialog_FILE_NAME, "anchor_top_tb"); // X (N, F)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (F)
+// Tcl Command: 'file mkdir C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sim_1/new'
+dismissDialog("Create Source File"); // F (c)
+// Tcl Message: file mkdir C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sim_1/new 
+selectButton("FINISH", "Finish"); // JButton (h, c)
+// 'h' command handler elapsed time: 20 seconds
+dismissDialog("Add Sources"); // c (cj)
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// bs (cj):  Add Simulation Sources  : addNotify
+// Tcl Message: set_property SOURCE_SET sources_1 [get_filesets sim_1] 
+// Tcl Message: close [ open C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sim_1/new/anchor_top_tb.v w ] 
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: add_files -fileset sim_1 C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+// I (cj): Define Module: addNotify
+dismissDialog("Add Simulation Sources"); // bs (cj)
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (I)
+// TclEventType: FILE_SET_CHANGE
+selectButton("PAResourceAtoD.DefineModulesDialog_YOU_HAVE_MADE_CHANGES_TO_MODULE_Yes", "Yes"); // JButton (A, H)
+dismissDialog("Define Module"); // I (cj)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// HMemoryUtils.trashcanNow. Engine heap size: 575 MB. GUI used memory: 47 MB. Current time: 12/3/18 5:24:15 PM CST
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// [GUI Memory]: 75 MB (+4719kb) [00:02:38]
+// Tcl Message: update_compile_order -fileset sim_1 
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// [GUI Memory]: 79 MB (+323kb) [00:02:42]
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, anchor_top_tb (anchor_top_tb.v)]", 10, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, anchor_top_tb (anchor_top_tb.v)]", 10, false, false, false, false, false, true); // B (D, cj) - Double Click
+// Launch External Editor: 'C:/Program Files (x86)/Notepad++/notepad++.exe "C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sim_1/new/anchor_top_tb.v" -n23'
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_ANALYSIS_MSG_RESET
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, anchor_top (anchor_top.v)]", 9, true); // B (D, cj) - Node
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v)]", 9, true); // B (D, cj) - Node
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sim_1 
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// [GUI Memory]: 83 MB (+249kb) [00:03:07]
+// Elapsed time: 54 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v)]", 9, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v), anchor_top : anchor_top (anchor_top.v)]", 10, true, false, false, false, false, true); // B (D, cj) - Double Click - Node
+// Launch External Editor: 'C:/Program Files (x86)/Notepad++/notepad++.exe "C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sim_1/new/anchor_top_tb.v" -n23'
+// Elapsed time: 196 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v)]", 9, true); // B (D, cj) - Node
+// [Engine Memory]: 580 MB (+81kb) [00:07:08]
+// [GUI Memory]: 88 MB (+400kb) [00:07:08]
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v), anchor_top : anchor_top (anchor_top.v)]", 10, true); // B (D, cj) - Node
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v), anchor_top : anchor_top (anchor_top.v)]", 10); // B (D, cj)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v), anchor_top : anchor_top (anchor_top.v)]", 10); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true, false, false, false, true, false); // B (D, cj) - Popup Trigger - Node
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RUN, "Run Simulation"); // Z (ai, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, "Run Behavioral Simulation"); // ac (cj)
+// Run Command: PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL
+// TclEventType: FILE_SET_CHANGE
+// e (cj):  Run Simulation : addNotify
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: launch_simulation 
+// Tcl Message: INFO: [Vivado 12-5682] Launching behavioral simulation in 'C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.sim/sim_1/behav/modelsim' INFO: [USF-ModelSim-47] Finding simulator installation... INFO: [USF-ModelSim-49] Using simulator executables from 'C:\modeltech64_10.5\win64' INFO: [SIM-utils-51] Simulation object is 'sim_1' INFO: [USF-modelsim-7] Finding pre-compiled libraries... 
+selectButton(RDIResource.ProgressDialog_BACKGROUND, "Background"); // a (e)
+// 'd' command handler elapsed time: 4 seconds
+selectTab((HResource) null, (HResource) null, "Messages", 1); // aF (Q, cj)
+selectCheckBox(PAResourceItoN.MsgView_CRITICAL_WARNINGS, (String) null, false); // g (aQ, cj): FALSE
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, "[, Vivado Commands, launch_simulation. , [USF-modelsim-8] Failed to find the pre-compiled simulation library!. ]", 13, false); // ah (O, cj)
+selectButton("HStatusBar_ProgressStatusItem_取消", "取消"); // NullButton (ae, cj)
+// Tcl Message: INFO: [Common 17-41] Interrupt caught. Command should exit soon. 
+// Tcl Message: run_program: Time (s): cpu = 00:00:03 ; elapsed = 00:00:14 . Memory (MB): peak = 784.582 ; gain = 0.000 
+// CommandFailedException: ERROR: [Common 17-69] Command failed:  
+// Tcl Message: INFO: [Common 17-344] 'run_program' was cancelled INFO: [Vivado 12-5357] 'compile' step aborted 
+// Tcl Message: launch_simulation: Time (s): cpu = 00:00:03 ; elapsed = 00:00:14 . Memory (MB): peak = 784.582 ; gain = 0.000 
+// Tcl Message: INFO: [Common 17-344] 'launch_simulation' was cancelled 
+// a (cj): Critical Messages: addNotify
+dismissDialog("Run Simulation"); // e (cj)
+selectButton(PAResourceAtoD.CmdMsgDialog_OK, "OK"); // f (a)
+dismissDialog("Critical Messages"); // a (cj)
+selectMenu(PAResourceItoN.MainMenuMgr_TOOLS, "Tools"); // U (q, cj)
+selectMenu(PAResourceItoN.MainMenuMgr_REPORT, "Report"); // Z (cj)
+selectMenu(RDIResourceCommand.RDICommands_CUSTOM_COMMANDS, "Custom Commands"); // Z (cj)
+selectMenuItem(RDIResourceCommand.RDICommands_SETTINGS, "Settings..."); // ac (cj)
+dismissMenu(PAResourceItoN.MainMenuMgr_TOOLS, "Tools"); // U (q, cj)
+// Run Command: RDIResourceCommand.RDICommands_SETTINGS
+// Tcl Command: 'rdi::info_commands {device::*}'
+// Tcl Command: 'rdi::info_commands {debug::*}'
+// Tcl Command: 'rdi::info_commands {*}'
+// v (cj): Settings: addNotify
+// [Engine Memory]: 618 MB (+9740kb) [00:07:40]
+selectTree(PAResourceQtoS.SettingsDialog_PROJECT_TREE, "[projectRoot, Simulation]", 1, false); // M (C, v)
+// HMemoryUtils.trashcanNow. Engine heap size: 618 MB. GUI used memory: 58 MB. Current time: 12/3/18 5:29:20 PM CST
+selectButton(PAResourceOtoP.ProjectSettingsSimulationPanel_CHOOSE_COMPILED_LIBRARY_LOCATION, (String) null); // q (af, v)
+// Elapsed time: 118 seconds
+setFolderChooser("C:/modeltech64_10.5/vivado2017_lib");
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a (v)
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: set_property compxlib.modelsim_compiled_library_dir C:/modeltech64_10.5/vivado2017_lib [current_project] 
+dismissDialog("Settings"); // v (cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 7, true, false, false, false, true, false); // B (D, cj) - Popup Trigger - Node
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RUN, "Run Simulation"); // Z (ai, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, "Run Behavioral Simulation"); // ac (cj)
+// Run Command: PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL
+// TclEventType: FILE_SET_CHANGE
+// e (cj):  Run Simulation : addNotify
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: launch_simulation 
+selectButton(RDIResource.ProgressDialog_BACKGROUND, "Background"); // a (e)
+// 'd' command handler elapsed time: 5 seconds
+selectCheckBox(PAResourceItoN.MsgView_INFORMATION_MESSAGES, (String) null, false); // g (aQ, cj): FALSE
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 4); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 4, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, anchor_top (anchor_top.v)]", 2); // B (D, cj)
+// [GUI Memory]: 96 MB (+3290kb) [00:10:32]
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, anchor_top (anchor_top.v), anchor_clk_gen : anchor_clk_gen (anchor_clk_gen.v)]", 3, false); // B (D, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, anchor_top (anchor_top.v), anchor_clk_gen : anchor_clk_gen (anchor_clk_gen.v)]", 3, false, false, false, false, false, true); // B (D, cj) - Double Click
+// Launch External Editor: 'C:/Program Files (x86)/Notepad++/notepad++.exe "C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v" -n10'
+// [GUI Memory]: 103 MB (+3060kb) [00:11:31]
+// Elapsed time: 63 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, anchor_top (anchor_top.v), axis_clk_conv_fifo : axis_clk_conv_fifo (axis_clk_conv_fifo.v)]", 5, false); // B (D, cj)
+selectButton("HStatusBar_ProgressStatusItem_取消", "取消"); // NullButton (ae, cj)
+// Tcl Message: INFO: [Common 17-41] Interrupt caught. Command should exit soon. 
+// CommandFailedException: ERROR: [Common 17-69] Command failed:  
+// Tcl Message: run_program: Time (s): cpu = 00:00:11 ; elapsed = 00:01:46 . Memory (MB): peak = 806.512 ; gain = 0.000 
+// Tcl Message: INFO: [Common 17-344] 'run_program' was cancelled INFO: [Vivado 12-5357] 'compile' step aborted 
+// Tcl Message: launch_simulation: Time (s): cpu = 00:00:11 ; elapsed = 00:01:46 . Memory (MB): peak = 806.512 ; gain = 0.000 
+// Tcl Message: INFO: [Common 17-344] 'launch_simulation' was cancelled 
+dismissDialog("Run Simulation"); // e (cj)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_GRAPH_GENERATED
+// [GUI Memory]: 111 MB (+2112kb) [00:11:43]
+// HMemoryUtils.trashcanNow. Engine heap size: 640 MB. GUI used memory: 62 MB. Current time: 12/3/18 5:33:25 PM CST
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 28, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 28, true, false, false, false, true, false); // B (D, cj) - Popup Trigger - Node
+selectMenu(PAResourceCommand.PACommandNames_SIMULATION_RUN, "Run Simulation"); // Z (ai, cj)
+selectMenuItem(PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, "Run Behavioral Simulation"); // ac (cj)
+// Run Command: PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL
+// e (cj):  Run Simulation : addNotify
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: launch_simulation 
+selectButton(RDIResource.ProgressDialog_BACKGROUND, "Background"); // a (e)
+// 'd' command handler elapsed time: 4 seconds
+expandTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 4); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 4, true); // ah (O, cj) - Node
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v), anchor_top : anchor_top (anchor_top.v)]", 31, true); // B (D, cj) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, mcu_to_fpga_tb (anchor_top_tb.v), anchor_top : anchor_top (anchor_top.v), genblk1[0].axis_cabs_serial : axis_cabs_serial (axis_cabs_serial.v)]", 39, true, false, false, false, false, true); // B (D, cj) - Double Click - Node
+// Launch External Editor: 'C:/Program Files (x86)/Notepad++/notepad++.exe "C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.srcs/sources_1/new/anchor_top.v" -n14'
+// Elapsed time: 152 seconds
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+// Elapsed time: 130 seconds
+selectTree(PAResourceItoN.MsgTreePanel_MESSAGE_VIEW_TREE, (String) null, 6, false); // ah (O, cj)
+// [GUI Memory]: 119 MB (+3218kb) [00:19:56]
+// Elapsed time: 322 seconds
+closeMainWindow("anchor_fpga - [C:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.xpr] - Vivado 2017.4"); // cj
+// HOptionPane Warning: 'A background task is running. Please wait until it completes to exit Vivado. If you choose to abort background task and exit immediately, you will lose all unsaved changes to project. (Background Task)'

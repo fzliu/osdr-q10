@@ -186,7 +186,7 @@ module ad9361_dual #(
   if (SAMP_FILT_ENABLE == 1) begin
 
     ad9361_samp_filt #(
-      .DATA_MODULUS_MIN (20),
+      .DATA_PASS_VALUE (20),
       .LOG2_FILTER_LENGTH (3),
       .NUM_DELAY (26),
       .ABS_WIDTH (16)
