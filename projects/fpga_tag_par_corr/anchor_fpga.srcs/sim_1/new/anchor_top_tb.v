@@ -26,12 +26,22 @@ reg             data_clk;
 reg             reset;
 reg             ren;
 reg     [16:0]  read_addr;
-reg             read_start;
+//reg             read_start;
 reg     [15:0]  din;
 
 reg             rx_clk_in;
 reg     [11:0]  a_rx_data_p_pos;
 reg     [11:0]  a_rx_data_p_neg;
+
+reg     [11:0]  _a_rx_data_p0;
+reg     [11:0]  _a_rx_data_p1;
+reg     [11:0]  _b_rx_data_p0;
+reg     [11:0]  _b_rx_data_p1;
+
+reg     [11:0]  mema0[0:1051];
+reg     [11:0]  mema1[0:1051];
+reg     [11:0]  memb0[0:1051];
+reg     [11:0]  memb1[0:1051];
 
 reg             rx_frame_in;
 
@@ -76,13 +86,25 @@ assign spi_cs_a = 1;
 assign spi_cs_b = 1;
 assign cs = 2;
 
-assign a_rx_data_p0 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg);
-assign a_rx_data_p1 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg) + 100;
-assign b_rx_data_p0 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg) + 200;
-assign b_rx_data_p1 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg) + 300;
+//assign a_rx_data_p0 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg);
+//assign a_rx_data_p1 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg) + 100;
+//assign b_rx_data_p0 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg) + 200;
+//assign b_rx_data_p1 = ((rx_frame_in) ? a_rx_data_p_pos : a_rx_data_p_neg) + 300;
 
-parameter _dina = 16'b0;
-parameter _addr = 708604;
+assign a_rx_data_p0 = _a_rx_data_p0;
+assign a_rx_data_p1 = _a_rx_data_p1;
+assign b_rx_data_p0 = _b_rx_data_p0;
+assign b_rx_data_p1 = _b_rx_data_p1;
+
+//parameter _dina = 16'b0;
+//parameter _addr = 708604;
+
+integer i;
+
+initial $readmemh("C:/mem_a0.txt",mema0);
+initial $readmemh("C:/mem_a1.txt",mema1);
+initial $readmemh("C:/mem_b0.txt",memb0);
+initial $readmemh("C:/mem_b1.txt",memb1);
 
 initial begin
   reset = 0;
@@ -90,13 +112,24 @@ initial begin
   data_clk = 0;
   ren = 1;
   din = 0;
-  read_start = 1;
+  //read_start = 1;
   #10000 reset = ~reset;
   #40 reset = ~reset;
   #400 reset = ~reset;
   #40 reset = ~reset;
   #243 reset = ~reset;
   #40 reset = ~reset;
+  
+  begin
+    for(i=0;i<1052;i=i+1) begin
+      #20
+      _a_rx_data_p0 <= mema0[i];
+      _a_rx_data_p1 <= mema1[i];
+      _b_rx_data_p0 <= memb0[i];
+      _b_rx_data_p1 <= memb1[i];
+    end
+  end
+  
 end
   
 initial begin
@@ -127,6 +160,7 @@ always @ (negedge rx_frame_in) begin
   end
 end
 
+/*
 always @ (posedge clk) begin
   if (reset) begin
     read_start <= 1;
@@ -152,6 +186,7 @@ always @ (posedge clk) begin
     read_addr <= read_addr;
   end
 end
+*/
 
 always @ (posedge clk) begin
   if (reset) begin

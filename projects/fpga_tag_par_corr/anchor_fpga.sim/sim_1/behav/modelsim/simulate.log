@@ -12,3 +12,145 @@
 # //  18 U.S.C. Section 1905.
 # //
 # do {mcu_to_fpga_tb_simulate.do}
+# vsim -voptargs=""+acc"" -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm -lib xil_defaultlib xil_defaultlib.mcu_to_fpga_tb xil_defaultlib.glbl 
+# Start time: 11:14:21 on Dec 06,2018
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) MSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) MSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) MSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) LSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) MSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) LSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) MSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) LSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) MSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) LSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) MSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) LSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) MSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) LSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(280): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(281): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) MSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(282): (vopt-2957) LSB of part-select into 'distrib_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(283): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(284): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) MSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(296): (vopt-2957) LSB of part-select into 'corr_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) MSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(297): (vopt-2957) LSB of part-select into 'corr_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(299): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(300): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) MSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(314): (vopt-2957) LSB of part-select into 'cabs_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) MSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(315): (vopt-2957) LSB of part-select into 'cabs_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) MSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(318): (vopt-2957) LSB of part-select into 'peak_axis_tvalid' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) MSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v(319): (vopt-2957) LSB of part-select into 'peak_axis_tready' is out of bounds.
+# ** Error: (vopt-3373) ../../../../../../firmware/fpga/util/axis/axis_fan_in.v(92): Range of part-select [-1:0] into 's_axis_tvalid' [4:0] is reversed.
+# ** Warning: ../../../../../../firmware/fpga/util/axis/axis_fan_in.v(92): (vopt-2697) MSB of part-select into 's_axis_tvalid' is out of bounds.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2685) [TFMPC] - Too few port connections for 'xpm_fifo_sync'.  Expected 25, found 13.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'dbiterr'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'sbiterr'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'data_valid'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'almost_empty'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'underflow'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'rd_data_count'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'prog_empty'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'wr_ack'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'almost_full'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'overflow'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'wr_data_count'.
+# ** Warning: ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v(105): (vopt-2718) [TFMPC] - Missing connection for port 'prog_full'.
+# ** Error: (vopt-2064) Compiler back-end code generation process terminated with code 2.
+# Error loading design
+# Error: Error loading design
+#        Pausing macro execution
+# MACRO ./mcu_to_fpga_tb_simulate.do PAUSED at line 9
+# End time: 11:14:37 on Dec 06,2018, Elapsed time: 0:00:16
+# Errors: 119, Warnings: 14
