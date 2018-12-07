@@ -49,8 +49,8 @@ module shift_reg #(
 
   // shift register implementation
 
-  generate
   genvar i, j;
+  generate
   for (i = 0; i < WIDTH; i = i + 1) begin : shift_gen
 
     // assign input
@@ -80,7 +80,7 @@ module shift_reg #(
 
       // cascade SRL32 for long shift registers
 
-      for (j = 0; j < NUM_CASCADE; j = j + 1) begin : srl32_shift
+      for (j = 0; j < NUM_CASCADE; j = j + 1) begin : casc_gen
         SRLC32E #(
           .INIT (32'h00000000)
         ) SRLC32E_inst (
@@ -97,7 +97,7 @@ module shift_reg #(
       ) SRLC32E_inst (
         .Q (dout[i]),
         .Q31 (),
-        .A (DEPTH_LAST),
+        .A (DEPTH_LAST[4:0]),
         .CE (ena),
         .CLK (clk),
         .D (shift[i][0])

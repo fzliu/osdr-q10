@@ -13,8 +13,8 @@ module anchor_clk_gen (
   input             clk_ad9361,
 
   output            d_clk,   /* data clock */
-  output            m_clk,  /* main clock */
-  output            c_clk  /* compute clock */
+  output            m_clk,   /* main clock */
+  output            c_clk    /* compute clock */
 
 );
 
@@ -37,15 +37,15 @@ module anchor_clk_gen (
     .BANDWIDTH ("OPTIMIZED"),
     .CLKIN1_PERIOD (20),
     .DIVCLK_DIVIDE (1),
-    .CLKFBOUT_MULT (64),
+    .CLKFBOUT_MULT (32),
     .CLKFBOUT_PHASE (0.000),
-    .CLKOUT0_DIVIDE (64),
+    .CLKOUT0_DIVIDE (32),
     .CLKOUT0_PHASE (-90.000),
     .CLKOUT0_DUTY_CYCLE (0.500),
-    .CLKOUT1_DIVIDE (32),
+    .CLKOUT1_DIVIDE (16),
     .CLKOUT1_PHASE (0),
     .CLKOUT1_DUTY_CYCLE (0.500),
-    .CLKOUT2_DIVIDE (8),
+    .CLKOUT2_DIVIDE (4),
     .CLKOUT2_PHASE (0),
     .CLKOUT2_DUTY_CYCLE (0.500)
   ) plle2_base (

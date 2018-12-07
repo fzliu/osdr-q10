@@ -85,11 +85,20 @@ module axis_fan_in #(
 
   assign s_axis_tready = m_axis_tready ? chan_sel : 'b0;
 
-  // fan-in priority encoder
+  // fan-in priority logic
+
+  assign chan_prio[0] = 1'b1;
+
+  generate
+  for (n = 1; n < NUM_FANIN; n = n + 1) begin
+    assign chan_prio[n] = ~|s_axis_tvalid[n-1:0];
+  end
+  endgenerate
+
+  // select channel based on priority
 
   generate
   for (n = 0; n < NUM_FANIN; n = n + 1) begin
-    assign chan_prio[n] = (n == 0) ? 1'b1 : ~|s_axis_tvalid[n-1:0];
     always @(posedge clk) begin
       if (rst) begin
         chan_sel[n] <= 1'b0;
@@ -107,7 +116,8 @@ module axis_fan_in #(
   // channel selection
 
   oh_to_bin #(
-    .WIDTH_IN (NUM_FANIN)
+    .WIDTH_IN (NUM_FANIN),
+    .WIDTH_OUT (NUM_FANIN)
   ) oh_to_bin (
     .oh (chan_sel),
     .bin (chan_num)

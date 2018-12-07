@@ -36,7 +36,7 @@ module anchor_top #(
   // bit width parameters
 
   localparam  NT = NUM_TAGS - 1,
-  localparam  WA = SAMPS_WIDTH - 1,
+  localparam  WS = SAMPS_WIDTH - 1,
   localparam  WE = EBI_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
   localparam  WI = INPUT_WIDTH - 1,
@@ -123,13 +123,13 @@ module anchor_top #(
 
   wire              ad9361_axis_tvalid;
   wire              ad9361_axis_tready;
-  wire    [ WA:0]   ad9361_axis_tdata;
+  wire    [ WS:0]   ad9361_axis_tdata;
 
   // internal signals (clock conv axi-stream)
 
   wire              fifo_axis_tvalid;
   wire              fifo_axis_tready;
-  wire    [ WA:0]   fifo_axis_tdata;
+  wire    [ WS:0]   fifo_axis_tdata;
 
   // internal signals (distributor)
 
@@ -155,13 +155,18 @@ module anchor_top #(
   wire    [ NT:0]   peak_axis_tvalid;
   wire    [ NT:0]   peak_axis_tready;
   wire    [ WP:0]   peak_axis_tdata;
+  wire    [ NT:0]   peak_axis_tlast;
 
   // internal signals (fan-in)
 
-  wire    [ NT:0]   fanin_axis_tvalid;
-  wire    [ NT:0]   fanin_axis_tready;
-  wire    [ WP:0]   fanin_axis_tdata;
+  wire              fanin_axis_tvalid;
+  wire              fanin_axis_tready;
+  wire    [ WD:0]   fanin_axis_tdata;
   wire    [ NT:0]   fanin_axis_tuser;
+
+  // buffer read enable
+
+  wire              rd_ena;
 
   // multi-chip sync
 
@@ -176,6 +181,17 @@ module anchor_top #(
     .m_clk (m_clk),
     .c_clk (c_clk),
     .d_clk (d_clk)
+  );
+
+  // synchronize external signals
+
+  anchor_ext_sync #()
+  anchor_ext_sync (
+    .d_clk (d_clk),
+    .m_clk (m_clk),
+    .c_clk (c_clk),
+    .ebi_nrde (ebi_nrde),
+    .rd_ena (rd_ena)
   );
 
   // dual-9361 controller
@@ -263,7 +279,7 @@ module anchor_top #(
   generate
   for (n = 0; n < NUM_TAGS; n = n + 1) begin
     localparam i0 = n * SAMPS_WIDTH;
-    localparam i1 = i0 + WA;
+    localparam i1 = i0 + WS;
     localparam j0 = n * DATA_WIDTH;
     localparam j1 = j0 + WD;
 
@@ -277,11 +293,11 @@ module anchor_top #(
       .CORR_NUM (n)
     ) axis_bit_corr (
       .clk (c_clk),
-      .s_axis_tvalid (distrib_axis_tvalid[i1:i0]),
-      .s_axis_tready (distrib_axis_tvalid[i1:i0]),
-      .s_axis_tdata (distrib_axis_tvalid[i1:i0]),
-      .m_axis_tvalid (corr_axis_tvalid[j1:j0]),
-      .m_axis_tready (corr_axis_tready[j1:j0]),
+      .s_axis_tvalid (distrib_axis_tvalid[n]),
+      .s_axis_tready (distrib_axis_tready[n]),
+      .s_axis_tdata (distrib_axis_tdata[i1:i0]),
+      .m_axis_tvalid (corr_axis_tvalid[n]),
+      .m_axis_tready (corr_axis_tready[n]),
       .m_axis_tdata (corr_axis_tdata[j1:j0])
     );
 
@@ -293,11 +309,11 @@ module anchor_top #(
       .CABS_DELAY (CABS_DELAY)
     ) axis_cabs_serial (
       .clk (c_clk),
-      .s_axis_tvalid (corr_axis_tvalid[j1:j0]),
-      .s_axis_tready (corr_axis_tready[j1:j0]),
+      .s_axis_tvalid (corr_axis_tvalid[n]),
+      .s_axis_tready (corr_axis_tready[n]),
       .s_axis_tdata (corr_axis_tdata[j1:j0]),
-      .m_axis_tvalid (cabs_axis_tvalid[j1:j0]),
-      .m_axis_tready (cabs_axis_tready[j1:j0]),
+      .m_axis_tvalid (cabs_axis_tvalid[n]),
+      .m_axis_tready (cabs_axis_tready[n]),
       .m_axis_tdata (cabs_axis_tdata[j1:j0]),
       .m_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0])
     );
@@ -311,14 +327,14 @@ module anchor_top #(
       .BURST_LENGTH (BURST_LENGTH)
     ) axis_peak_detn (
       .clk (c_clk),
-      .s_axis_tvalid (cabs_axis_tvalid[j1:j0]),
-      .s_axis_tready (cabs_axis_tready[j1:j0]),
+      .s_axis_tvalid (cabs_axis_tvalid[n]),
+      .s_axis_tready (cabs_axis_tready[n]),
       .s_axis_tdata (cabs_axis_tdata[j1:j0]),
       .s_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0]),
-      .m_axis_tvalid (peak_axis_tvalid[j1:j0]),
-      .m_axis_tready (peak_axis_tready[j1:j0]),
+      .m_axis_tvalid (peak_axis_tvalid[n]),
+      .m_axis_tready (peak_axis_tready[n]),
       .m_axis_tdata (peak_axis_tdata[j1:j0]),
-      .m_axis_tlast ()
+      .m_axis_tlast (peak_axis_tlast[n])
     );
 
   end
@@ -345,6 +361,7 @@ module anchor_top #(
 
   tag_data_buff #(
     .NUM_TAGS (NUM_TAGS),
+    .NUM_CHANNELS (NUM_CHANNELS),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
     .READ_WIDTH (EBI_WIDTH)
   ) tag_data_buff (
@@ -353,8 +370,8 @@ module anchor_top #(
     .s_axis_tready (fanin_axis_tready),
     .s_axis_tdata (fanin_axis_tdata),
     .s_axis_tuser (fanin_axis_tuser),
-    .s_axis_tlast ({NUM_TAGS{1'b0}}),
-    .rd_ena (ebi_nrde),
+    .s_axis_tlast (1'b0),
+    .rd_ena (rd_ena),
     .ready (ready),
     .data_out (ebi_data)
   );

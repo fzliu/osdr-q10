@@ -57,6 +57,7 @@ module ad9361_dual_axis #(
 );
 
   `include "log2_func.vh"
+  `include "sign_ext.vh"
 
   // internal registers
 
@@ -93,27 +94,27 @@ module ad9361_dual_axis #(
   if (REVERSE_DATA == 0) begin
 
     always @(posedge data_clk) begin
-      data_packed[15:0] <= {{4{data_q3[11]}}, data_q3}; // axi spec: sign extend
-      data_packed[31:16] <= {{4{data_i3[11]}}, data_i3};
-      data_packed[47:32] <= {{4{data_q2[11]}}, data_q2};
-      data_packed[63:48] <= {{4{data_i2[11]}}, data_i2};
-      data_packed[79:64] <= {{4{data_q1[11]}}, data_q1};
-      data_packed[95:80] <= {{4{data_i1[11]}}, data_i1};
-      data_packed[111:96] <= {{4{data_q0[11]}}, data_q0};
-      data_packed[127:112] <= {{4{data_i0[11]}}, data_i0};
+      data_packed[15:0] <= `SIGN_EXT(data_q3,12,16); // axi spec: byte align
+      data_packed[31:16] <= `SIGN_EXT(data_i3,12,16);
+      data_packed[47:32] <= `SIGN_EXT(data_q2,12,16);
+      data_packed[63:48] <= `SIGN_EXT(data_i2,12,16);
+      data_packed[79:64] <= `SIGN_EXT(data_q1,12,16);
+      data_packed[95:80] <= `SIGN_EXT(data_i1,12,16);
+      data_packed[111:96] <= `SIGN_EXT(data_q0,12,16);
+      data_packed[127:112] <= `SIGN_EXT(data_i0,12,16);
     end
 
   end else begin
 
     always @(posedge data_clk) begin
-      data_packed[15:0] <= {{4{data_i0[11]}}, data_i0};
-      data_packed[31:16] <= {{4{data_q0[11]}}, data_q0};
-      data_packed[47:32] <= {{4{data_i1[11]}}, data_i1};
-      data_packed[63:48] <= {{4{data_q1[11]}}, data_q1};
-      data_packed[79:64] <= {{4{data_i2[11]}}, data_i2};
-      data_packed[95:80] <= {{4{data_q2[11]}}, data_q2};
-      data_packed[111:96] <= {{4{data_i3[11]}}, data_i3};
-      data_packed[127:112] <= {{4{data_q3[11]}}, data_q3};
+      data_packed[15:0] <= `SIGN_EXT(data_i0,12,16);
+      data_packed[31:16] <= `SIGN_EXT(data_q0,12,16);
+      data_packed[47:32] <= `SIGN_EXT(data_i1,12,16);
+      data_packed[63:48] <= `SIGN_EXT(data_q1,12,16);
+      data_packed[79:64] <= `SIGN_EXT(data_i2,12,16);
+      data_packed[95:80] <= `SIGN_EXT(data_q2,12,16);
+      data_packed[111:96] <= `SIGN_EXT(data_i3,12,16);
+      data_packed[127:112] <= `SIGN_EXT(data_q3,12,16);
     end
 
   end

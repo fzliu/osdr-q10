@@ -142,14 +142,14 @@ module axis_bit_corr #(
   assign adder_in1[0] = {ADDER_WIDTH{1'b0}};
 
   generate
-  for (n = 1; n < CORR_LENGTH; n = n + 1) begin : corr_gen
+  for (n = 1; n < CORR_LENGTH; n = n + 1) begin
     xpm_memory_dpdistram # (
       .MEMORY_SIZE (NUM_PARALLEL * ADDER_WIDTH),
       .CLOCKING_MODE ("common_clock"),
       .MEMORY_INIT_FILE ("none"),
       .MEMORY_INIT_PARAM ("0"),
       .USE_MEM_INIT (1),
-      .MESSAGE_CONTROL (1),
+      .MESSAGE_CONTROL (0),
       .USE_EMBEDDED_CONSTRAINT (0),
       .MEMORY_OPTIMIZATION ("true"),
       .WRITE_DATA_WIDTH_A (ADDER_WIDTH),

@@ -62,8 +62,6 @@ module axis_cabs_serial #(
 
   // internal registers
 
-  reg               batch_done_d = 'b0;
-
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_abs_reg = 'b0;
@@ -71,8 +69,11 @@ module axis_cabs_serial #(
   // internal signals
 
   wire    [ WC:0]   s_axis_tdata_unpack [0:NC];
-  wire              batch_done;
   wire              s_axis_frame;
+  wire              m_axis_frame;
+
+  wire              batch_done;
+  wire              batch_done_d;
 
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
@@ -84,7 +85,6 @@ module axis_cabs_serial #(
 
   wire    [ WD:0]   data_out;
   wire    [ WD:0]   data_cabs_out;
-  wire              m_axis_frame;
 
   // initialize final memory column
 
@@ -127,12 +127,14 @@ module axis_cabs_serial #(
 
   // absolute value module
 
+  assign cabs_dout[63:34] = 30'h00000000;
+
   math_cabs_32 #()
   math_cabs (
     .clk (clk),
     .dina (s_axis_tdata_unpack[count][WW:0]),
     .dinb (s_axis_tdata_unpack[count][WC:(WW+1)]),
-    .dout (cabs_dout)
+    .dout (cabs_dout[33:0])
   );
 
   shift_reg #(

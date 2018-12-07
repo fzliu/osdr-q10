@@ -7,4 +7,4 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-dC:/latest_orion-anchor/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.sim/sim_1/behav/modelsim
+d/home/fzliu/orion/code/orion-anchor/projects/fpga_tag_par_corr/anchor_fpga.sim/sim_1/behav/modelsim

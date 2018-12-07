@@ -17,20 +17,19 @@ module tag_data_buff #(
   // parameters
 
   parameter   NUM_TAGS = 20,
+  parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 64,
   parameter   FIFO_DEPTH = 1024,
   parameter   READ_WIDTH = 16,
 
   // derived parameters
 
-  localparam  DATA_WIDTH = CHANNEL_WIDTH * 4,
-  localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH,
+  localparam  DATA_WIDTH = NUM_CHANNELS * CHANNEL_WIDTH,
 
   // bit width parameters
 
   localparam  NT = NUM_TAGS - 1,
   localparam  WD = DATA_WIDTH - 1,
-  localparam  WP = PACKED_WIDTH - 1,
   localparam  WR = READ_WIDTH - 1
 
 ) (
@@ -43,7 +42,7 @@ module tag_data_buff #(
 
   input             s_axis_tvalid,
   output            s_axis_tready,
-  input   [ WP:0]   s_axis_tdata,
+  input   [ WD:0]   s_axis_tdata,
   input   [ NT:0]   s_axis_tuser,
   input             s_axis_tlast,
 
@@ -64,7 +63,7 @@ module tag_data_buff #(
 
   // internal signals
 
-  wire    [ WP:0]   fifo_din;
+  wire    [ WD:0]   fifo_din;
   wire              fifo_full;
   wire              fifo_empty;
   wire              fifo_rd_rst_busy;
@@ -109,13 +108,25 @@ module tag_data_buff #(
     .wr_en (s_axis_tvalid | s_axis_tvalid_d),
     .din (fifo_din),
     .full (fifo_full),
+    .overflow (),
+    .prog_full (),
+    .wr_data_count (),
+    .almost_full (),
+    .wr_ack (),
     .wr_rst_busy (fifo_wr_rst_busy),
     .rd_en (rd_ena & ~rd_ena_d),
     .dout (data_out),
     .empty (fifo_empty),
+    .prog_empty (),
+    .rd_data_count (),
+    .almost_empty (),
+    .data_valid (),
+    .underflow (),
     .rd_rst_busy (fifo_rd_rst_busy),
     .injectsbiterr (1'b0),
-    .injectdbiterr (1'b0)
+    .injectdbiterr (1'b0),
+    .sbiterr (),
+    .dbiterr ()
   );
 
   // output control signals

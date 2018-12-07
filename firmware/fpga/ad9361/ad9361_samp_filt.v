@@ -18,9 +18,8 @@ module ad9361_samp_filt #(
   // bit width parameters
 
   localparam  WA = ABS_WIDTH - 1
+
 ) (
-  
-  `include "sign_ext.vh"
 
   // core interface
 
@@ -58,6 +57,8 @@ module ad9361_samp_filt #(
 
 );
 
+  `include "sign_ext.vh"
+
   // internal signals
 
   wire    [  3:0]   valid_in;
@@ -65,9 +66,8 @@ module ad9361_samp_filt #(
   wire    [ 11:0]   data_iq [0:7];
   wire    [ 11:0]   data_out_iq [0:7];
 
-  wire    [ WA:0]   abs_dout [0:3];
+  wire    [ 33:0]   abs_dout [0:3];
   wire    [ WA:0]   avg_dout [0:3];
-  wire    [32-WA:0] abs_empty [0:3];
 
   // internal registers
 
@@ -151,7 +151,7 @@ module ad9361_samp_filt #(
       .clk (clk),
       .dina (`SIGN_EXT(data_iq[a],12,32)),
       .dinb (`SIGN_EXT(data_iq[b],12,32)),
-      .dout ({abs_empty[n],abs_dout[n]})
+      .dout (abs_dout[n])
     );
 
     // boxcar averager
@@ -162,7 +162,7 @@ module ad9361_samp_filt #(
     ) filt_boxcar (
       .clk (clk),
       .rst (1'b0),
-      .data_in (abs_dout[n]),
+      .data_in (abs_dout[n][WA:0]),
       .avg_out (avg_dout[n])
     );
 
