@@ -64,7 +64,6 @@ module filt_boxcar #(
   for (n = 0; n < FILTER_LENGTH; n = n + 1) begin
     initial begin
       shift[n] = 'b0;
-      sum_reg = 'b0;
     end
   end
   endgenerate

@@ -33,7 +33,7 @@ module math_cabs_32 (
   // multiply_a
 
   math_mult_35 #()
-  math_mult_35_0 (
+  math_mult_35_b (
     .clk (clk),
     .dina (`SIGN_EXT(dina,32,42)),
     .dinb (`SIGN_EXT(dina,32,35)),
@@ -43,8 +43,8 @@ module math_cabs_32 (
   // multiply_b
 
   math_mult_35 #()
-  math_mult_35_1 (
-     .clk(clk),
+  math_mult_35_a (
+     .clk (clk),
      .dina (`SIGN_EXT(dinb,32,42)),
      .dinb (`SIGN_EXT(dinb,32,35)),
      .dout (mult_b_out)
@@ -55,8 +55,8 @@ module math_cabs_32 (
   math_add_96 #()
   math_add_96 (
     .clk (clk),
-    .dina ({26'h0000000, mult_a_out}),
-    .dinb ({26'h0000000, mult_b_out}),
+    .dina ({26'h0000000, mult_a_out}),  // mult_a_out is positive
+    .dinb ({26'h0000000, mult_b_out}),  // mult_b_out is positive
     .dout (add_out)
   );
 
@@ -72,7 +72,7 @@ module math_cabs_32 (
   math_pow2_12 #()
   math_pow2_12 (
     .clk (clk),
-    .din (log_out << 1),  // left shift log = sqrt of exp
+    .din ({2'b00, log_out << 1}),  // left shift log = sqrt of exp
     .dout (dout)
   );
 

@@ -26,9 +26,9 @@ module math_add_96 (
 
   // internal registers
 
-  reg     [ 95:0]   dina_d;
-  reg     [ 95:0]   dinb_d;
-  reg     [ 96:0]   dout_reg;
+  reg     [ 95:0]   dina_d = 'b0;
+  reg     [ 95:0]   dinb_d = 'b0;
+  reg     [ 96:0]   dout_reg = 'b0;
 
   // internal signals
 
@@ -64,7 +64,7 @@ module math_add_96 (
     .BCASCREG (0),
     .BREG (0),
     .CARRYINREG (0),
-    .CARRYINSELREG (1),
+    .CARRYINSELREG (0),
     .CREG (0),
     .DREG (0),
     .INMODEREG (0),
@@ -104,7 +104,7 @@ module math_add_96 (
     .CEALUMODE (1'b1),
     .CEB1 (1'b0),
     .CEB2 (1'b0),
-    .CEC (1'b1),
+    .CEC (1'b0),
     .CECARRYIN (1'b0),
     .CECTRL (1'b1),
     .CED (1'b0),
@@ -144,12 +144,12 @@ module math_add_96 (
     .BCASCREG (1),
     .BREG (1),
     .CARRYINREG (0),
-    .CARRYINSELREG (1),
+    .CARRYINSELREG (0),
     .CREG (1),
     .DREG (0),
     .INMODEREG (0),
     .MREG (0),
-    .OPMODEREG (1),
+    .OPMODEREG (0),
     .PREG (0)
   ) DSP48E1_u (
     .ACOUT (),
@@ -179,11 +179,11 @@ module math_add_96 (
     .CARRYIN (),
     .D (),
     .CEA1 (1'b1),
-    .CEA2 (1'b0),
+    .CEA2 (1'b1),
     .CEAD (1'b0),
     .CEALUMODE (1'b1),
     .CEB1 (1'b1),
-    .CEB2 (1'b0),
+    .CEB2 (1'b1),
     .CEC (1'b1),
     .CECARRYIN (1'b1),
     .CECTRL (1'b1),
