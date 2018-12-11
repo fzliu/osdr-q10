@@ -13,6 +13,7 @@ module ad9361_dual #(
 
   parameter   DEVICE_TYPE = "7SERIES",
   parameter   REALTIME_ENABLE = 1,
+  parameter   VALID_ALL = 0,
   parameter   INDEP_CLOCKS = 0,
   parameter   REVERSE_DATA = 0,
   parameter   USE_AXIS_TLAST = 0,
@@ -239,6 +240,7 @@ module ad9361_dual #(
   // serialize data
 
   ad9361_dual_axis #(
+    .VALID_ALL (VALID_ALL),
     .INDEP_CLOCKS (INDEP_CLOCKS),
     .REVERSE_DATA (REVERSE_DATA),
     .USE_AXIS_TLAST (USE_AXIS_TLAST)

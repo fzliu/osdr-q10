@@ -1,4 +1,4 @@
-`timescale 1ns / 1ns
+`timescale 1ns / 100ps
 ////////////////////////////////////////////////////////////////////////////////
 // Company: 奥新智能
 // Engineer:
@@ -9,24 +9,43 @@
 
 module anchor_top_tb;
 
-  reg                 clk = 'b0;
+  // parameters
 
-  reg                 rx_clk_in = 'b0;
-  reg                 rx_frame_in = 'b0;
-  reg       [ 11:0]   a_rx_data_p0 = 'b0;
-  reg       [ 11:0]   a_rx_data_p1 = 'b0;
-  reg       [ 11:0]   b_rx_data_p0 = 'b0;
-  reg       [ 11:0]   b_rx_data_p1 = 'b0;
+  parameter   NUM_TAGS = 5;
+  parameter   SAMPS_WIDTH = 128;
+  parameter   DATA_WIDTH = 256;
 
-  reg                 ebi_nrde = 'b0;
+  localparam  INPUT_WIDTH = NUM_TAGS * SAMPS_WIDTH;
+  localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH;
 
-  wire                ready;
-  wire      [ 15:0]   ebi_data;
+  localparam  NT = NUM_TAGS - 1;
+  localparam  WS = SAMPS_WIDTH - 1;
+  localparam  WD = DATA_WIDTH - 1;
+  localparam  WI = INPUT_WIDTH - 1;
+  localparam  WP = PACKED_WIDTH - 1;
 
-  reg       [ 11:0]   mema0 [0:1051];
-  reg       [ 11:0]   mema1 [0:1051];
-  reg       [ 11:0]   memb1 [0:1051];
-  reg       [ 11:0]   memb0 [0:1051];
+  // signals
+
+  reg               clk = 'b0;
+
+  reg               rx_clk_in = 'b0;
+  reg               rx_frame_in = 'b0;
+  reg     [ 11:0]   a_rx_data_p0 = 'b0;
+  reg     [ 11:0]   a_rx_data_p1 = 'b0;
+  reg     [ 11:0]   b_rx_data_p0 = 'b0;
+  reg     [ 11:0]   b_rx_data_p1 = 'b0;
+
+  reg               ebi_nrde = 'b0;
+
+  wire              ready;
+  wire    [ 15:0]   ebi_data;
+
+  reg     [ 11:0]   mema0 [0:1051];
+  reg     [ 11:0]   mema1 [0:1051];
+  reg     [ 11:0]   memb1 [0:1051];
+  reg     [ 11:0]   memb0 [0:1051];
+
+  // input "real" signal
 
   localparam dir_mem = "../../../../anchor_fpga.srcs/sim_1/new/";
   initial $readmemb({dir_mem, "mem_a0.mem"}, mema0);
@@ -34,14 +53,18 @@ module anchor_top_tb;
   initial $readmemb({dir_mem, "mem_b0.mem"}, memb0);
   initial $readmemb({dir_mem, "mem_b1.mem"}, memb1);
 
-  initial forever #20 clk = ~clk;
-  initial forever #40 rx_clk_in <= ~rx_clk_in;
+  // set clocks
 
-  initial #2 forever #40 rx_frame_in = ~rx_frame_in;
+  initial forever #20 clk = ~clk;
+  initial forever #10 rx_clk_in <= ~rx_clk_in;
+
+  initial #1 forever #10 rx_frame_in = ~rx_frame_in;
+
+  // set input data
 
   integer i;
   initial begin
-    #12000
+    #5000
     for (i = 0; i < 1052; i = i + 1) begin
       #20
       a_rx_data_p0 <= mema0[i];
@@ -55,6 +78,8 @@ module anchor_top_tb;
     b_rx_data_p0 <= 'b0;
     b_rx_data_p1 <= 'b0;
   end
+
+  // anchor_top
 
   anchor_top anchor_top (
     .clk (clk),
@@ -94,10 +119,35 @@ module anchor_top_tb;
     .ready (ready)
   );
 
-  // add signals to waveform by default
+  // add signals to wave
 
-  wire d_clk = anchor_top.d_clk;
-  wire m_clk = anchor_top.m_clk;
-  wire c_clk = anchor_top.c_clk;
+  wire              d_clk = anchor_top.d_clk;
+  wire              m_clk = anchor_top.m_clk;
+  wire              c_clk = anchor_top.c_clk;
+
+  wire              ad9361_axis_tvalid = anchor_top.ad9361_axis_tvalid;
+  wire              ad9361_axis_tready = anchor_top.ad9361_axis_tready;
+  wire    [ WS:0]   ad9361_axis_tdata = anchor_top.ad9361_axis_tdata;
+  wire              fifo_axis_tvalid = anchor_top.fifo_axis_tvalid;
+  wire              fifo_axis_tready = anchor_top.fifo_axis_tready;
+  wire    [ WS:0]   fifo_axis_tdata = anchor_top.fifo_axis_tdata;
+  wire    [ NT:0]   distrib_axis_tvalid = anchor_top.distrib_axis_tvalid;
+  wire    [ NT:0]   distrib_axis_tready = anchor_top.distrib_axis_tready;
+  wire    [ WI:0]   distrib_axis_tdata = anchor_top.distrib_axis_tdata;
+  wire    [ NT:0]   corr_axis_tvalid = anchor_top.corr_axis_tvalid;
+  wire    [ NT:0]   corr_axis_tready = anchor_top.corr_axis_tready;
+  wire    [ WP:0]   corr_axis_tdata = anchor_top.corr_axis_tdata;
+  wire    [ NT:0]   cabs_axis_tvalid = anchor_top.cabs_axis_tvalid;
+  wire    [ NT:0]   cabs_axis_tready = anchor_top.cabs_axis_tready;
+  wire    [ WP:0]   cabs_axis_tdata = anchor_top.cabs_axis_tdata;
+  wire    [ WP:0]   cabs_axis_tdata_abs = anchor_top.cabs_axis_tdata_abs;
+  wire    [ NT:0]   peak_axis_tvalid = anchor_top.peak_axis_tvalid;
+  wire    [ NT:0]   peak_axis_tready = anchor_top.peak_axis_tready;
+  wire    [ WP:0]   peak_axis_tdata = anchor_top.peak_axis_tdata;
+  wire    [ NT:0]   peak_axis_tlast = anchor_top.peak_axis_tlast;
+  wire              fanin_axis_tvalid = anchor_top.fanin_axis_tvalid;
+  wire              fanin_axis_tready = anchor_top.fanin_axis_tready;
+  wire    [ WD:0]   fanin_axis_tdata = anchor_top.fanin_axis_tdata;
+  wire    [ NT:0]   fanin_axis_tuser = anchor_top.fanin_axis_tuser;
 
 endmodule

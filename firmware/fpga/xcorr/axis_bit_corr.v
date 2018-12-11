@@ -79,6 +79,7 @@ module axis_bit_corr #(
 
   wire              s_axis_frame;
   wire              m_axis_frame;
+
   wire    [ WW:0]   data_in [0:NP];
   wire    [ WM:0]   data_out;
   wire              batch_done;

@@ -15,6 +15,7 @@ module ad9361_dual_axis #(
 
   // parameters
 
+  parameter   VALID_ALL = 0,
   parameter   INDEP_CLOCKS = 0,
   parameter   REVERSE_DATA = 0,
   parameter   USE_AXIS_TLAST = 0,
@@ -76,14 +77,24 @@ module ad9361_dual_axis #(
 
   // internal signals
 
+  wire              valid_int;
+
   wire              m_axis_update;
   wire              m_axis_frame;
   wire              m_axis_end_burst;
 
   // input data domain
 
+  generate
+  if (VALID_ALL != 0) begin
+    assign valid_int = valid_0 & valid_1 & valid_2 & valid_3;
+  end else begin
+    assign valid_int = valid_0 | valid_1 | valid_2 | valid_3;
+  end
+  endgenerate
+
   always @(posedge data_clk) begin
-    if (valid_0 & valid_1 & valid_2 & valid_3) begin
+    if (valid_int) begin
       data_frame <= ~data_frame;
     end else begin
       data_frame <= data_frame;

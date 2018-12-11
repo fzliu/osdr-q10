@@ -70,7 +70,6 @@ module axis_fan_in #(
 
   wire              in_valid;
   wire    [ WD:0]   in_data;
-  wire              in_last;
 
   // slave interface
 
@@ -83,7 +82,7 @@ module axis_fan_in #(
   end
   endgenerate
 
-  assign s_axis_tready = m_axis_tready ? chan_sel : 'b0;
+  assign s_axis_tready = m_axis_tready ? chan_sel : 1'b0;
 
   // fan-in priority logic
 

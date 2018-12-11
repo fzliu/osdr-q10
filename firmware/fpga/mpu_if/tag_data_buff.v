@@ -71,7 +71,7 @@ module tag_data_buff #(
 
   // slave interface
 
-  assign s_axis_tready = (~s_axis_tvalid | s_axis_tvalid) & ~fifo_full;
+  assign s_axis_tready = (~s_axis_tvalid | s_axis_tvalid_d) & ~fifo_full;
 
   // assign FIFO inputs
 

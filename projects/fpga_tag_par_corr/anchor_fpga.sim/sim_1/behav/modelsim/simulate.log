@@ -1,6 +1,6 @@
 # do {anchor_top_tb_simulate.do}
 # vsim -voptargs=""+acc"" -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm -lib xil_defaultlib xil_defaultlib.anchor_top_tb xil_defaultlib.glbl 
-# Start time: 16:22:46 on Dec 07,2018
+# Start time: 10:46:51 on Dec 11,2018
 # Loading xil_defaultlib.anchor_top_tb
 # Loading xil_defaultlib.anchor_top
 # Loading xil_defaultlib.anchor_clk_gen
@@ -51,7 +51,7 @@
 # Loading unisims_ver.SRL16E
 # Loading unisims_ver.SRLC32E
 # ** Warning: (vsim-8311) System Verilog assertions are supported only in Questasim.
-# ** Warning: Design size of 12542 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# ** Warning: Design size of 12668 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
 # Expect performance to be adversely affected.
 # 1
 # 1
@@ -193,39 +193,6 @@
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
-add wave -position end  sim:/anchor_top_tb/anchor_top/d_clk
-add wave -position end  sim:/anchor_top_tb/anchor_top/m_clk
-add wave -position end  sim:/anchor_top_tb/anchor_top/c_clk
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_axis_tvalid
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_axis_tready
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_axis_tdata
-add wave -position end  sim:/anchor_top_tb/anchor_top/fifo_axis_tvalid
-add wave -position end  sim:/anchor_top_tb/anchor_top/fifo_axis_tready
-add wave -position end  sim:/anchor_top_tb/anchor_top/fifo_axis_tdata
-add wave -position end  sim:/anchor_top_tb/anchor_top/distrib_axis_tvalid
-add wave -position end  sim:/anchor_top_tb/anchor_top/distrib_axis_tready
-add wave -position end  sim:/anchor_top_tb/anchor_top/distrib_axis_tdata
-add wave -position end  sim:/anchor_top_tb/anchor_top/corr_axis_tvalid
-add wave -position end  sim:/anchor_top_tb/anchor_top/corr_axis_tready
-add wave -position end  sim:/anchor_top_tb/anchor_top/corr_axis_tdata
-add wave -position end  sim:/anchor_top_tb/anchor_top/cabs_axis_tvalid
-add wave -position end  sim:/anchor_top_tb/anchor_top/cabs_axis_tready
-add wave -position end  sim:/anchor_top_tb/anchor_top/cabs_axis_tdata
-add wave -position end  sim:/anchor_top_tb/anchor_top/cabs_axis_tdata_abs
-add wave -position end  sim:/anchor_top_tb/anchor_top/peak_axis_tvalid
-add wave -position end  sim:/anchor_top_tb/anchor_top/peak_axis_tready
-add wave -position end  sim:/anchor_top_tb/anchor_top/peak_axis_tdata
-add wave -position end  sim:/anchor_top_tb/anchor_top/peak_axis_tlast
-add wave -position end  sim:/anchor_top_tb/anchor_top/fanin_axis_tvalid
-add wave -position end  sim:/anchor_top_tb/anchor_top/fanin_axis_tready
-add wave -position end  sim:/anchor_top_tb/anchor_top/fanin_axis_tdata
-add wave -position end  sim:/anchor_top_tb/anchor_top/fanin_axis_tuser
-run
-# Warning : input CLKIN1 period and attribute CLKIN1_PERIOD on PLLE2_ADV instance anchor_top_tb.anchor_top.anchor_clk_gen.plle2_base.plle2_adv_1 are not same.
-add wave -position 12  sim:/anchor_top_tb/anchor_top/ad9361_dual/valid_0
-add wave -position 13  sim:/anchor_top_tb/anchor_top/ad9361_dual/valid_1
-add wave -position 14  sim:/anchor_top_tb/anchor_top/ad9361_dual/valid_2
-add wave -position 15  sim:/anchor_top_tb/anchor_top/ad9361_dual/data_i3
 restart
 run
 # ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
@@ -363,6 +330,173 @@ run
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
-# Warning : input CLKIN1 period and attribute CLKIN1_PERIOD on PLLE2_ADV instance anchor_top_tb.anchor_top.anchor_clk_gen.plle2_base.plle2_adv_1 are not same.
-# End time: 16:49:21 on Dec 07,2018, Elapsed time: 0:26:35
-# Errors: 0, Warnings: 64
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/clk
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_0_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i0_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q0_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_1_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i1_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q1_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_2_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i2_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q2_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_3_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i3_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q3_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_0_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i0_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q0_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_1_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i1_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q1_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_2_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i2_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q2_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_3_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_i3_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_q3_out
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_in
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_iq
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/data_out_iq
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/abs_dout
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/avg_dout
+add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/valid_out
+restart
+run
+# ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.axis_clk_conv_fifo.axis_sample_fifo.gnuram_async_fifo.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.axis_clk_conv_fifo.axis_sample_fifo.gnuram_async_fifo.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc  0
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[0].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[1].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc  0
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[1].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[2].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc  0
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[2].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[3].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc  0
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[3].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[2].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[3].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[4].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[5].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Warning: [XPM_MEMORY 30-15] MEMORY_TYPE (2) and MEMORY_PRIMITIVE (1) together specify a true dual port distributed RAM, which will be mapped to a dual port RAM structure using port A and B read interfaces but a single port A write interface, leaving the port B write interface unused. anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_bit_corr.genblk3[6].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 495
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[4].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc  0
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
+#    Time: 1 ps  Scope: anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+# End time: 11:02:13 on Dec 11,2018, Elapsed time: 0:15:22
+# Errors: 0, Warnings: 95

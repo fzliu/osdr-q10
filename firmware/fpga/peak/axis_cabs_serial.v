@@ -110,6 +110,7 @@ module axis_cabs_serial #(
   // slave interface
 
   assign batch_done = (count == NC);
+  assign s_axis_frame = s_axis_tvalid & s_axis_tready;
   assign s_axis_tready = m_axis_tready & batch_done;
 
   // channel counter
@@ -127,13 +128,15 @@ module axis_cabs_serial #(
 
   // absolute value module
 
+  assign cabs_dina = s_axis_tdata_unpack[count][WW:0];
+  assign cabs_dinb = s_axis_tdata_unpack[count][WC:(WW+1)];
   assign cabs_dout[63:34] = 30'h00000000;
 
   math_cabs_32 #()
   math_cabs (
     .clk (clk),
-    .dina (s_axis_tdata_unpack[count][WW:0]),
-    .dinb (s_axis_tdata_unpack[count][WC:(WW+1)]),
+    .dina (cabs_dina),
+    .dinb (cabs_dinb),
     .dout (cabs_dout[33:0])
   );
 
@@ -190,6 +193,10 @@ module axis_cabs_serial #(
       m_axis_tdata_abs_reg <= m_axis_tdata_abs;
     end
   end
+
+  assign m_axis_tvalid = m_axis_tvalid_reg;
+  assign m_axis_tdata = m_axis_tdata_reg;
+  assign m_axis_tdata_abs = m_axis_tdata_abs_reg;
 
 endmodule
 
