@@ -2,9 +2,9 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AXI-stream distributor. Similar to fan-out but does so for ALL
-// channels. Waits for all channels to assert tready before updating the bus
-// data.
+// Description: AXI-stream distributor. Similar to axis_fan_out but sends the
+// same data to all channels, i.e. waits for all channels to assert tready
+// before updating the bus data (m_axis_tdata).
 //
 // enable  :  N/A
 // reset   :  active-high

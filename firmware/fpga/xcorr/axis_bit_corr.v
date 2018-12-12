@@ -72,6 +72,8 @@ module axis_bit_corr #(
   // internal registers
 
   reg               batch_done_d = 'b0;
+  reg               valid_out = 'b0;
+
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WM:0]   m_axis_tdata_reg = 'b0;
 
@@ -117,7 +119,7 @@ module axis_bit_corr #(
 
   assign batch_done = (count == NP);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = m_axis_tready & batch_done;
+  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
 
   // counter (for tracking current input set) logic
 
@@ -168,13 +170,13 @@ module axis_bit_corr #(
       .rsta (1'b0),
       .ena (1'b1),
       .regcea (1'b0),
-      .wea (s_axis_tvalid),
+      .wea (1'b1),
       .addra (count),
       .dina (adder_out[n-1]),
       .douta (),
       .clkb (),
       .rstb (1'b0),
-      .enb (s_axis_tvalid),
+      .enb (1'b1),
       .regceb (1'b1),
       .addrb (count_next),
       .doutb (adder_in1[n])
@@ -192,12 +194,10 @@ module axis_bit_corr #(
   end
   endgenerate
 
-  // output memory
+  // output "memory"
 
   always @(posedge clk) begin
-    if (s_axis_tvalid) begin
-      output_mem[count] <= adder_out[LC];
-    end
+    output_mem[count] <= adder_out[LC];
   end
 
   // repack output data
@@ -210,17 +210,29 @@ module axis_bit_corr #(
   end
   endgenerate
 
-  // master interface
-
-  assign m_axis_frame = m_axis_tvalid & m_axis_tready;
+  // valid_out logic
 
   always @(posedge clk) begin
     batch_done_d <= batch_done;
   end
 
   always @(posedge clk) begin
+    if (batch_done & ~batch_done_d) begin
+      valid_out <= 1'b1;
+    end else if (m_axis_frame | ~m_axis_tvalid) begin
+      valid_out <= 1'b0;
+    end else begin
+      valid_out <= valid_out;
+    end
+  end
+
+  // master interface
+
+  assign m_axis_frame = m_axis_tvalid & m_axis_tready;
+
+  always @(posedge clk) begin
     if (m_axis_frame | ~m_axis_tvalid) begin
-      m_axis_tvalid_reg <= batch_done_d;
+      m_axis_tvalid_reg <= valid_out;
       m_axis_tdata_reg <= data_out;
     end else begin
       m_axis_tvalid_reg <= m_axis_tvalid;

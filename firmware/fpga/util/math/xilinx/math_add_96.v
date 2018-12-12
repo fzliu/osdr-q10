@@ -4,8 +4,10 @@
 //
 // Description: Cascades two 48-bit adders into a 96-bit one.
 //
-// Revision: N/A
-// Additional Comments: This module should be auto-generated.
+// enable  :  N/A
+// reset   :  N/A
+// latency :  3 cycles
+// output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -144,12 +146,12 @@ module math_add_96 (
     .BCASCREG (1),
     .BREG (1),
     .CARRYINREG (0),
-    .CARRYINSELREG (0),
+    .CARRYINSELREG (1),
     .CREG (1),
     .DREG (0),
     .INMODEREG (0),
     .MREG (0),
-    .OPMODEREG (0),
+    .OPMODEREG (1),   // if set to 0, warning occurs (CARRYINSEL == 3'b010)
     .PREG (0)
   ) DSP48E1_u (
     .ACOUT (),
@@ -176,7 +178,7 @@ module math_add_96 (
     .A (dina_d[95:66]),
     .B (dina_d[65:48]),
     .C (dinb_d[95:48]),
-    .CARRYIN (),
+    .CARRYIN (1'b0),
     .D (),
     .CEA1 (1'b1),
     .CEA2 (1'b1),

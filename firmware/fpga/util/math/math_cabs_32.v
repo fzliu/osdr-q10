@@ -60,7 +60,7 @@ module math_cabs_32 (
     .dout (add_out)
   );
 
-  // input data domain
+  // log2 (6 decimal places)
 
   math_log2_64 #()
   math_log2_64 (
@@ -69,10 +69,12 @@ module math_cabs_32 (
     .dout (log_out)
   );
 
+  // pow2 (4 decimal places)
+
   math_pow2_12 #()
   math_pow2_12 (
     .clk (clk),
-    .din ({2'b00, log_out << 1}),  // left shift log = sqrt of exp
+    .din ({2'b00, log_out << 1}),
     .dout (dout)
   );
 

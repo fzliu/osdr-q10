@@ -62,6 +62,9 @@ module axis_cabs_serial #(
 
   // internal registers
 
+  reg               batch_done_out_d = 'b0;
+  reg               valid_out = 'b0;
+
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_abs_reg = 'b0;
@@ -72,12 +75,10 @@ module axis_cabs_serial #(
   wire              s_axis_frame;
   wire              m_axis_frame;
 
-  wire              batch_done;
-  wire              batch_done_d;
-
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
-  wire              valid_out;
+  wire              batch_done;
+  wire              batch_done_out;
 
   wire    [ WW:0]   cabs_dina;
   wire    [ WW:0]   cabs_dinb;
@@ -111,7 +112,7 @@ module axis_cabs_serial #(
 
   assign batch_done = (count == NC);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = m_axis_tready & batch_done;
+  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
 
   // channel counter
 
@@ -141,21 +142,29 @@ module axis_cabs_serial #(
   );
 
   shift_reg #(
-    .WIDTH (COUNT_WIDTH + 1),
+    .WIDTH (COUNT_WIDTH),
     .DEPTH (CABS_DELAY)
   ) shift_reg_count (
     .clk (clk),
     .ena (1'b1),
-    .din ({count, s_axis_tvalid}),
-    .dout ({count_out, valid_out})
+    .din (count),
+    .dout (count_out)
   );
 
-  // cabs memory
+  shift_reg #(
+    .WIDTH (1),
+    .DEPTH (CABS_DELAY)
+  ) shift_reg_done (
+    .clk (clk),
+    .ena (1'b1),
+    .din (batch_done),
+    .dout (batch_done_out)
+  );
+
+  // cabs "memory"
 
   always @(posedge clk) begin
-    if (valid_out) begin
-      cabs_mem[count_out] <= cabs_dout;
-    end
+    cabs_mem[count_out] <= cabs_dout;
   end
 
   generate
@@ -169,14 +178,31 @@ module axis_cabs_serial #(
   // align input data with abs data
 
   shift_reg #(
-    .WIDTH (DATA_WIDTH + 1),
+    .WIDTH (DATA_WIDTH),
     .DEPTH (CABS_DELAY + 1)
   ) shift_reg_data (
     .clk (clk),
     .ena (1'b1),
-    .din ({s_axis_tdata, batch_done}),
-    .dout ({data_out, batch_done_d})
+    .din (s_axis_tdata),
+    .dout (data_out)
   );
+
+  // data_out logic
+  // when valid_out == 1'b1, both m_axis and output contain valid data
+
+  always @(posedge clk) begin
+    batch_done_out_d <= batch_done_out;
+  end
+
+  always @(posedge clk) begin
+    if (batch_done_out & ~batch_done_out_d) begin
+      valid_out <= 1'b1;
+    end else if (m_axis_frame | ~m_axis_tvalid) begin
+      valid_out <= 1'b0;
+    end else begin
+      valid_out <= valid_out;
+    end
+  end
 
   // master interface
 
@@ -184,7 +210,7 @@ module axis_cabs_serial #(
 
   always @(posedge clk) begin
     if (m_axis_frame | ~m_axis_tvalid) begin
-      m_axis_tvalid_reg <= batch_done_d;
+      m_axis_tvalid_reg <= valid_out;
       m_axis_tdata_reg <= data_out;
       m_axis_tdata_abs_reg <= data_cabs_out;
     end else begin

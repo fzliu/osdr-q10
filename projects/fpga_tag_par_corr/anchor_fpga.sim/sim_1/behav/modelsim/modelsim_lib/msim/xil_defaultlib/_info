@@ -174,7 +174,7 @@ R8
 R9
 R10
 vanchor_top
-!s10a 1544432082
+!s10a 1544512930
 R14
 !i10b 1
 !s100 CmaR1Y3ZWDbgTAN]PUBBi3
@@ -197,14 +197,14 @@ R8
 R9
 R10
 vanchor_top_tb
-!s10a 1544496389
-!s110 1544496407
+!s10a 1544602396
+!s110 1544602412
 !i10b 1
-!s100 @_8X6a``KaY0K=7?N^Y;c1
-ITd<f>gF8RjoEz>6a[FJ9o3
+!s100 VD6eGPnnJK8eCoci>_>091
+IT`_^Hi0z2j2P0T7>Me[;l2
 R1
 R0
-w1544496389
+w1544602396
 8../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v
 F../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v
 R15
@@ -212,7 +212,7 @@ R4
 r1
 !s85 0
 31
-!s108 1544496407.000000
+!s108 1544602412.000000
 R6
 R7
 !i113 1
@@ -220,14 +220,14 @@ R8
 R9
 R10
 vaxis_bit_corr
-!s10a 1544489890
-Z16 !s110 1544494608
+!s10a 1544600317
+Z16 !s110 1544600344
 !i10b 1
-!s100 CQQ@HUk8F[<`IA=K1Z0]F0
-I5`c?7FY3[1kCzMd>VRYQ<2
+!s100 LfkjTR<:RJE4C[laKn9h;2
+I8;=ZPD7@OJ6VXck>QhYg;0
 R1
 R0
-w1544489890
+w1544600317
 8../../../../../../firmware/fpga/xcorr/axis_bit_corr.v
 F../../../../../../firmware/fpga/xcorr/axis_bit_corr.v
 F../../../../../../firmware/fpga/xcorr/correlators.vh
@@ -238,7 +238,7 @@ R4
 r1
 !s85 0
 31
-Z18 !s108 1544494608.000000
+Z18 !s108 1544600344.000000
 R6
 R7
 !i113 1
@@ -246,14 +246,14 @@ R8
 R9
 R10
 vaxis_cabs_serial
-!s10a 1544495909
-!s110 1544495918
+!s10a 1544600329
+R16
 !i10b 1
-!s100 B8Z^M7NJDHVR8[OHMGU931
-I=gDP03jRSmdbA4Nh4:Q4U3
+!s100 E2jV9?nZfZ^9:PV`6b=Tj3
+I5<6D:3SfM2X@ENLP>ofEl0
 R1
 R0
-w1544495909
+w1544600329
 8../../../../../../firmware/fpga/peak/axis_cabs_serial.v
 F../../../../../../firmware/fpga/peak/axis_cabs_serial.v
 R2
@@ -262,7 +262,7 @@ R4
 r1
 !s85 0
 31
-!s108 1544495918.000000
+R18
 R6
 R7
 !i113 1
@@ -293,8 +293,8 @@ R8
 R9
 R10
 vaxis_distrib
-!s10a 1544489776
-R16
+!s10a 1544597203
+Z19 !s110 1544494608
 !i10b 1
 !s100 4Hki<5:b]nW8i]fz=@IWb0
 IABWOFJ6z89]?D=:P@1iQ]2
@@ -304,12 +304,12 @@ w1544489776
 8../../../../../../firmware/fpga/util/axis/axis_distrib.v
 F../../../../../../firmware/fpga/util/axis/axis_distrib.v
 R2
-Z19 L0 15
+Z20 L0 15
 R4
 r1
 !s85 0
 31
-R18
+Z21 !s108 1544494608.000000
 R6
 R7
 !i113 1
@@ -318,7 +318,7 @@ R9
 R10
 vaxis_fan_in
 !s10a 1544494316
-R16
+R19
 !i10b 1
 !s100 ]TGXG[h8XD=TGEc]>LzAB3
 IQ4iYHYP=I?VnIQ6HeVGzY0
@@ -328,12 +328,12 @@ w1544494316
 8../../../../../../firmware/fpga/util/axis/axis_fan_in.v
 F../../../../../../firmware/fpga/util/axis/axis_fan_in.v
 R2
-R19
+R20
 R4
 r1
 !s85 0
 31
-R18
+R21
 R6
 R7
 !i113 1
@@ -352,7 +352,7 @@ w1543544071
 8../../../../../../firmware/fpga/peak/axis_peak_detn.v
 F../../../../../../firmware/fpga/peak/axis_peak_detn.v
 R2
-R19
+R20
 R4
 r1
 !s85 0
@@ -365,14 +365,14 @@ R8
 R9
 R10
 vaxis_to_mem
-Z20 !s10a 1543542779
+Z22 !s10a 1543542779
 R14
 !i10b 1
 !s100 :Y<kR^b[ij5Tnl[;gnSEY1
 IO231cbk4Cj__>[C4j<RlW3
 R1
 R0
-Z21 w1543542779
+Z23 w1543542779
 8../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v
 F../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v
 R2
@@ -389,14 +389,14 @@ R8
 R9
 R10
 vcounter
-R20
+R22
 R14
 !i10b 1
 !s100 2k9jXjj:7WH5QjcQInG>;3
 IHfIAo:3=_YJ<XdlIn_>m52
 R1
 R0
-R21
+R23
 8../../../../../../firmware/fpga/util/math/counter.v
 F../../../../../../firmware/fpga/util/math/counter.v
 R2
@@ -436,7 +436,7 @@ R8
 R9
 R10
 vglbl
-Z22 !s110 1544511896
+Z24 !s110 1544603154
 !i10b 1
 !s100 JWZ^meD<P7inSF0<1SiO32
 IHANT?><<>G9J5i]G9zVT[0
@@ -450,28 +450,28 @@ R4
 r1
 !s85 0
 31
-!s108 1544511896.000000
+Z25 !s108 1544603154.000000
 !s107 glbl.v|
 !s90 -work|xil_defaultlib|glbl.v|
 !i113 1
 R8
 R10
 vmath_add_96
-R22
+R24
 !i10b 1
-!s100 mKM=VC35So:BAPJMz]FTj0
-Ig3>_lAnPePfL<58;:=P@D3
+!s100 JZBl<X[]8>HY94oa[O6@Y1
+IM2hzo8c84S<2eMRKWLGB<3
 R1
 R0
-w1544511874
+w1544603124
 8../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v
 F../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v
-R11
+R13
 R4
 r1
 !s85 0
 31
-!s108 1544511895.000000
+R25
 R6
 R7
 !i113 1
@@ -479,14 +479,14 @@ R8
 R9
 R10
 vmath_cabs_32
-!s10a 1544500648
-!s110 1544498637
+!s10a 1544514677
+!s110 1544520612
 !i10b 1
-!s100 ;47>k5hCV1BP56^:;VJOK0
-IU`8T4coOE467E]^T<3oT_0
+!s100 Ha4:UAZ@g>?F=_`6aAo>_0
+IQB:>H8f[BHn;DIn;_W;F=3
 R1
 R0
-w1544498621
+w1544514677
 8../../../../../../firmware/fpga/util/math/math_cabs_32.v
 F../../../../../../firmware/fpga/util/math/math_cabs_32.v
 R12
@@ -495,7 +495,7 @@ R4
 r1
 !s85 0
 31
-!s108 1544498637.000000
+!s108 1544520612.000000
 R6
 R7
 !i113 1
@@ -503,14 +503,14 @@ R8
 R9
 R10
 vmath_log2_64
-Z23 !s10a 1544068703
+Z26 !s10a 1544068703
 R14
 !i10b 1
 !s100 M`FRk62idY8ghFb6oKBMi0
 IBJ4S68lO]f6SgNo3Q^n6S3
 R1
 R0
-Z24 w1544068703
+Z27 w1544068703
 8../../../../../../firmware/fpga/util/math/math_log2_64.v
 F../../../../../../firmware/fpga/util/math/math_log2_64.v
 R11
@@ -549,14 +549,14 @@ R8
 R9
 R10
 vmath_pow2_12
-R23
+R26
 R14
 !i10b 1
 !s100 f568f9YJQ6]FLHCXVoB6K2
 Idk]0Ak8k=[o2O50cNQfDG2
 R1
 R0
-R24
+R27
 8../../../../../../firmware/fpga/util/math/math_pow2_12.v
 F../../../../../../firmware/fpga/util/math/math_pow2_12.v
 R13
@@ -572,14 +572,14 @@ R8
 R9
 R10
 voh_to_bin
-R20
+R22
 R14
 !i10b 1
 !s100 fhOERMCfVn`=m4FX2E4Xb0
 IVCPo2g`>E]nDX9zD>FUaO1
 R1
 R0
-R21
+R23
 8../../../../../../firmware/fpga/util/misc/oh_to_bin.v
 F../../../../../../firmware/fpga/util/misc/oh_to_bin.v
 R2
@@ -606,7 +606,7 @@ R0
 w1544088825
 8../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v
 F../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v
-R19
+R20
 R4
 r1
 !s85 0
@@ -620,7 +620,7 @@ R9
 R10
 vtag_data_buff
 !s10a 1544491320
-R16
+R19
 !i10b 1
 !s100 R7IngAE0`k>K_]=L7ceFn3
 IONcjLIB7@DUV1aGe<@fI<2
@@ -630,12 +630,12 @@ w1544491320
 8../../../../../../firmware/fpga/mpu_if/tag_data_buff.v
 F../../../../../../firmware/fpga/mpu_if/tag_data_buff.v
 R2
-R19
+R20
 R4
 r1
 !s85 0
 31
-R18
+R21
 R6
 R7
 !i113 1

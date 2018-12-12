@@ -64,19 +64,28 @@ module anchor_top_tb;
 
   integer i;
   initial begin
-    #5000
+    #2500;  // clocks come up at about 2350
     for (i = 0; i < 1052; i = i + 1) begin
-      #20
       a_rx_data_p0 <= mema0[i];
       a_rx_data_p1 <= mema1[i];
       b_rx_data_p0 <= memb0[i];
       b_rx_data_p1 <= memb1[i];
+      #20;
     end
-    #20
+
     a_rx_data_p0 <= 'b0;
     a_rx_data_p1 <= 'b0;
     b_rx_data_p0 <= 'b0;
     b_rx_data_p1 <= 'b0;
+
+    #2500;
+    for (i = 0; i < 1052; i = i + 1) begin
+      a_rx_data_p0 <= mema0[i];
+      a_rx_data_p1 <= mema1[i];
+      b_rx_data_p0 <= memb0[i];
+      b_rx_data_p1 <= memb1[i];
+      #20;
+    end
   end
 
   // anchor_top

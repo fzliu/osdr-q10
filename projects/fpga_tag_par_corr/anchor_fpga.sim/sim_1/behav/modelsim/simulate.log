@@ -1,6 +1,6 @@
 # do {anchor_top_tb_simulate.do}
 # vsim -voptargs=""+acc"" -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm -lib xil_defaultlib xil_defaultlib.anchor_top_tb xil_defaultlib.glbl 
-# Start time: 15:05:00 on Dec 11,2018
+# Start time: 16:25:58 on Dec 12,2018
 # Loading xil_defaultlib.anchor_top_tb
 # Loading xil_defaultlib.anchor_top
 # Loading xil_defaultlib.anchor_clk_gen
@@ -51,7 +51,7 @@
 # Loading unisims_ver.SRL16E
 # Loading unisims_ver.SRLC32E
 # ** Warning: (vsim-8311) System Verilog assertions are supported only in Questasim.
-# ** Warning: Design size of 12670 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# ** Warning: Design size of 12693 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
 # Expect performance to be adversely affected.
 # 1
 # 1
@@ -59,15 +59,6 @@
 # .main_pane.structure.interior.cs.body.struct
 # .main_pane.objects.interior.cs.body.tree
 # ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[0].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[1].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[2].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[3].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[0].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[1].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[2].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[3].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[4].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.axis_clk_conv_fifo.axis_sample_fifo.gnuram_async_fifo.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.axis_clk_conv_fifo.axis_sample_fifo.gnuram_async_fifo.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
@@ -203,28 +194,29 @@
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
 run
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/clk
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/dina
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/dinb
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/dout
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/dina_d
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/dinb_d
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/dout_reg
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/dsp_out
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/carry_out_0
-add wave -position end  sim:/anchor_top_tb/anchor_top/ad9361_dual/genblk1/ad9361_samp_filt/filt_gen[0]/math_cabs/math_add_96/carry_out_1
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/clk
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/s_axis_tvalid
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/s_axis_tready
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/s_axis_tdata
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/s_axis_tdata_abs
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_tvalid
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_tready
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_tdata
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_tlast
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/mem_count
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_tvalid_reg
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_tdata_reg
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_tlast_reg
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/has_peak
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/data_abs_avg
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/s_axis_tdata_abs_d
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/mem_ready
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/mem_addr
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/mem_dout
+add wave -position end  sim:/anchor_top_tb/anchor_top/genblk1[0]/axis_peak_detn/m_axis_frame
 restart
 run
 # ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[0].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[1].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[2].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.ad9361_dual.genblk1.ad9361_samp_filt.filt_gen[3].math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[0].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[1].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[2].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[3].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
-# DRC warning : CARRYINSEL is set to 010 with OPMODEREG set to 0. This causes unknown values after reset occurs. It is suggested to use OPMODEREG = 1 when cascading large adders. DSP48E1 instance anchor_top_tb.anchor_top.genblk1[4].axis_cabs_serial.math_cabs.math_add_96.DSP48E1_u at 0.000 ns.
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.axis_clk_conv_fifo.axis_sample_fifo.gnuram_async_fifo.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.axis_clk_conv_fifo.axis_sample_fifo.gnuram_async_fifo.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.genblk1[0].axis_bit_corr.genblk3[1].xpm_memory_dpdistram.xpm_memory_base_inst.config_drc 48
@@ -359,3 +351,5 @@ run
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.genblk1[4].axis_peak_detn.axis_to_mem.xpm_memory_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
 # ** Info: [XPM_MEMORY 20-2] MEMORY_INIT_FILE (none), MEMORY_INIT_PARAM together specify no memory initialization. Initial memory contents will be all 0's. anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc  0
 #    Time: 1 ps  Scope: anchor_top_tb.anchor_top.tag_data_buff.xpm_fifo_sync.xpm_fifo_base_inst.gen_sdpram.xpm_memory_base_inst.config_drc File: /opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv Line: 458
+run
+run
