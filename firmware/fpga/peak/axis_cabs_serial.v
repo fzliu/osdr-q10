@@ -75,6 +75,7 @@ module axis_cabs_serial #(
   wire              s_axis_frame;
   wire              m_axis_frame;
 
+  wire              enable_int;
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
   wire              batch_done;
@@ -111,6 +112,7 @@ module axis_cabs_serial #(
   // slave interface
 
   assign batch_done = (count == NC);
+  assign enable_int = ~(valid_out & m_axis_tvalid);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
   assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
 
@@ -122,7 +124,7 @@ module axis_cabs_serial #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .ena (s_axis_tvalid),
+    .ena (enable_int & s_axis_tvalid),
     .rst (s_axis_frame),  // bus data is "transferred" upon completion
     .value (count)
   );
@@ -146,7 +148,7 @@ module axis_cabs_serial #(
     .DEPTH (CABS_DELAY)
   ) shift_reg_count (
     .clk (clk),
-    .ena (1'b1),
+    .ena (enable_int),
     .din (count),
     .dout (count_out)
   );
@@ -156,7 +158,7 @@ module axis_cabs_serial #(
     .DEPTH (CABS_DELAY)
   ) shift_reg_done (
     .clk (clk),
-    .ena (1'b1),
+    .ena (enable_int),
     .din (batch_done),
     .dout (batch_done_out)
   );
@@ -164,7 +166,9 @@ module axis_cabs_serial #(
   // cabs "memory"
 
   always @(posedge clk) begin
-    cabs_mem[count_out] <= cabs_dout;
+    if (enable_int) begin
+      cabs_mem[count_out] <= cabs_dout;
+    end
   end
 
   generate
@@ -175,19 +179,7 @@ module axis_cabs_serial #(
   end
   endgenerate
 
-  // align input data with abs data
-
-  shift_reg #(
-    .WIDTH (DATA_WIDTH),
-    .DEPTH (CABS_DELAY + 1)
-  ) shift_reg_data (
-    .clk (clk),
-    .ena (1'b1),
-    .din (s_axis_tdata),
-    .dout (data_out)
-  );
-
-  // data_out logic
+  // valid_out logic
   // when valid_out == 1'b1, both m_axis and output contain valid data
 
   always @(posedge clk) begin
@@ -203,6 +195,18 @@ module axis_cabs_serial #(
       valid_out <= valid_out;
     end
   end
+
+  // align input data with abs data
+
+  shift_reg #(
+    .WIDTH (DATA_WIDTH),
+    .DEPTH (CABS_DELAY + 1)
+  ) shift_reg_data (
+    .clk (clk),
+    .ena (enable_int),
+    .din (s_axis_tdata),
+    .dout (data_out)
+  );
 
   // master interface
 

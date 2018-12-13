@@ -25,7 +25,7 @@ module anchor_top #(
 
   parameter   CABS_DELAY = 14,
   parameter   BURST_LENGTH = 32,
-  parameter   PEAK_THRESH_MULT = 8,
+  parameter   PEAK_THRESH_MULT = 2, //8
 
   // derived parameters
 
@@ -162,6 +162,7 @@ module anchor_top #(
   wire              fanin_axis_tvalid;
   wire              fanin_axis_tready;
   wire    [ WD:0]   fanin_axis_tdata;
+  wire              fanin_axis_tlast;
   wire    [ NT:0]   fanin_axis_tuser;
 
   // buffer read enable
@@ -351,9 +352,11 @@ module anchor_top #(
     .s_axis_tvalid (peak_axis_tvalid),
     .s_axis_tready (peak_axis_tready),
     .s_axis_tdata (peak_axis_tdata),
+    .s_axis_tlast (peak_axis_tlast),
     .m_axis_tvalid (fanin_axis_tvalid),
     .m_axis_tready (fanin_axis_tready),
     .m_axis_tdata (fanin_axis_tdata),
+    .m_axis_tlast (fanin_axis_tlast),
     .m_axis_tuser (fanin_axis_tuser)
   );
 
@@ -369,8 +372,8 @@ module anchor_top #(
     .s_axis_tvalid (fanin_axis_tvalid),
     .s_axis_tready (fanin_axis_tready),
     .s_axis_tdata (fanin_axis_tdata),
+    .s_axis_tlast (fanin_axis_tlast),
     .s_axis_tuser (fanin_axis_tuser),
-    .s_axis_tlast (1'b0),
     .rd_ena (rd_ena),
     .ready (ready),
     .data_out (ebi_data)

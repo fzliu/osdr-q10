@@ -1,10 +1,11 @@
-
 ////////////////////////////////////////////////////////////////////////////////
-// Company: ????
+// Company: 奥新智能
 // Engineer: Frank Liu
 //
 // Description: AXI-stream fan-in implementation. The relevant input channel
 // is stored in the output tuser. Preference is given to earlier input channels.
+// If USE_AXIS_TLAST is set to true, this module will lock onto a channel until
+// s_axis_tlast is asserted.
 //
 // enable  :  N/A
 // reset   :  active-high
@@ -18,6 +19,7 @@ module axis_fan_in #(
 
   parameter   NUM_FANIN = 6,
   parameter   DATA_WIDTH = 256,
+  parameter   USE_AXIS_TLAST = 1,
 
   // derived parameters
 
@@ -41,12 +43,14 @@ module axis_fan_in #(
   input   [ NF:0]   s_axis_tvalid,
   output  [ NF:0]   s_axis_tready,
   input   [ WP:0]   s_axis_tdata,
+  input   [ NF:0]   s_axis_tlast,
 
   // master interface
 
   output            m_axis_tvalid,
   input             m_axis_tready,
   output  [ WD:0]   m_axis_tdata,
+  input             m_axis_tlast,
   output  [ NF:0]   m_axis_tuser
 
 );
@@ -59,6 +63,7 @@ module axis_fan_in #(
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
+  reg               m_axis_tlast_reg = 'b0;
   reg     [ NF:0]   m_axis_tuser_reg = 'b0;
 
   // internal signals
@@ -67,9 +72,11 @@ module axis_fan_in #(
 
   wire    [ NF:0]   chan_prio;
   wire    [ NF:0]   chan_num;
+  wire              hold_cond;
 
   wire              in_valid;
   wire    [ WD:0]   in_data;
+  wire              in_last;
 
   // slave interface
 
@@ -97,11 +104,15 @@ module axis_fan_in #(
   // select channel based on priority
 
   generate
+  assign hold_cond = USE_AXIS_TLAST ? ~in_last : 1'b0;
+  endgenerate
+
+  generate
   for (n = 0; n < NUM_FANIN; n = n + 1) begin
     always @(posedge clk) begin
       if (rst) begin
         chan_sel[n] <= 1'b0;
-      end else if (in_valid) begin
+      end else if (hold_cond) begin
         chan_sel[n] <= chan_sel[n];
       end else if (chan_prio[n]) begin
         chan_sel[n] <= s_axis_tvalid[n];
@@ -122,10 +133,10 @@ module axis_fan_in #(
     .bin (chan_num)
   );
 
+  // master interface
+
   assign in_valid = s_axis_tvalid[chan_num];
   assign in_data = s_axis_tdata_unpack[chan_num];
-
-  // master interface
 
   always @(posedge clk) begin
     if (rst | ~in_valid) begin
@@ -143,11 +154,35 @@ module axis_fan_in #(
     end
   end
 
+  generate
+  if (USE_AXIS_TLAST) begin
+
+    assign in_last = s_axis_tlast[chan_num];
+
+    always @(posedge clk) begin
+      if (rst | ~in_valid) begin
+        m_axis_tlast_reg <= 'b0;
+      end else if (m_axis_tready) begin
+        m_axis_tlast_reg <= in_last;
+      end else begin
+        m_axis_tlast_reg <= m_axis_tlast;
+      end
+    end
+ 
+  end
+  endgenerate
+
   // assign outputs
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
-  assign m_axis_tuser = m_axis_tuser_reg;
+  assign m_axis_tlast = m_axis_tlast_reg;
+
+  generate
+  if (USE_AXIS_TLAST) begin
+    assign m_axis_tuser = m_axis_tuser_reg;
+  end
+  endgenerate
 
 endmodule
 

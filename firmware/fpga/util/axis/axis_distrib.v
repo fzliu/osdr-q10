@@ -102,7 +102,7 @@ module axis_distrib #(
         m_axis_tdata_reg[n1:n0] <= s_axis_tdata;
       end else begin
         m_axis_tvalid_reg[n] <= 'b0;
-        m_axis_tdata_reg[n1:n0] <= 'bx;
+        m_axis_tdata_reg[n1:n0] <= s_axis_tdata; //'bx
       end
     end
   end

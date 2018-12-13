@@ -171,6 +171,22 @@ module axis_peak_detn #(
   assign m_axis_tdata = m_axis_tdata_reg;
   assign m_axis_tlast = m_axis_tlast_reg;
 
+  // SIMULATION
+  
+  wire      [ WC:0]   s_axis_tdata_unpack [0:NC];
+  wire      [ WC:0]   s_axis_tdata_abs_unpack [0:NC];
+  wire      [ WC:0]   m_axis_tdata_unpack [0:NC];
+
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    localparam n0 = n * CHANNEL_WIDTH;
+    localparam n1 = n0 + WC;
+    assign s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
+    assign s_axis_tdata_abs_unpack[n] = s_axis_tdata_abs[n1:n0];
+    assign m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
+  end
+  endgenerate
+
 endmodule
 
 ////////////////////////////////////////////////////////////////////////////////

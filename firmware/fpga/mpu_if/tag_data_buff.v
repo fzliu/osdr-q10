@@ -25,6 +25,7 @@ module tag_data_buff #(
   // derived parameters
 
   localparam  DATA_WIDTH = NUM_CHANNELS * CHANNEL_WIDTH,
+  localparam  PAD_WIDTH = DATA_WIDTH - NUM_TAGS,
 
   // bit width parameters
 
@@ -59,9 +60,11 @@ module tag_data_buff #(
   // internal registers
 
   reg               rd_ena_d = 'b0;
-  reg               s_axis_tvalid_d = 'b0;
+  reg               s_axis_tlast_d = 'b0;
 
   // internal signals
+
+  wire    [ WD:0]   tag_num;
 
   wire    [ WD:0]   fifo_din;
   wire              fifo_full;
@@ -71,15 +74,16 @@ module tag_data_buff #(
 
   // slave interface
 
-  assign s_axis_tready = (~s_axis_tvalid | s_axis_tvalid_d) & ~fifo_full;
+  always @(posedge clk) begin
+    s_axis_tlast_d <= s_axis_tlast;
+  end
+
+  assign s_axis_tready = ~s_axis_tlast_d & ~fifo_full;
 
   // assign FIFO inputs
 
-  always @(posedge clk) begin
-    s_axis_tvalid_d <= s_axis_tvalid;
-  end
-
-  assign fifo_din = s_axis_tvalid ? s_axis_tdata : s_axis_tuser;
+  assign tag_num = {{PAD_WIDTH{1'b0}}, s_axis_tuser};
+  assign fifo_din = s_axis_tlast_d ? tag_num : s_axis_tdata;
 
   // delayed read enable
 
@@ -105,7 +109,7 @@ module tag_data_buff #(
     .sleep (1'b0),
     .rst (1'b0),
     .wr_clk (clk),
-    .wr_en (s_axis_tvalid | s_axis_tvalid_d),
+    .wr_en (s_axis_tvalid | s_axis_tlast_d),
     .din (fifo_din),
     .full (fifo_full),
     .overflow (),

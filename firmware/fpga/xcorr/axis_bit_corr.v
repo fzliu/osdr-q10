@@ -84,8 +84,9 @@ module axis_bit_corr #(
 
   wire    [ WW:0]   data_in [0:NP];
   wire    [ WM:0]   data_out;
-  wire              batch_done;
 
+  wire              enable_int;
+  wire              batch_done;
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_next;
 
@@ -118,8 +119,9 @@ module axis_bit_corr #(
   // slave interface
 
   assign batch_done = (count == NP);
+  assign enable_int = ~(valid_out & m_axis_tvalid);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
+  assign s_axis_tready = enable_int & batch_done;
 
   // counter (for tracking current input set) logic
 
@@ -129,7 +131,7 @@ module axis_bit_corr #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .ena (s_axis_tvalid),
+    .ena (enable_int & s_axis_tvalid),
     .rst (s_axis_frame),  // bus data is "transferred" upon completion
     .value (count)
   );
@@ -168,7 +170,7 @@ module axis_bit_corr #(
     ) xpm_memory_dpdistram (
       .clka (clk),
       .rsta (1'b0),
-      .ena (1'b1),
+      .ena (enable_int),
       .regcea (1'b0),
       .wea (1'b1),
       .addra (count),
@@ -176,7 +178,7 @@ module axis_bit_corr #(
       .douta (),
       .clkb (),
       .rstb (1'b0),
-      .enb (1'b1),
+      .enb (enable_int),
       .regceb (1'b1),
       .addrb (count_next),
       .doutb (adder_in1[n])
@@ -197,7 +199,9 @@ module axis_bit_corr #(
   // output "memory"
 
   always @(posedge clk) begin
-    output_mem[count] <= adder_out[LC];
+    if (enable_int) begin
+      output_mem[count] <= adder_out[LC];
+    end
   end
 
   // repack output data
