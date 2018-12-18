@@ -63,7 +63,7 @@ module axis_distrib #(
 
   // internal signals
 
-  wire              ready_all_next;
+  wire    [ ND:0]   ready_all_next;
   wire              s_axis_frame;
   wire    [ ND:0]   m_axis_frame;
 
@@ -97,12 +97,12 @@ module axis_distrib #(
       if (rst) begin
         m_axis_tvalid_reg[n] <= 'b0;
         m_axis_tdata_reg[n1:n0] <= 'b0;
-      end else if (~ready_all[n]) begin
+      end else if (~ready_all_next[n]) begin
         m_axis_tvalid_reg[n] <= s_axis_tvalid;
         m_axis_tdata_reg[n1:n0] <= s_axis_tdata;
       end else begin
         m_axis_tvalid_reg[n] <= 'b0;
-        m_axis_tdata_reg[n1:n0] <= s_axis_tdata; //'bx
+        m_axis_tdata_reg[n1:n0] <= 'b0;
       end
     end
   end

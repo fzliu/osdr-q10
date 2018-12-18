@@ -12,7 +12,7 @@ module ad9361_samp_filt #(
 
   parameter   ABS_WIDTH = 16,
   parameter   NUM_DELAY = 24,
-  parameter   DATA_PASS_VALUE = 20,
+  parameter   DATA_PASS_VALUE = 16,
   parameter   LOG2_FILTER_LENGTH = 4,
 
   // bit width parameters

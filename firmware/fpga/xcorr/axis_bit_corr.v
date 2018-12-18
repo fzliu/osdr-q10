@@ -65,6 +65,8 @@ module axis_bit_corr #(
   `include "log2_func.vh"
   `include "sign_ext.vh"
 
+  `define CORR(i,j) CORRELATORS[i*CORR_LENGTH+j]
+
   // internal memories
 
   reg     [ WA:0]   output_mem [0:NP];
@@ -190,7 +192,7 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    assign adder_out[n] = CORRELATORS[n] ?
+    assign adder_out[n] = `CORR(CORR_NUM,n) ?
                           adder_in1[n] + adder_in0 :
                           adder_in1[n] - adder_in0;
   end

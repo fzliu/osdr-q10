@@ -11,7 +11,7 @@ module anchor_top_tb;
 
   // parameters
 
-  parameter   NUM_TAGS = 5;
+  parameter   NUM_TAGS = 20;
   parameter   SAMPS_WIDTH = 128;
   parameter   DATA_WIDTH = 256;
 
@@ -64,6 +64,7 @@ module anchor_top_tb;
 
   integer i;
   initial begin
+    #1;     // align data with rx_frame signal
     #2500;  // clocks come up at about 2350
     for (i = 0; i < 1052; i = i + 1) begin
       a_rx_data_p0 <= mema0[i];

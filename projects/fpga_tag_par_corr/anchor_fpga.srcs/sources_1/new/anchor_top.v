@@ -345,7 +345,8 @@ module anchor_top #(
 
   axis_fan_in #(
     .NUM_FANIN (NUM_TAGS),
-    .DATA_WIDTH (DATA_WIDTH)
+    .DATA_WIDTH (DATA_WIDTH),
+    .USE_AXIS_TLAST (1)
   ) axis_fan_in (
     .clk (c_clk),
     .rst (1'b0),
