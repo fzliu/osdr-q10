@@ -249,4 +249,16 @@ module axis_bit_corr #(
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
 
+  // SIMULATION
+  
+  wire      [ WF:0]   m_axis_tdata_unpack [0:NP];
+
+  generate
+  for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
+    localparam n0 = n * FILT_WIDTH;
+    localparam n1 = n0 + WF;
+    assign m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
+  end
+  endgenerate
+
 endmodule

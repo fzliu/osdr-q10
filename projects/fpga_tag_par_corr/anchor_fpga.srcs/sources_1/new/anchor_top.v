@@ -16,6 +16,7 @@ module anchor_top #(
   // parameters
 
   parameter   NUM_TAGS = 5,
+  parameter   CORR_OFFSET = 0,
 
   parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 64,
@@ -25,7 +26,7 @@ module anchor_top #(
 
   parameter   CABS_DELAY = 14,
   parameter   BURST_LENGTH = 32,
-  parameter   PEAK_THRESH_MULT = 2, //8
+  parameter   PEAK_THRESH_MULT = 8,
 
   // derived parameters
 
@@ -291,7 +292,7 @@ module anchor_top #(
       .SLAVE_WIDTH (SAMPS_WIDTH),
       .MASTER_WIDTH (DATA_WIDTH),
       .ADDER_WIDTH (ADDER_WIDTH),
-      .CORR_NUM (n)
+      .CORR_NUM (n + CORR_OFFSET)
     ) axis_bit_corr (
       .clk (c_clk),
       .s_axis_tvalid (distrib_axis_tvalid[n]),

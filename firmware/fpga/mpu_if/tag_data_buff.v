@@ -60,7 +60,7 @@ module tag_data_buff #(
   // internal registers
 
   reg               rd_ena_d = 'b0;
-  reg               s_axis_tlast_d = 'b0;
+  reg               s_axis_tlast_d = 'b1;
 
   // internal signals
 

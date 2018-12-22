@@ -11,7 +11,10 @@ module anchor_top_tb;
 
   // parameters
 
-  parameter   NUM_TAGS = 20;
+  parameter   NUM_TAGS = 1;
+  parameter   CORR_OFFSET = 19;
+  parameter   PEAK_THRESH_MULT = 4;
+  
   parameter   SAMPS_WIDTH = 128;
   parameter   DATA_WIDTH = 256;
 
@@ -91,7 +94,11 @@ module anchor_top_tb;
 
   // anchor_top
 
-  anchor_top anchor_top (
+  anchor_top #(
+    .NUM_TAGS (NUM_TAGS),
+    .CORR_OFFSET (CORR_OFFSET),
+    .PEAK_THRESH_MULT (PEAK_THRESH_MULT)
+  ) anchor_top (
     .clk (clk),
     .a_rx_clk_in (rx_clk_in),
     .a_rx_frame_in (rx_frame_in),

@@ -86,7 +86,7 @@ module axis_cabs_serial #(
   wire    [ WC:0]   cabs_dout;
 
   wire    [ WD:0]   data_out;
-  wire    [ WD:0]   data_cabs_out;
+  wire    [ WD:0]   data_abs_out;
 
   // initialize final memory column
 
@@ -175,7 +175,7 @@ module axis_cabs_serial #(
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin : repack_gen
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WC;
-    assign data_cabs_out[n1:n0] = cabs_mem[n];
+    assign data_abs_out[n1:n0] = cabs_mem[n];
   end
   endgenerate
 
@@ -216,7 +216,7 @@ module axis_cabs_serial #(
     if (m_axis_frame | ~m_axis_tvalid) begin
       m_axis_tvalid_reg <= valid_out;
       m_axis_tdata_reg <= data_out;
-      m_axis_tdata_abs_reg <= data_cabs_out;
+      m_axis_tdata_abs_reg <= data_abs_out;
     end else begin
       m_axis_tvalid_reg <= m_axis_tvalid;
       m_axis_tdata_reg <= m_axis_tdata;
@@ -227,6 +227,20 @@ module axis_cabs_serial #(
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
   assign m_axis_tdata_abs = m_axis_tdata_abs_reg;
+
+  // SIMULATION
+  
+  wire      [ WC:0]   m_axis_tdata_unpack [0:NC];
+  wire      [ WC:0]   m_axis_tdata_unpack_abs [0:NC];
+
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    localparam n0 = n * CHANNEL_WIDTH;
+    localparam n1 = n0 + WC;
+    assign m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
+    assign m_axis_tdata_unpack_abs[n] = m_axis_tdata_abs[n1:n0];
+  end
+  endgenerate
 
 endmodule
 
