@@ -69,27 +69,32 @@ module anchor_top_tb;
   initial begin
     #1;     // align data with rx_frame signal
     #2500;  // clocks come up at about 2350
-    for (i = 0; i < 1052; i = i + 1) begin
+
+    for (i = 0; i < 1050; i = i + 1) begin
+      #10;
       a_rx_data_p0 <= mema0[i];
       a_rx_data_p1 <= mema1[i];
       b_rx_data_p0 <= memb0[i];
       b_rx_data_p1 <= memb1[i];
-      #20;
     end
-
     a_rx_data_p0 <= 'b0;
     a_rx_data_p1 <= 'b0;
     b_rx_data_p0 <= 'b0;
     b_rx_data_p1 <= 'b0;
-
     #2500;
-    for (i = 0; i < 1052; i = i + 1) begin
+
+    for (i = 0; i < 1050; i = i + 1) begin
+      #10;
       a_rx_data_p0 <= mema0[i];
       a_rx_data_p1 <= mema1[i];
       b_rx_data_p0 <= memb0[i];
+      b_rx_data_p0 <= memb0[i];
       b_rx_data_p1 <= memb1[i];
-      #20;
     end
+    a_rx_data_p0 <= 'b0;
+    a_rx_data_p1 <= 'b0;
+    b_rx_data_p0 <= 'b0;
+    b_rx_data_p1 <= 'b0;
   end
 
   // anchor_top

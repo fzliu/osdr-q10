@@ -65,7 +65,7 @@ module axis_bit_corr #(
   `include "log2_func.vh"
   `include "sign_ext.vh"
 
-  `define CORR(i,j) CORRELATORS[i*CORR_LENGTH+j]
+  `define CORR(i,j) CORRELATORS[W0-(i*CORR_LENGTH+j)]
 
   // internal memories
 
@@ -93,8 +93,8 @@ module axis_bit_corr #(
   wire    [ WN:0]   count_next;
 
   wire    [ WA:0]   adder_in0;
-  wire    [ WA:0]   adder_in1 [0:LC];
-  wire    [ WA:0]   adder_out [0:LC];
+  wire    [ WA:0]   adder_in1 [0:LR];
+  wire    [ WA:0]   adder_out [0:LR];
 
 
   // initialize final memory column
@@ -202,7 +202,7 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (enable_int) begin
-      output_mem[count] <= adder_out[LC];
+      output_mem[count] <= adder_out[LR];
     end
   end
 
@@ -251,7 +251,14 @@ module axis_bit_corr #(
 
   // SIMULATION
   
+  wire      [ LR:0]   corr;
   wire      [ WF:0]   m_axis_tdata_unpack [0:NP];
+
+  generate
+  for (n = 0; n < CORR_LENGTH; n = n + 1) begin
+    assign corr[n] = `CORR(CORR_NUM,n);
+  end
+  endgenerate
 
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
