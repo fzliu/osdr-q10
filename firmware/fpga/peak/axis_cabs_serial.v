@@ -114,7 +114,7 @@ module axis_cabs_serial #(
   assign batch_done = (count == NC);
   assign enable_int = ~(valid_out & m_axis_tvalid);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
+  assign s_axis_tready = enable_int & batch_done;
 
   // channel counter
 
@@ -230,15 +230,15 @@ module axis_cabs_serial #(
 
   // SIMULATION
   
-  wire      [ WC:0]   m_axis_tdata_unpack [0:NC];
-  wire      [ WC:0]   m_axis_tdata_unpack_abs [0:NC];
+  wire      [ WC:0]   _m_axis_tdata_unpack [0:NC];
+  wire      [ WC:0]   _m_axis_tdata_unpack_abs [0:NC];
 
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WC;
-    assign m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
-    assign m_axis_tdata_unpack_abs[n] = m_axis_tdata_abs[n1:n0];
+    assign _m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
+    assign _m_axis_tdata_unpack_abs[n] = m_axis_tdata_abs[n1:n0];
   end
   endgenerate
 

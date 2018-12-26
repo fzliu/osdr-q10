@@ -15,6 +15,7 @@ module counter #(
   parameter   LOWER = 0,
   parameter   UPPER = 255,
   parameter   WRAPAROUND = 0,
+  parameter   INIT_VALUE = 0,
 
   // derived parameters
 
@@ -46,7 +47,7 @@ module counter #(
 
   // internal registers
 
-  reg     [ W0:0]   count = LOWER;
+  reg     [ W0:0]   count = INIT_VALUE;
 
   // counter implementation
 

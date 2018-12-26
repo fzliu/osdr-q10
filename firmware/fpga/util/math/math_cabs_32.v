@@ -74,7 +74,7 @@ module math_cabs_32 (
   math_pow2_12 #()
   math_pow2_12 (
     .clk (clk),
-    .din ({2'b00, log_out << 1}),
+    .din ({1'b0, log_out, 1'b0}),
     .dout (dout)
   );
 

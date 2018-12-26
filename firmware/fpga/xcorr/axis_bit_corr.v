@@ -90,7 +90,6 @@ module axis_bit_corr #(
   wire              enable_int;
   wire              batch_done;
   wire    [ WN:0]   count;
-  wire    [ WN:0]   count_next;
 
   wire    [ WA:0]   adder_in0;
   wire    [ WA:0]   adder_in1 [0:LR];
@@ -138,8 +137,6 @@ module axis_bit_corr #(
     .value (count)
   );
 
-  assign count_next = count + 1'b1;
-
   // first adder input - s_axis_tdata module input
 
   assign adder_in0 = `SIGN_EXT(data_in[count],WAVE_WIDTH,ADDER_WIDTH);
@@ -182,7 +179,7 @@ module axis_bit_corr #(
       .rstb (1'b0),
       .enb (enable_int),
       .regceb (1'b1),
-      .addrb (count_next),
+      .addrb (s_axis_tvalid ? count + 1'b1 : count),
       .doutb (adder_in1[n])
     );
   end
@@ -251,12 +248,12 @@ module axis_bit_corr #(
 
   // SIMULATION
   
-  wire      [ LR:0]   corr;
-  wire      [ WF:0]   m_axis_tdata_unpack [0:NP];
+  wire      [ LR:0]   _corr;
+  wire      [ WF:0]   _m_axis_tdata_unpack [0:NP];
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    assign corr[n] = `CORR(CORR_NUM,n);
+    assign _corr[n] = `CORR(CORR_NUM,n);
   end
   endgenerate
 
@@ -264,7 +261,7 @@ module axis_bit_corr #(
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     localparam n0 = n * FILT_WIDTH;
     localparam n1 = n0 + WF;
-    assign m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
+    assign _m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
   end
   endgenerate
 

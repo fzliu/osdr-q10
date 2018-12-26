@@ -156,15 +156,9 @@ module axis_peak_detn #(
   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
 
   always @(posedge clk) begin
-    if (m_axis_tready) begin
-      m_axis_tvalid_reg <= mem_ready;
-      m_axis_tdata_reg <= mem_dout;
-      m_axis_tlast_reg <= ~|mem_addr;
-    end else begin
-      m_axis_tvalid_reg <= m_axis_tvalid;
-      m_axis_tdata_reg <= m_axis_tdata;
-      m_axis_tlast_reg <= m_axis_tlast;
-    end
+    m_axis_tvalid_reg <= mem_ready;
+    m_axis_tdata_reg <= mem_dout;
+    m_axis_tlast_reg <= (mem_addr == 1'b1);
   end
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
@@ -173,13 +167,13 @@ module axis_peak_detn #(
 
   // SIMULATION
   
-  wire      [ WC:0]   m_axis_tdata_unpack [0:NC];
+  wire      [ WC:0]   _m_axis_tdata_unpack [0:NC];
 
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WC;
-    assign m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
+    assign _m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
   end
   endgenerate
 

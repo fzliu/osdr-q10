@@ -59,7 +59,7 @@ module axis_fan_in #(
 
   // internal registers
 
-  reg     [ NF:0]   chan_sel = 'b0;
+  reg     [ NF:0]   chan_sel = {{NF{1'b0}}, 1'b1};
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
@@ -110,15 +110,12 @@ module axis_fan_in #(
   generate
   for (n = 0; n < NUM_FANIN; n = n + 1) begin
     always @(posedge clk) begin
-      if (rst) begin
-        chan_sel[n] <= 1'b0;
-      end else if (hold_cond) begin
-        chan_sel[n] <= chan_sel[n];
-      end else if (chan_prio[n]) begin
-        chan_sel[n] <= s_axis_tvalid[n];
-      end else begin
-        chan_sel[n] <= 1'b0;
-      end
+      casex ({rst, hold_cond, chan_prio[n]})
+        3'b1??: chan_sel[n] <= (n == 0);
+        3'b01?: chan_sel[n] <= chan_sel[n];
+        3'b001: chan_sel[n] <= s_axis_tvalid[n];
+        default: chan_sel <= chan_sel[n];
+      endcase
     end
   end
   endgenerate

@@ -170,6 +170,7 @@ module anchor_top_tb;
   wire              fanin_axis_tvalid = anchor_top.fanin_axis_tvalid;
   wire              fanin_axis_tready = anchor_top.fanin_axis_tready;
   wire    [ WD:0]   fanin_axis_tdata = anchor_top.fanin_axis_tdata;
+  wire    [ NT:0]   fanin_axis_tlast = anchor_top.fanin_axis_tlast;
   wire    [ NT:0]   fanin_axis_tuser = anchor_top.fanin_axis_tuser;
 
 endmodule

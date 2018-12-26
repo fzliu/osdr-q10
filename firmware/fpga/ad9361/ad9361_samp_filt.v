@@ -12,12 +12,14 @@ module ad9361_samp_filt #(
 
   parameter   ABS_WIDTH = 16,
   parameter   NUM_DELAY = 24,
+  parameter   NUM_PAD_SAMPS = 7,
   parameter   DATA_PASS_VALUE = 16,
   parameter   LOG2_FILTER_LENGTH = 4,
 
   // bit width parameters
 
-  localparam  WA = ABS_WIDTH - 1
+  localparam  WA = ABS_WIDTH - 1,
+  localparam  WN = log2(NUM_PAD_SAMPS) - 1
 
 ) (
 
@@ -57,6 +59,7 @@ module ad9361_samp_filt #(
 
 );
 
+  `include "log2_func.vh"
   `include "sign_ext.vh"
 
   // internal signals
@@ -68,6 +71,8 @@ module ad9361_samp_filt #(
 
   wire    [ 33:0]   abs_dout [0:3];
   wire    [ WA:0]   avg_dout [0:3];
+  wire    [ WN:0]   pad_count [0:3];
+  wire              data_pass [0:3];
 
   // internal registers
 
@@ -105,17 +110,31 @@ module ad9361_samp_filt #(
 
   // create one filter per channel
 
-  generate
-  
   genvar n;
+  generate
+
   for (n = 0; n < 4; n = n + 1) begin : filt_gen
     localparam a = 2 * n;
     localparam b = 2 * n + 1;
 
     // filter passthrough
 
+    assign data_pass[n] = (avg_dout[n] > DATA_PASS_VALUE);
+
+    counter #(
+      .LOWER (0),
+      .UPPER (NUM_PAD_SAMPS),
+      .WRAPAROUND (0),
+      .INIT_VALUE (NUM_PAD_SAMPS)
+    ) counter (
+      .clk (clk),
+      .ena (1'b1),
+      .rst (data_pass[n]),
+      .value (pad_count[n])
+    );
+
     always @(posedge clk) begin
-      if ((avg_dout[n] > DATA_PASS_VALUE) & valid_in[n]) begin
+      if ((data_pass[n] | (pad_count[n] < NUM_PAD_SAMPS)) & valid_in[n]) begin
         valid_out[n] <= 1'b1;
       end else begin
         valid_out[n] <= 1'b0;
