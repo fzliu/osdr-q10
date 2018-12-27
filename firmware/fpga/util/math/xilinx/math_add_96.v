@@ -4,8 +4,8 @@
 //
 // Description: Cascades two 48-bit adders into a 96-bit one.
 //
-// enable  :  N/A
-// reset   :  N/A
+// enable  :  active-high
+// reset   :  active-high
 // latency :  3 cycles
 // output  :  registered
 //
@@ -14,6 +14,8 @@
 module math_add_96 (
 
   input             clk,
+  input             ena,
+  input             rst,
 
   // input operands
 
@@ -41,8 +43,13 @@ module math_add_96 (
   // register the inputs
 
   always @(posedge clk) begin
-    dina_d <= dina;
-    dinb_d <= dinb;
+    if (ena) begin
+      dina_d <= dina;
+      dinb_d <= dinb;
+    end else if (rst) begin
+      dina_d <= 'b0;
+      dinb_d <= 'b0;
+    end
   end
 
   // LSBs adder
@@ -112,7 +119,7 @@ module math_add_96 (
     .CED (1'b0),
     .CEINMODE (1'b1),
     .CEM (1'b0),
-    .CEP (1'b1),
+    .CEP (ena),
     .RSTA (1'b0),
     .RSTALLCARRYIN (1'b0),
     .RSTALUMODE (1'b0),
@@ -122,7 +129,7 @@ module math_add_96 (
     .RSTD (1'b0),
     .RSTINMODE (1'b0),
     .RSTM (1'b0),
-    .RSTP (1'b0)
+    .RSTP (rst)
   );
 
   // MSBs adder
@@ -180,24 +187,24 @@ module math_add_96 (
     .C (dinb_d[95:48]),
     .CARRYIN (1'b0),
     .D (),
-    .CEA1 (1'b1),
-    .CEA2 (1'b1),
+    .CEA1 (ena),
+    .CEA2 (ena),
     .CEAD (1'b0),
     .CEALUMODE (1'b1),
-    .CEB1 (1'b1),
-    .CEB2 (1'b1),
-    .CEC (1'b1),
+    .CEB1 (ena),
+    .CEB2 (ena),
+    .CEC (ena),
     .CECARRYIN (1'b1),
     .CECTRL (1'b1),
     .CED (1'b0),
     .CEINMODE (1'b1),
     .CEM (1'b0),
     .CEP (1'b0),
-    .RSTA (1'b0),
+    .RSTA (rst),
     .RSTALLCARRYIN (1'b0),
     .RSTALUMODE (1'b0),
-    .RSTB (1'b0),
-    .RSTC (1'b0),
+    .RSTB (rst),
+    .RSTC (rst),
     .RSTCTRL (1'b0),
     .RSTD (1'b0),
     .RSTINMODE (1'b0),
@@ -210,7 +217,11 @@ module math_add_96 (
   // flop the outputs
 
   always @(posedge clk) begin
-    dout_reg <= dsp_out;
+    if (ena) begin
+      dout_reg <= dsp_out;
+    end else if (rst) begin
+      dout_reg <= 'b0;
+    end
   end
 
   assign dout = dout_reg;

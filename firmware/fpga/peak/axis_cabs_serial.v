@@ -112,9 +112,9 @@ module axis_cabs_serial #(
   // slave interface
 
   assign batch_done = (count == NC);
-  assign enable_int = ~(valid_out & m_axis_tvalid);
+  assign enable_int = ~(valid_out & m_axis_tvalid) & s_axis_tvalid;
+  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = enable_int & batch_done;
 
   // channel counter
 
@@ -124,7 +124,7 @@ module axis_cabs_serial #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .ena (enable_int & s_axis_tvalid),
+    .ena (enable_int),
     .rst (s_axis_frame),  // bus data is "transferred" upon completion
     .value (count)
   );

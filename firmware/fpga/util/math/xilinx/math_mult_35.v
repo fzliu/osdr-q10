@@ -4,8 +4,8 @@
 //
 // Description: Cascades four DSP48 multipliers into a larger 42x35 multiply.
 //
-// enable  :  N/A
-// reset   :  N/A
+// enable  :  active-high
+// reset   :  active-high
 // latency :  6 cycles
 // output  :  registered
 //
@@ -14,6 +14,8 @@
 module math_mult_35 (
 
   input             clk,
+  input             ena,
+  input             rst,
 
   // input operands
 
@@ -47,7 +49,7 @@ module math_mult_35 (
     .DEPTH (0)
   ) shift_reg_mult_2_a (
     .clk (clk),
-    .ena (1'b1),
+    .ena (ena),
     .din (dina[16:0]),
     .dout (mult_2_a)
   );
@@ -57,7 +59,7 @@ module math_mult_35 (
     .DEPTH (1)
   ) shift_reg_mult_3_a (
     .clk (clk),
-    .ena (1'b1),
+    .ena (ena),
     .din (dina[41:17]),
     .dout (mult_3_a)
   );
@@ -67,7 +69,7 @@ module math_mult_35 (
     .DEPTH (0)
   ) shift_reg_mult_2_b (
     .clk (clk),
-    .ena (1'b1),
+    .ena (ena),
     .din (dinb[34:17]),
     .dout (mult_2_b)
   );
@@ -129,29 +131,29 @@ module math_mult_35 (
     .C (),
     .CARRYIN (1'b0),
     .D (),
-    .CEA1 (1'b1),
-    .CEA2 (1'b1),
+    .CEA1 (ena),
+    .CEA2 (ena),
     .CEAD (1'b0),
     .CEALUMODE (1'b1),
-    .CEB1 (1'b1),
-    .CEB2 (1'b1),
+    .CEB1 (ena),
+    .CEB2 (ena),
     .CEC (1'b0),
     .CECARRYIN (1'b1),
     .CECTRL (1'b1),
     .CED (1'b0),
     .CEINMODE (1'b1),
-    .CEM (1'b1),
-    .CEP (1'b1),
-    .RSTA (1'b0),
+    .CEM (ena),
+    .CEP (ena),
+    .RSTA (rst),
     .RSTALLCARRYIN (1'b0),
     .RSTALUMODE (1'b0),
-    .RSTB (1'b0),
+    .RSTB (rst),
     .RSTC (1'b0),
     .RSTCTRL (1'b0),
     .RSTD (1'b0),
     .RSTINMODE (1'b0),
-    .RSTM (1'b0),
-    .RSTP (1'b0)
+    .RSTM (rst),
+    .RSTP (rst)
   );
 
   // multiplier 1
@@ -211,29 +213,29 @@ module math_mult_35 (
     .C (),
     .CARRYIN (1'b0),
     .D (),
-    .CEA1 (1'b1),
-    .CEA2 (1'b1),
+    .CEA1 (ena),
+    .CEA2 (ena),
     .CEAD (1'b0),
     .CEALUMODE (1'b1),
-    .CEB1 (1'b1),
-    .CEB2 (1'b1),
+    .CEB1 (ena),
+    .CEB2 (ena),
     .CEC (1'b0),
     .CECARRYIN (1'b1),
     .CECTRL (1'b1),
     .CED (1'b0),
     .CEINMODE (1'b1),
-    .CEM (1'b1),
-    .CEP (1'b1),
-    .RSTA (1'b0),
+    .CEM (ena),
+    .CEP (ena),
+    .RSTA (rst),
     .RSTALLCARRYIN (1'b0),
     .RSTALUMODE (1'b0),
-    .RSTB (1'b0),
+    .RSTB (rst),
     .RSTC (1'b0),
     .RSTCTRL (1'b0),
     .RSTD (1'b0),
     .RSTINMODE (1'b0),
-    .RSTM (1'b0),
-    .RSTP (1'b0)
+    .RSTM (rst),
+    .RSTP (rst)
   );
 
   // multiplier 2
@@ -293,29 +295,29 @@ module math_mult_35 (
     .C (),
     .CARRYIN (1'b0),
     .D (),
-    .CEA1 (1'b1),
-    .CEA2 (1'b1),
+    .CEA1 (ena),
+    .CEA2 (ena),
     .CEAD (1'b0),
     .CEALUMODE (1'b1),
-    .CEB1 (1'b1),
-    .CEB2 (1'b1),
+    .CEB1 (ena),
+    .CEB2 (ena),
     .CEC (1'b0),
     .CECARRYIN (1'b1),
     .CECTRL (1'b1),
     .CED (1'b0),
     .CEINMODE (1'b1),
-    .CEM (1'b1),
-    .CEP (1'b1),
-    .RSTA (1'b0),
+    .CEM (ena),
+    .CEP (ena),
+    .RSTA (rst),
     .RSTALLCARRYIN (1'b0),
     .RSTALUMODE (1'b0),
-    .RSTB (1'b0),
+    .RSTB (rst),
     .RSTC (1'b0),
     .RSTCTRL (1'b0),
     .RSTD (1'b0),
     .RSTINMODE (1'b0),
-    .RSTM (1'b0),
-    .RSTP (1'b0)
+    .RSTM (rst),
+    .RSTP (rst)
   );
 
   // multiplier 3
@@ -375,29 +377,29 @@ module math_mult_35 (
     .C (),
     .CARRYIN (1'b0),
     .D (),
-    .CEA1 (1'b1),
-    .CEA2 (1'b1),
+    .CEA1 (ena),
+    .CEA2 (ena),
     .CEAD (1'b0),
     .CEALUMODE (1'b1),
-    .CEB1 (1'b1),
-    .CEB2 (1'b1),
+    .CEB1 (ena),
+    .CEB2 (ena),
     .CEC (1'b0),
     .CECARRYIN (1'b1),
     .CECTRL (1'b1),
     .CED (1'b0),
     .CEINMODE (1'b1),
-    .CEM (1'b1),
-    .CEP (1'b1),
-    .RSTA (1'b0),
+    .CEM (ena),
+    .CEP (ena),
+    .RSTA (rst),
     .RSTALLCARRYIN (1'b0),
     .RSTALUMODE (1'b0),
-    .RSTB (1'b0),
+    .RSTB (rst),
     .RSTC (1'b0),
     .RSTCTRL (1'b0),
     .RSTD (1'b0),
     .RSTINMODE (1'b0),
-    .RSTM (1'b0),
-    .RSTP (1'b0)
+    .RSTM (rst),
+    .RSTP (rst)
   );
 
   // connect outputs
@@ -407,7 +409,7 @@ module math_mult_35 (
     .DEPTH (2)
   ) shift_reg_dout_l (
     .clk (clk),
-    .ena (1'b1),
+    .ena (ena),
     .din (mult_p[0][16:0]),
     .dout (dout[16:0])
   );
@@ -417,7 +419,7 @@ module math_mult_35 (
     .DEPTH (0)
   ) shift_reg_dout_m (
     .clk (clk),
-    .ena (1'b1),
+    .ena (ena),
     .din (mult_p[2][16:0]),
     .dout (dout[33:17])
   );
