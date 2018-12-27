@@ -97,6 +97,11 @@ module axis_distrib #(
       if (rst) begin
         m_axis_tvalid_reg[n] <= 'b0;
         m_axis_tdata_reg[n1:n0] <= 'b0;
+      // once all are ready, immediately proceed to avoid 1-cycle delay
+      end else if (&ready_all_next) begin
+        m_axis_tvalid_reg[n] <= s_axis_tvalid;
+        m_axis_tdata_reg[n1:n0] <= s_axis_tdata;
+      // single channel case - stay with current batch of data
       end else if (~ready_all_next[n]) begin
         m_axis_tvalid_reg[n] <= s_axis_tvalid;
         m_axis_tdata_reg[n1:n0] <= s_axis_tdata;
