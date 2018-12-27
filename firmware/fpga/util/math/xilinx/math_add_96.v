@@ -14,8 +14,8 @@
 module math_add_96 (
 
   input             clk,
-  input             ena,
   input             rst,
+  input             ena,
 
   // input operands
 
@@ -43,12 +43,12 @@ module math_add_96 (
   // register the inputs
 
   always @(posedge clk) begin
-    if (ena) begin
-      dina_d <= dina;
-      dinb_d <= dinb;
-    end else if (rst) begin
+    if (rst) begin
       dina_d <= 'b0;
       dinb_d <= 'b0;
+    end else if (ena) begin
+      dina_d <= dina;
+      dinb_d <= dinb;
     end
   end
 
@@ -217,10 +217,10 @@ module math_add_96 (
   // flop the outputs
 
   always @(posedge clk) begin
-    if (ena) begin
-      dout_reg <= dsp_out;
-    end else if (rst) begin
+    if (rst) begin
       dout_reg <= 'b0;
+    end else if (ena) begin
+      dout_reg <= dsp_out;
     end
   end
 

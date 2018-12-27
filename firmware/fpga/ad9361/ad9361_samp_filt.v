@@ -128,8 +128,8 @@ module ad9361_samp_filt #(
       .INIT_VALUE (NUM_PAD_SAMPS)
     ) counter (
       .clk (clk),
-      .ena (1'b1),
       .rst (data_pass[n]),
+      .ena (1'b1),
       .value (pad_count[n])
     );
 
@@ -168,6 +168,8 @@ module ad9361_samp_filt #(
     math_cabs_32 #(
     ) math_cabs (
       .clk (clk),
+      .rst (1'b0),
+      .ena (1'b1),
       .dina (`SIGN_EXT(data_iq[a],12,32)),
       .dinb (`SIGN_EXT(data_iq[b],12,32)),
       .dout (abs_dout[n])
@@ -181,6 +183,7 @@ module ad9361_samp_filt #(
     ) filt_boxcar (
       .clk (clk),
       .rst (1'b0),
+      .ena (1'b1),
       .data_in (abs_dout[n][WA:0]),
       .avg_out (avg_dout[n])
     );

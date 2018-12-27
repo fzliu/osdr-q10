@@ -110,7 +110,7 @@ module axis_fan_in #(
   generate
   for (n = 0; n < NUM_FANIN; n = n + 1) begin
     always @(posedge clk) begin
-      casex ({rst, hold_cond, chan_prio[n]})
+      casez ({rst, hold_cond, chan_prio[n]})
         3'b1??: chan_sel[n] <= (n == 0);
         3'b01?: chan_sel[n] <= chan_sel[n];
         3'b001: chan_sel[n] <= s_axis_tvalid[n];

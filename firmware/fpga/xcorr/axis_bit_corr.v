@@ -132,8 +132,8 @@ module axis_bit_corr #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .ena (enable_int),
     .rst (s_axis_frame),  // bus data is "transferred" upon completion
+    .ena (enable_int),
     .value (count)
   );
 

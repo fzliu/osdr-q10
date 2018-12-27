@@ -14,8 +14,8 @@
 module math_mult_35 (
 
   input             clk,
-  input             ena,
   input             rst,
+  input             ena,
 
   // input operands
 

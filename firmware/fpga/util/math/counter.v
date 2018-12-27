@@ -30,8 +30,8 @@ module counter #(
   // master interface
 
   input             clk,
-  input             ena,
   input             rst,
+  input             ena,
 
   // data interface
 

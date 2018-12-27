@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Company: 奥新智能
-// Engineer: 耿慧慿
+// Engineer: 耿慧�?
 //
 // Description: The absolute value of the complex number. 14-cycle delay.
 //
@@ -11,6 +11,8 @@ module math_cabs_32 (
   // core interface
 
   input             clk,
+  input             ena,
+  input             rst,
 
   // data interface
 
@@ -35,6 +37,8 @@ module math_cabs_32 (
   math_mult_35 #()
   math_mult_35_b (
     .clk (clk),
+    .ena (ena),
+    .rst (rst),
     .dina (`SIGN_EXT(dina,32,42)),
     .dinb (`SIGN_EXT(dina,32,35)),
     .dout (mult_a_out)
@@ -44,10 +48,12 @@ module math_cabs_32 (
 
   math_mult_35 #()
   math_mult_35_a (
-     .clk (clk),
-     .dina (`SIGN_EXT(dinb,32,42)),
-     .dinb (`SIGN_EXT(dinb,32,35)),
-     .dout (mult_b_out)
+    .clk (clk),
+    .ena (ena),
+    .rst (rst),
+    .dina (`SIGN_EXT(dinb,32,42)),
+    .dinb (`SIGN_EXT(dinb,32,35)),
+    .dout (mult_b_out)
   );
 
   // add
@@ -55,6 +61,8 @@ module math_cabs_32 (
   math_add_96 #()
   math_add_96 (
     .clk (clk),
+    .ena (ena),
+    .rst (rst),
     .dina ({26'h0000000, mult_a_out}),  // mult_a_out is positive
     .dinb ({26'h0000000, mult_b_out}),  // mult_b_out is positive
     .dout (add_out)
@@ -65,6 +73,8 @@ module math_cabs_32 (
   math_log2_64 #()
   math_log2_64 (
     .clk (clk),
+    .ena (ena),
+    .rst (rst),
     .din (add_out[63:0]),
     .dout (log_out)
   );
@@ -74,6 +84,8 @@ module math_cabs_32 (
   math_pow2_12 #()
   math_pow2_12 (
     .clk (clk),
+    .ena (ena),
+    .rst (rst),
     .din ({1'b0, log_out, 1'b0}),
     .dout (dout)
   );

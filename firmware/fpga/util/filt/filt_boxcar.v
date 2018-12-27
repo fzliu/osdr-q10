@@ -10,7 +10,7 @@
 // the newest value while subtracting the oldest. This module must be reset
 // before use. No overflow checking is performed.
 //
-// TODO(fzliu): Implement this with distributed RAM.
+// TODO(fzliu): Implement this with distributed RAM and SRLs.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +36,7 @@ module filt_boxcar #(
 
   input             clk,
   input             rst,
+  input             ena,
 
   // data interface
 
@@ -74,8 +75,8 @@ module filt_boxcar #(
   for (n = 0; n < FILTER_LENGTH; n = n + 1) begin
     always @(posedge clk) begin
       if (rst) begin
-        shift[n] <= {DATA_WIDTH{1'b0}};
-      end else begin
+        shift[n] <= 'b0;
+      end else if (ena) begin
         shift[n] <= (n == 0) ? data_in : shift[n-1];
       end
     end
@@ -87,7 +88,7 @@ module filt_boxcar #(
   always @(posedge clk) begin
     if (rst) begin
       sum_reg <= {DATA_WIDTH{1'b0}};
-    end else begin
+    end else if (ena) begin
       sum_reg <= sum_out;
     end
   end

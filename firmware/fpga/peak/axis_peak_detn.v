@@ -103,6 +103,7 @@ module axis_peak_detn #(
     ) filt_boxcar (
       .clk (clk),
       .rst (1'b0),
+      .ena (1'b1),
       .data_in (s_axis_tdata_abs[n1:n0]),
       .avg_out (data_abs_avg[n1:n0])
     );

@@ -124,8 +124,8 @@ module axis_cabs_serial #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .ena (enable_int),
     .rst (s_axis_frame),  // bus data is "transferred" upon completion
+    .ena (enable_int),
     .value (count)
   );
 
@@ -138,6 +138,8 @@ module axis_cabs_serial #(
   math_cabs_32 #()
   math_cabs (
     .clk (clk),
+    .rst (1'b0),
+    .ena (enable_int),
     .dina (cabs_dina),
     .dinb (cabs_dinb),
     .dout (cabs_dout[33:0])
