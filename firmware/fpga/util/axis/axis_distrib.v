@@ -9,6 +9,7 @@
 // enable  :  N/A
 // reset   :  active-high
 // latency :  1 cycle
+// output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -18,6 +19,8 @@ module axis_distrib #(
 
   parameter   NUM_DISTRIB = 6,
   parameter   DATA_WIDTH = 256,
+  parameter   USE_FIFOS = 0,
+  parameter   FIFO_TYPE = "distributed",
 
   // derived parameters
 
@@ -58,14 +61,16 @@ module axis_distrib #(
 
   reg     [ ND:0]   ready_all = 'b0;
 
-  reg     [ ND:0]   m_axis_tvalid_reg = 'b0;
-  reg     [ WP:0]   m_axis_tdata_reg = 'b0;
+  reg     [ ND:0]   distrib_valid = 'b0;
+  reg     [ WP:0]   distrib_data = 'b0;
 
   // internal signals
 
   wire    [ ND:0]   ready_all_next;
   wire              s_axis_frame;
-  wire    [ ND:0]   m_axis_frame;
+
+  wire    [ ND:0]   distrib_ready;
+  wire    [ ND:0]   distrib_frame;
 
   // slave interface
 
@@ -82,11 +87,11 @@ module axis_distrib #(
     end
   end
 
-  assign ready_all_next = ready_all | m_axis_frame;
+  assign ready_all_next = ready_all | distrib_frame;
 
   // master interface
 
-  assign m_axis_frame = m_axis_tvalid & m_axis_tready;
+  assign distrib_frame = distrib_valid & distrib_ready;
 
   genvar n;
   generate
@@ -95,19 +100,14 @@ module axis_distrib #(
     localparam n1 = n0 + WD;
     always @(posedge clk) begin
       if (rst) begin
-        m_axis_tvalid_reg[n] <= 'b0;
-        m_axis_tdata_reg[n1:n0] <= 'b0;
-      // once all are ready, immediately proceed to avoid 1-cycle delay
-      end else if (&ready_all_next) begin
-        m_axis_tvalid_reg[n] <= s_axis_tvalid;
-        m_axis_tdata_reg[n1:n0] <= s_axis_tdata;
-      // single channel case - stay with current batch of data
+        distrib_valid[n] <= 'b0;
+        distrib_data[n1:n0] <= 'b0;
       end else if (~ready_all_next[n]) begin
-        m_axis_tvalid_reg[n] <= s_axis_tvalid;
-        m_axis_tdata_reg[n1:n0] <= s_axis_tdata;
+        distrib_valid[n] <= s_axis_tvalid;
+        distrib_data[n1:n0] <= s_axis_tdata;
       end else begin
-        m_axis_tvalid_reg[n] <= 'b0;
-        m_axis_tdata_reg[n1:n0] <= 'b0;
+        distrib_valid[n] <= 'b0;
+        distrib_data[n1:n0] <= 'b0;
       end
     end
   end
@@ -115,8 +115,36 @@ module axis_distrib #(
 
   // assign outputs
 
-  assign m_axis_tvalid = m_axis_tvalid_reg;
-  assign m_axis_tdata = m_axis_tdata_reg;
+  generate
+  if (USE_FIFOS == 0) begin
+
+    assign distrib_ready = m_axis_tready;
+    assign m_axis_tvalid = distrib_valid;
+    assign m_axis_tdata = distrib_data;
+
+  end else begin
+
+    for (n = 0; n < NUM_DISTRIB; n = n + 1) begin
+      localparam n0 = n * DATA_WIDTH;
+      localparam n1 = n0 + WD;
+      axis_fifo_sync #(
+        .MEMORY_TYPE (FIFO_TYPE),
+        .DATA_WIDTH (DATA_WIDTH),
+        .FIFO_DEPTH (16)
+      ) axis_fifo_sync (
+        .clk (clk),
+        .rst (rst),
+        .s_axis_tvalid (distrib_valid[n]),
+        .s_axis_tready (distrib_ready[n]),
+        .s_axis_tdata (distrib_data[n1:n0]),
+        .m_axis_tvalid (m_axis_tvalid[n]),
+        .m_axis_tready (m_axis_tready[n]),
+        .m_axis_tdata (m_axis_tdata[n1:n0])
+      );
+    end
+
+  end
+  endgenerate
 
 endmodule
 

@@ -245,11 +245,11 @@ module anchor_top #(
 
   // clock conversion
 
-  axis_clk_conv_fifo #(
+  axis_fifo_async #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
     .FIFO_DEPTH (16384)
-  ) axis_clk_conv_fifo (
+  ) axis_fifo_async (
     .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
     .m_axis_clk (c_clk),
@@ -265,7 +265,9 @@ module anchor_top #(
 
   axis_distrib #(
     .NUM_DISTRIB (NUM_TAGS),
-    .DATA_WIDTH (SAMPS_WIDTH)
+    .DATA_WIDTH (SAMPS_WIDTH),
+    .USE_FIFOS (1),
+    .FIFO_TYPE ("block")
   ) axis_distrib (
     .clk (c_clk),
     .rst (1'b0),
@@ -368,7 +370,8 @@ module anchor_top #(
     .NUM_TAGS (NUM_TAGS),
     .NUM_CHANNELS (NUM_CHANNELS),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
-    .READ_WIDTH (EBI_WIDTH)
+    .READ_WIDTH (EBI_WIDTH),
+    .MEMORY_TYPE ("block")
   ) tag_data_buff (
     .clk (c_clk),
     .s_axis_tvalid (fanin_axis_tvalid),

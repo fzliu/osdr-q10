@@ -11,7 +11,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-module axis_clk_conv_fifo #(
+module axis_fifo_async #(
 
   // parameters
 
@@ -55,17 +55,18 @@ module axis_clk_conv_fifo #(
   wire              fifo_empty;
   wire              fifo_write;
   wire              fifo_read;
+  wire              fifo_valid;
   wire    [ WD:0]   fifo_din;
   wire    [ WD:0]   fifo_dout;
 
   // slave interface
 
-  assign fifo_write = s_axis_tvalid & s_axis_tready;
-  assign fifo_din = s_axis_tdata;
-
   assign s_axis_tready = ~fifo_full;
 
   // fifo instantitation
+
+  assign fifo_write = s_axis_tvalid & s_axis_tready;
+  assign fifo_din = s_axis_tdata;
 
   xpm_fifo_async #(
     .FIFO_MEMORY_TYPE (MEMORY_TYPE),
@@ -75,15 +76,15 @@ module axis_clk_conv_fifo #(
     .WRITE_DATA_WIDTH (DATA_WIDTH),
     .WR_DATA_COUNT_WIDTH (0),
     .FULL_RESET_VALUE (0),
-    .USE_ADV_FEATURES ("0000"),
-    .READ_MODE ("fwft"),
-    .FIFO_READ_LATENCY (0),
+    .USE_ADV_FEATURES ("1000"),
+    .READ_MODE ("fwft"),  // "std": no output (bug?)
+    .FIFO_READ_LATENCY (1),
     .READ_DATA_WIDTH (DATA_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
     .CDC_SYNC_STAGES (3),
     .WAKEUP_TIME (0)
-  ) axis_sample_fifo (
+  ) xpm_fifo_async (
     .rst (s_axis_rst),
     .wr_clk (s_axis_clk),
     .wr_en (fifo_write),
@@ -104,7 +105,7 @@ module axis_clk_conv_fifo #(
     .prog_empty (),
     .rd_data_count (),
     .almost_empty (),
-    .data_valid (),
+    .data_valid (fifo_valid),
     .sleep (1'b0),
     .injectsbiterr (1'b0),
     .injectdbiterr (1'b0),
@@ -112,12 +113,12 @@ module axis_clk_conv_fifo #(
     .dbiterr ()
   );
 
-  // master interface
-
   assign fifo_read = m_axis_tready & m_axis_tvalid;
 
+  // master interface
+
   assign m_axis_tdata = fifo_dout;
-  assign m_axis_tvalid = ~fifo_empty;
+  assign m_axis_tvalid = fifo_valid;
 
 endmodule
 

@@ -21,6 +21,7 @@ module tag_data_buff #(
   parameter   CHANNEL_WIDTH = 64,
   parameter   FIFO_DEPTH = 1024,
   parameter   READ_WIDTH = 16,
+  parameter   MEMORY_TYPE = "distributed",
 
   // derived parameters
 
@@ -94,7 +95,7 @@ module tag_data_buff #(
   // fifo instantiation
 
   xpm_fifo_sync #(
-    .FIFO_MEMORY_TYPE ("block"),
+    .FIFO_MEMORY_TYPE (MEMORY_TYPE),
     .ECC_MODE ("no_ecc"),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
     .WRITE_DATA_WIDTH (DATA_WIDTH),
