@@ -90,7 +90,7 @@ module ad9361_cmos_if #(
   assign data_clk = rx_clk_in;
 
   generate
-    assign rx_clk = (USE_EXT_CLOCK != 0) ? clk : data_clk;
+    assign rx_clk = USE_EXT_CLOCK ? clk : data_clk;
   endgenerate
 
   // register data

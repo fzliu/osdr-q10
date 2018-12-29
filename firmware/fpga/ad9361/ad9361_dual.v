@@ -17,7 +17,10 @@ module ad9361_dual #(
   parameter   INDEP_CLOCKS = 0,
   parameter   REVERSE_DATA = 0,
   parameter   USE_AXIS_TLAST = 0,
-  parameter   SAMP_FILT_ENABLE = 1
+  parameter   SAMP_FILT_ENABLE = 1,
+  parameter   SAMP_FILT_NUM_PAD = 7,
+  parameter   SAMP_FILT_PASS_VALUE = 20,
+  parameter   SAMP_FILT_LENGTH = 16
 
 ) (
 
@@ -84,6 +87,8 @@ module ad9361_dual #(
 
 );
 
+  `include "log2_func.vh"
+
   // internal signals
 
   wire              valid_0;
@@ -141,7 +146,7 @@ module ad9361_dual #(
 
   ad9361_cmos_if #(
     .DEVICE_TYPE (DEVICE_TYPE),
-    .USE_EXT_CLOCK (1'b1),
+    .USE_EXT_CLOCK (1),
     .REALTIME_ENABLE (REALTIME_ENABLE)
   ) ad9361_cmos_if_b (
     .clk (clk),
@@ -187,10 +192,11 @@ module ad9361_dual #(
   if (SAMP_FILT_ENABLE == 1) begin
 
     ad9361_samp_filt #(
-      .DATA_PASS_VALUE (20),
-      .LOG2_FILTER_LENGTH (3),
+      .ABS_WIDTH (16),
       .NUM_DELAY (26),
-      .ABS_WIDTH (16)
+      .NUM_PAD_SAMPS (SAMP_FILT_NUM_PAD),
+      .DATA_PASS_VALUE (SAMP_FILT_PASS_VALUE),
+      .LOG2_FILTER_LENGTH (log2(SAMP_FILT_LENGTH-1))
     ) ad9361_samp_filt (
       .clk (clk),
       .valid_0_in (valid_0),

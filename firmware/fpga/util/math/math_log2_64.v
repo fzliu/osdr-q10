@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Company: 奥新智能
-// Engineer: 耿慧�?
+// Engineer: 耿慧慧
 //
 // Description: A fast base-2 logarithm function
 //
@@ -31,11 +31,10 @@ module math_log2_64 (
   reg       [ 3:0]         lut_out_reg = 'b0;
   reg       [ 5:0]         priencout2 = 'b0;
   reg       [ 5:0]         priencout3 = 'b0;
-  reg       [ 5:0]         priencout4 = 'b0;
   reg       [59:0]         barrelin = 'b0;
   reg       [ 4:0]         barrelout = 'b0;
 
-  assign dout =	{priencout4, lut_out};	// Basic top-level connectivity
+  assign dout =	{priencout3, lut_out};	// Basic top-level connectivity
 
   // Barrel shifter - OMG, it's a primitive in Verilog!
 
@@ -56,21 +55,11 @@ module math_log2_64 (
     if (rst) begin
       priencout2 <= 'b0;
       priencout3 <= 'b0;
-      priencout4 <= 'b0;
       barrelin <= 'b0;
-    end else if (ena) begin 
+    end else if (ena) begin
       priencout2 <= priencout1;
       priencout3 <= priencout2;
-      priencout4 <= priencout3;
-      barrelin <= din[62:3];     
-    end
-  end  
-  
-  always @(posedge clk) begin   
-    if (rst) begin 
-      lut_out <= 'b0;                 
-    end else if (ena) begin     
-      lut_out <= lut_out_reg;         
+      barrelin <= din[62:3];
     end
   end
 
@@ -241,88 +230,51 @@ module math_log2_64 (
       63: lut_out = 31;
     endcase */
 
-  always @(posedge clk) 
-      casez ({rst,ena,barrelout})
-        7'b1?????? : lut_out_reg <= 0;
-        7'b0100000 : lut_out_reg <= 0;
-        7'b0100001 : lut_out_reg <= 1;
-        7'b0100010 : lut_out_reg <= 1;
-        7'b0100011 : lut_out_reg <= 2;
-        7'b0100100 : lut_out_reg <= 3;
-        7'b0100101 : lut_out_reg <= 3;
-        7'b0100110 : lut_out_reg <= 4;
-        7'b0100111 : lut_out_reg <= 5;
-        7'b0101000 : lut_out_reg <= 5;
-        7'b0101001 : lut_out_reg <= 6;
-        7'b0101010 : lut_out_reg <= 6;
-        7'b0101011 : lut_out_reg <= 7;
-        7'b0101100 : lut_out_reg <= 7;
-        7'b0101101 : lut_out_reg <= 8;
-        7'b0101110 : lut_out_reg <= 8;
-        7'b0101111 : lut_out_reg <= 9;
-        7'b0110000 : lut_out_reg <= 9;
-        7'b0110001 : lut_out_reg <= 10;
-        7'b0110010 : lut_out_reg <= 10;
-        7'b0110011 : lut_out_reg <= 11;
-        7'b0110100 : lut_out_reg <= 11;
-        7'b0110101 : lut_out_reg <= 12;
-        7'b0110110 : lut_out_reg <= 12;
-        7'b0110111 : lut_out_reg <= 13;
-        7'b0111000 : lut_out_reg <= 13;
-        7'b0111001 : lut_out_reg <= 13;
-        7'b0111010 : lut_out_reg <= 14;
-        7'b0111011 : lut_out_reg <= 14;
-        7'b0111100 : lut_out_reg <= 14;
-        7'b0111101 : lut_out_reg <= 15;
-        7'b0111110 : lut_out_reg <= 15;
-        7'b0111111 : lut_out_reg <= 15; 
-        default : lut_out_reg <= 0;
-      endcase 
+ // The equation is: output = log2(1+input/32)*16
 
   always @(posedge clk) begin
     if (rst) begin
-      lut_out_reg <= 0;
+      lut_out <= 0;
     end else if (ena) begin
       case (barrelout)
-        0 : lut_out_reg <= 0;
-        1 : lut_out_reg <= 1;
-        2 : lut_out_reg <= 1;
-        3 : lut_out_reg <= 2;
-        4 : lut_out_reg <= 3;
-        5 : lut_out_reg <= 3;
-        6 : lut_out_reg <= 4;
-        7 : lut_out_reg <= 5;
-        8 : lut_out_reg <= 5;
-        9 : lut_out_reg <= 6;
-        10: lut_out_reg <= 6;
-        11: lut_out_reg <= 7;
-        12: lut_out_reg <= 7;
-        13: lut_out_reg <= 8;
-        14: lut_out_reg <= 8;
-        15: lut_out_reg <= 9;
-        16: lut_out_reg <= 9;
-        17: lut_out_reg <= 10;
-        18: lut_out_reg <= 10;
-        19: lut_out_reg <= 11;
-        20: lut_out_reg <= 11;
-        21: lut_out_reg <= 12;
-        22: lut_out_reg <= 12;
-        23: lut_out_reg <= 13;
-        24: lut_out_reg <= 13;
-        25: lut_out_reg <= 13;
-        26: lut_out_reg <= 14;
-        27: lut_out_reg <= 14;
-        28: lut_out_reg <= 14;
-        29: lut_out_reg <= 15;
-        30: lut_out_reg <= 15;
-        31: lut_out_reg <= 15; 
-        default : lut_out_reg <= 0;
+        0 : lut_out <= 0;
+        1 : lut_out <= 1;
+        2 : lut_out <= 1;
+        3 : lut_out <= 2;
+        4 : lut_out <= 3;
+        5 : lut_out <= 3;
+        6 : lut_out <= 4;
+        7 : lut_out <= 5;
+        8 : lut_out <= 5;
+        9 : lut_out <= 6;
+        10: lut_out <= 6;
+        11: lut_out <= 7;
+        12: lut_out <= 7;
+        13: lut_out <= 8;
+        14: lut_out <= 8;
+        15: lut_out <= 9;
+        16: lut_out <= 9;
+        17: lut_out <= 10;
+        18: lut_out <= 10;
+        19: lut_out <= 11;
+        20: lut_out <= 11;
+        21: lut_out <= 12;
+        22: lut_out <= 12;
+        23: lut_out <= 13;
+        24: lut_out <= 13;
+        25: lut_out <= 13;
+        26: lut_out <= 14;
+        27: lut_out <= 14;
+        28: lut_out <= 14;
+        29: lut_out <= 15;
+        30: lut_out <= 15;
+        31: lut_out <= 15;
+        default : lut_out <= 0;
       endcase
     end
   end
-                                        
+
 endmodule
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-

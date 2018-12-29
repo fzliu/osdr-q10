@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Company: 奥新智能
-// Engineer: 耿慧�?
+// Engineer: 耿慧慧
 //
 // Description: The absolute value of the complex number. 14-cycle delay.
 //

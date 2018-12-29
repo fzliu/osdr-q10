@@ -201,8 +201,14 @@ module anchor_top #(
   ad9361_dual #(
     .DEVICE_TYPE ("7SERIES"),
     .REALTIME_ENABLE (1),
+    .VALID_ALL (0),
     .INDEP_CLOCKS (0),
-    .USE_AXIS_TLAST (0)
+    .REVERSE_DATA (0),
+    .USE_AXIS_TLAST (0),
+    .SAMP_FILT_ENABLE (1),
+    .SAMP_FILT_NUM_PAD (15),
+    .SAMP_FILT_PASS_VALUE (32),
+    .SAMP_FILT_LENGTH (16)
   ) ad9361_dual (
     .clk (d_clk),
     .a_rx_clk_in (a_rx_clk_in),

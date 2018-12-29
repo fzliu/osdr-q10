@@ -17,7 +17,7 @@ module axis_cabs_serial #(
 
   parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 64,
-  parameter   CABS_DELAY = 14,
+  parameter   CABS_DELAY = 1,
 
   // derived parameters
 
@@ -147,7 +147,7 @@ module axis_cabs_serial #(
 
   shift_reg #(
     .WIDTH (COUNT_WIDTH),
-    .DEPTH (CABS_DELAY)
+    .DEPTH (CABS_DELAY-1)
   ) shift_reg_count (
     .clk (clk),
     .ena (enable_int),
@@ -157,7 +157,7 @@ module axis_cabs_serial #(
 
   shift_reg #(
     .WIDTH (1),
-    .DEPTH (CABS_DELAY)
+    .DEPTH (CABS_DELAY-1)
   ) shift_reg_done (
     .clk (clk),
     .ena (enable_int),
@@ -202,7 +202,7 @@ module axis_cabs_serial #(
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
-    .DEPTH (CABS_DELAY + 1)
+    .DEPTH (CABS_DELAY)
   ) shift_reg_data (
     .clk (clk),
     .ena (enable_int),
@@ -229,20 +229,6 @@ module axis_cabs_serial #(
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
   assign m_axis_tdata_abs = m_axis_tdata_abs_reg;
-
-  // SIMULATION
-  
-  wire      [ WC:0]   _m_axis_tdata_unpack [0:NC];
-  wire      [ WC:0]   _m_axis_tdata_unpack_abs [0:NC];
-
-  generate
-  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
-    localparam n0 = n * CHANNEL_WIDTH;
-    localparam n1 = n0 + WC;
-    assign _m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
-    assign _m_axis_tdata_unpack_abs[n] = m_axis_tdata_abs[n1:n0];
-  end
-  endgenerate
 
 endmodule
 

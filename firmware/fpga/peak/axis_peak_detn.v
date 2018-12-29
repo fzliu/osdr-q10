@@ -63,6 +63,7 @@ module axis_peak_detn #(
   // internal registers
 
   reg     [ WN:0]   mem_count = 'b0;
+  reg               has_peak_any_d = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
@@ -71,6 +72,7 @@ module axis_peak_detn #(
   // internal signals
 
   wire    [ NC:0]   has_peak;
+  wire              burst_start;
   wire    [ WD:0]   data_abs_avg;
   wire    [ WD:0]   s_axis_tdata_abs_d;
 
@@ -87,7 +89,7 @@ module axis_peak_detn #(
     .DEPTH (BURST_LENGTH / 2)
   ) shift_reg (
     .clk (clk),
-    .ena (1'b1),
+    .ena (s_axis_tvalid),
     .din (s_axis_tdata_abs),
     .dout (s_axis_tdata_abs_d)
   );
@@ -103,7 +105,7 @@ module axis_peak_detn #(
     ) filt_boxcar (
       .clk (clk),
       .rst (1'b0),
-      .ena (1'b1),
+      .ena (s_axis_tvalid),
       .data_in (s_axis_tdata_abs[n1:n0]),
       .avg_out (data_abs_avg[n1:n0])
     );
@@ -115,9 +117,15 @@ module axis_peak_detn #(
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WC;
     assign has_peak[n] = (s_axis_tdata_abs_d[n1:n0] >
-        (data_abs_avg[n1:n0] << PEAK_THRESH_SHIFT));
+        ((data_abs_avg[n1:n0] + 1'b1) << PEAK_THRESH_SHIFT));
   end
   endgenerate
+
+  always @(posedge clk) begin
+    has_peak_any_d <= |has_peak;
+  end
+
+  assign burst_start = (|has_peak) & ~has_peak_any_d;
 
   // memory control logic
 
@@ -125,9 +133,9 @@ module axis_peak_detn #(
   assign mem_addr = (mem_count - 1'b1);
 
   always @(posedge clk) begin
-    if (mem_count > 1'b0) begin
+    if (mem_ready) begin
       mem_count <= mem_count - m_axis_frame;
-    end else if (|has_peak) begin
+    end else if (burst_start) begin
       mem_count <= BURST_LENGTH;
     end else begin
       mem_count <= mem_count;
@@ -168,13 +176,15 @@ module axis_peak_detn #(
 
   // SIMULATION
   
-  wire      [ WC:0]   _m_axis_tdata_unpack [0:NC];
+  wire      [ WC:0]   _s_axis_tdata_abs_unpack [0:NC];
+  wire      [ WC:0]   _data_abs_avg_unpack [0:NC];
 
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WC;
-    assign _m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
+    assign _s_axis_tdata_abs_unpack[n] = s_axis_tdata_abs[n1:n0];
+    assign _data_abs_avg_unpack[n] = data_abs_avg[n1:n0];
   end
   endgenerate
 
