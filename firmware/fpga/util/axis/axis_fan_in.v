@@ -60,6 +60,7 @@ module axis_fan_in #(
   // internal registers
 
   reg     [ NF:0]   chan_sel = {{NF{1'b0}}, 1'b1};
+  reg               hold_cond = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
@@ -72,7 +73,6 @@ module axis_fan_in #(
 
   wire    [ NF:0]   chan_prio;
   wire    [ NF:0]   chan_num;
-  wire              hold_cond;
 
   wire              in_valid;
   wire    [ WD:0]   in_data;
@@ -104,7 +104,17 @@ module axis_fan_in #(
   // select channel based on priority
 
   generate
-  assign hold_cond = USE_AXIS_TLAST ? ~in_last : 1'b0;
+  always @(posedge clk) begin
+    if (USE_AXIS_TLAST) begin
+      if (rst) begin
+        hold_cond <= 'b0;
+      end else if (in_valid) begin
+        hold_cond <= ~in_last;
+      end else begin
+        hold_cond <= hold_cond;
+      end
+    end
+  end
   endgenerate
 
   generate
@@ -114,7 +124,7 @@ module axis_fan_in #(
         3'b1??: chan_sel[n] <= (n == 0);
         3'b01?: chan_sel[n] <= chan_sel[n];
         3'b001: chan_sel[n] <= s_axis_tvalid[n];
-        default: chan_sel <= chan_sel[n];
+        default: chan_sel[n] <= chan_sel[n];
       endcase
     end
   end

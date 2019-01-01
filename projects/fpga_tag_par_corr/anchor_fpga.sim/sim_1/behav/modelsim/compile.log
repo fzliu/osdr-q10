@@ -1348,3 +1348,503 @@ Top level modules:
 	glbl
 End time: 14:34:55 on Dec 29,2018, Elapsed time: 0:00:00
 Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 16:29:40 on Dec 29,2018
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Compiling module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 16:29:40 on Dec 29,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 16:29:40 on Dec 29,2018
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 16:29:41 on Dec 29,2018, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 16:44:54 on Dec 29,2018
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Compiling module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 16:44:54 on Dec 29,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 16:44:54 on Dec 29,2018
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 16:44:54 on Dec 29,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 17:52:19 on Dec 30,2018
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Compiling module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 17:52:19 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 17:52:19 on Dec 30,2018
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 17:52:19 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 18:09:36 on Dec 30,2018
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Compiling module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 18:09:37 on Dec 30,2018, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 18:09:37 on Dec 30,2018
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 18:09:37 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 18:15:03 on Dec 30,2018
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Skipping module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 18:15:04 on Dec 30,2018, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 18:15:04 on Dec 30,2018
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 18:15:04 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 18:20:57 on Dec 30,2018
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Skipping module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 18:20:57 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 18:20:57 on Dec 30,2018
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 18:20:57 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 19:42:09 on Dec 30,2018
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Compiling module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 19:42:09 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 19:42:09 on Dec 30,2018
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 19:42:09 on Dec 30,2018, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 14:32:44 on Jan 01,2019
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Skipping module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 14:32:45 on Jan 01,2019, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 14:32:45 on Jan 01,2019
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 14:32:45 on Jan 01,2019, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 15:16:39 on Jan 01,2019
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Skipping module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Compiling module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 15:16:39 on Jan 01,2019, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 15:16:39 on Jan 01,2019
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 15:16:39 on Jan 01,2019, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+** Warning: (vlib-34) Library already exists at "modelsim_lib/work".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim".
+** Warning: (vlib-34) Library already exists at "modelsim_lib/msim/xil_defaultlib".
+Model Technology ModelSim - Intel FPGA Edition vmap 10.6d Lib Mapping Utility 2018.02 Feb 24 2018
+vmap xil_defaultlib modelsim_lib/msim/xil_defaultlib 
+Modifying modelsim.ini
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 15:57:29 on Jan 01,2019
+vlog -incr -work xil_defaultlib "+incdir+../../../../../../firmware/fpga/util/incl" "+incdir+../../../../../../firmware/fpga/xcorr" ../../../../../../firmware/fpga/ad9361/ad9361_cmos_if.v ../../../../../../firmware/fpga/ad9361/ad9361_dual.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_axis.v ../../../../../../firmware/fpga/ad9361/ad9361_dual_spi.v ../../../../../../firmware/fpga/ad9361/ad9361_samp_filt.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_clk_gen.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_ext_sync.v ../../../../anchor_fpga.srcs/sources_1/new/anchor_top.v ../../../../../../firmware/fpga/xcorr/axis_bit_corr.v ../../../../../../firmware/fpga/peak/axis_cabs_serial.v ../../../../../../firmware/fpga/util/axis/axis_distrib.v ../../../../../../firmware/fpga/util/axis/axis_fan_in.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_async.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v ../../../../../../firmware/fpga/peak/axis_peak_detn.v ../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v ../../../../../../firmware/fpga/util/math/counter.v ../../../../../../firmware/fpga/util/filt/filt_boxcar.v ../../../../../../firmware/fpga/util/math/xilinx/math_add_96.v ../../../../../../firmware/fpga/util/math/math_cabs_32.v ../../../../../../firmware/fpga/util/math/math_log2_64.v ../../../../../../firmware/fpga/util/math/xilinx/math_mult_35.v ../../../../../../firmware/fpga/util/math/math_pow2_12.v ../../../../../../firmware/fpga/util/misc/oh_to_bin.v ../../../../../../firmware/fpga/util/misc/xilinx/shift_reg.v ../../../../../../firmware/fpga/mpu_if/tag_data_buff.v ../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v 
+-- Skipping module ad9361_cmos_if
+-- Skipping module ad9361_dual
+-- Skipping module ad9361_dual_axis
+-- Skipping module ad9361_dual_spi
+-- Skipping module ad9361_samp_filt
+-- Skipping module anchor_clk_gen
+-- Skipping module anchor_ext_sync
+-- Skipping module anchor_top
+-- Skipping module axis_bit_corr
+-- Skipping module axis_cabs_serial
+-- Skipping module axis_distrib
+-- Compiling module axis_fan_in
+-- Skipping module axis_fifo_async
+-- Skipping module axis_fifo_sync
+-- Skipping module axis_peak_detn
+-- Skipping module axis_to_mem
+-- Skipping module counter
+-- Skipping module filt_boxcar
+-- Skipping module math_add_96
+-- Skipping module math_cabs_32
+-- Skipping module math_log2_64
+-- Skipping module math_mult_35
+-- Skipping module math_pow2_12
+-- Skipping module oh_to_bin
+-- Skipping module shift_reg
+-- Skipping module tag_data_buff
+-- Skipping module anchor_top_tb
+
+Top level modules:
+	anchor_top_tb
+End time: 15:57:30 on Jan 01,2019, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+Model Technology ModelSim - Intel FPGA Edition vlog 10.6d Compiler 2018.02 Feb 24 2018
+Start time: 15:57:30 on Jan 01,2019
+vlog -work xil_defaultlib glbl.v 
+-- Compiling module glbl
+
+Top level modules:
+	glbl
+End time: 15:57:30 on Jan 01,2019, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0

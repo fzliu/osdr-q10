@@ -11,9 +11,9 @@ module anchor_top_tb;
 
   // parameters
 
-  parameter   NUM_TAGS = 1;
-  parameter   CORR_OFFSET = 19;
-  parameter   PEAK_THRESH_MULT = 4;
+  parameter   NUM_TAGS = 2;
+  parameter   CORR_OFFSET = 18;
+  parameter   PEAK_THRESH_MULT = 8;
   
   parameter   SAMPS_WIDTH = 128;
   parameter   DATA_WIDTH = 256;
