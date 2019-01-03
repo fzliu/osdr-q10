@@ -13,14 +13,17 @@ module ad9361_dual #(
 
   parameter   DEVICE_TYPE = "7SERIES",
   parameter   REALTIME_ENABLE = 1,
-  parameter   VALID_ALL = 0,
-  parameter   INDEP_CLOCKS = 0,
+  parameter   USE_SAMPLE_FILTER = 1,
+  parameter   NUM_PAD_SAMPS = 7,
+  parameter   DATA_PASS_VALUE = 20,
+  parameter   FILTER_LENGTH = 16,
+  parameter   SAMPS_WIDTH = 64,
+  parameter   REDUCE_PRECISION = 0,
   parameter   REVERSE_DATA = 0,
+  parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
-  parameter   SAMP_FILT_ENABLE = 1,
-  parameter   SAMP_FILT_NUM_PAD = 7,
-  parameter   SAMP_FILT_PASS_VALUE = 20,
-  parameter   SAMP_FILT_LENGTH = 16
+
+  localparam  WS = SAMPS_WIDTH - 1
 
 ) (
 
@@ -83,7 +86,7 @@ module ad9361_dual #(
   output            m_axis_tvalid,
   input             m_axis_tready,
   output            m_axis_tlast,
-  output  [127:0]   m_axis_tdata
+  output  [ WS:0]   m_axis_tdata
 
 );
 
@@ -189,14 +192,14 @@ module ad9361_dual #(
   // sample filter
 
   generate
-  if (SAMP_FILT_ENABLE == 1) begin
+  if (USE_SAMPLE_FILTER) begin
 
     ad9361_samp_filt #(
       .ABS_WIDTH (16),
       .NUM_DELAY (26),
-      .NUM_PAD_SAMPS (SAMP_FILT_NUM_PAD),
-      .DATA_PASS_VALUE (SAMP_FILT_PASS_VALUE),
-      .LOG2_FILTER_LENGTH (log2(SAMP_FILT_LENGTH-1))
+      .NUM_PAD_SAMPS (NUM_PAD_SAMPS),
+      .DATA_PASS_VALUE (DATA_PASS_VALUE),
+      .LOG2_FILTER_LENGTH (log2(FILTER_LENGTH-1))
     ) ad9361_samp_filt (
       .clk (clk),
       .valid_0_in (valid_0),
@@ -246,9 +249,10 @@ module ad9361_dual #(
   // serialize data
 
   ad9361_dual_axis #(
-    .VALID_ALL (VALID_ALL),
-    .INDEP_CLOCKS (INDEP_CLOCKS),
+    .SAMPS_WIDTH (SAMPS_WIDTH),
+    .REDUCE_PRECISION (REDUCE_PRECISION),
     .REVERSE_DATA (REVERSE_DATA),
+    .INDEP_CLOCKS (INDEP_CLOCKS),
     .USE_AXIS_TLAST (USE_AXIS_TLAST)
   ) ad9361_dual_axis (
     .data_clk (clk),

@@ -27,12 +27,16 @@ module tag_data_buff #(
 
   localparam  DATA_WIDTH = NUM_CHANNELS * CHANNEL_WIDTH,
   localparam  PAD_WIDTH = DATA_WIDTH - NUM_TAGS,
+  localparam  NUM_PARALLEL = NUM_CHANNELS * 2,
+  localparam  WORD_WIDTH = CHANNEL_WIDTH / 2,
 
   // bit width parameters
 
   localparam  NT = NUM_TAGS - 1,
   localparam  WD = DATA_WIDTH - 1,
-  localparam  WR = READ_WIDTH - 1
+  localparam  WR = READ_WIDTH - 1,
+  localparam  NP = NUM_PARALLEL - 1,
+  localparam  WW = WORD_WIDTH - 1
 
 ) (
 
@@ -99,11 +103,13 @@ module tag_data_buff #(
     .ECC_MODE ("no_ecc"),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
     .WRITE_DATA_WIDTH (DATA_WIDTH),
+    .WR_DATA_COUNT_WIDTH (0),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
-    .READ_MODE ("std"),
-    .FIFO_READ_LATENCY (1),
+    .READ_MODE ("fwft"),
+    .FIFO_READ_LATENCY (0),
     .READ_DATA_WIDTH (READ_WIDTH),
+    .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
     .WAKEUP_TIME (0)
   ) xpm_fifo_sync (
@@ -122,12 +128,12 @@ module tag_data_buff #(
     .rd_en (rd_ena & ~rd_ena_d),
     .dout (data_out),
     .empty (fifo_empty),
+    .rd_rst_busy (fifo_rd_rst_busy),
     .prog_empty (),
     .rd_data_count (),
     .almost_empty (),
     .data_valid (),
     .underflow (),
-    .rd_rst_busy (fifo_rd_rst_busy),
     .injectsbiterr (1'b0),
     .injectdbiterr (1'b0),
     .sbiterr (),
@@ -137,6 +143,19 @@ module tag_data_buff #(
   // output control signals
 
   assign ready = ~fifo_empty;
+
+  // SIMULATION
+  
+  wire      [ WW:0]   _s_axis_tdata_unpack [0:NP];
+
+  genvar n;
+  generate
+  for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
+    localparam n0 = n * WORD_WIDTH;
+    localparam n1 = n0 + WW;
+    assign _s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
+  end
+  endgenerate
 
 endmodule
 

@@ -15,13 +15,13 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 5,
+  parameter   NUM_TAGS = 1,
   parameter   CORR_OFFSET = 0,
 
   parameter   NUM_CHANNELS = 4,
-  parameter   CHANNEL_WIDTH = 64,
-  parameter   ADDER_WIDTH = 20,
-  parameter   SAMPS_WIDTH = 128,
+  parameter   CHANNEL_WIDTH = 32,
+  parameter   ADDER_WIDTH = 12,
+  parameter   SAMPS_WIDTH = 64,
   parameter   EBI_WIDTH = 16,
 
   parameter   CABS_DELAY = 14,
@@ -201,14 +201,15 @@ module anchor_top #(
   ad9361_dual #(
     .DEVICE_TYPE ("7SERIES"),
     .REALTIME_ENABLE (1),
-    .VALID_ALL (0),
-    .INDEP_CLOCKS (0),
+    .USE_SAMPLE_FILTER (1),
+    .NUM_PAD_SAMPS (15),
+    .DATA_PASS_VALUE (64),
+    .FILTER_LENGTH (16),
+    .SAMPS_WIDTH (SAMPS_WIDTH),
+    .REDUCE_PRECISION (6),
     .REVERSE_DATA (0),
-    .USE_AXIS_TLAST (0),
-    .SAMP_FILT_ENABLE (1),
-    .SAMP_FILT_NUM_PAD (15),
-    .SAMP_FILT_PASS_VALUE (32),
-    .SAMP_FILT_LENGTH (16)
+    .INDEP_CLOCKS (0),
+    .USE_AXIS_TLAST (0)
   ) ad9361_dual (
     .clk (d_clk),
     .a_rx_clk_in (a_rx_clk_in),

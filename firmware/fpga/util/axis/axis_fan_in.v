@@ -50,7 +50,7 @@ module axis_fan_in #(
   output            m_axis_tvalid,
   input             m_axis_tready,
   output  [ WD:0]   m_axis_tdata,
-  input             m_axis_tlast,
+  output            m_axis_tlast,
   output  [ NF:0]   m_axis_tuser
 
 );

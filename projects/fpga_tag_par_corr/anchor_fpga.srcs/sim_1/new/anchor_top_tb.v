@@ -11,8 +11,8 @@ module anchor_top_tb;
 
   // parameters
 
-  parameter   NUM_TAGS = 2;
-  parameter   CORR_OFFSET = 18;
+  parameter   NUM_TAGS = 1;
+  parameter   CORR_OFFSET = 19;
   parameter   PEAK_THRESH_MULT = 8;
   
   parameter   SAMPS_WIDTH = 128;
@@ -139,7 +139,7 @@ module anchor_top_tb;
     .ebi_nrde (ebi_nrde),
     .ebi_data (ebi_data),
     .ready (ready)
-  );
+  ); 
 
   // add signals to wave
 

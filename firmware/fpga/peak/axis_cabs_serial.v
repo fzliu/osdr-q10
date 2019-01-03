@@ -16,7 +16,7 @@ module axis_cabs_serial #(
   // parameters
 
   parameter   NUM_CHANNELS = 4,
-  parameter   CHANNEL_WIDTH = 64,
+  parameter   CHANNEL_WIDTH = 32,
   parameter   CABS_DELAY = 1,
 
   // derived parameters
@@ -55,6 +55,7 @@ module axis_cabs_serial #(
 );
 
   `include "log2_func.vh"
+  `include "sign_ext.vh"
 
   // internal memories
 
@@ -81,9 +82,11 @@ module axis_cabs_serial #(
   wire              batch_done;
   wire              batch_done_out;
 
-  wire    [ WW:0]   cabs_dina;
-  wire    [ WW:0]   cabs_dinb;
-  wire    [ WC:0]   cabs_dout;
+  wire    [ WW:0]   data_slice_a;
+  wire    [ WW:0]   data_slice_b;
+  wire    [ 31:0]   cabs_dina;
+  wire    [ 31:0]   cabs_dinb;
+  wire    [ 33:0]   cabs_dout;
 
   wire    [ WD:0]   data_out;
   wire    [ WD:0]   data_abs_out;
@@ -131,9 +134,10 @@ module axis_cabs_serial #(
 
   // absolute value module
 
-  assign cabs_dina = s_axis_tdata_unpack[count][WW:0];
-  assign cabs_dinb = s_axis_tdata_unpack[count][WC:(WW+1)];
-  assign cabs_dout[63:34] = 30'h00000000;
+  assign data_slice_a = s_axis_tdata_unpack[count][WW:0];
+  assign data_slice_b = s_axis_tdata_unpack[count][WC:(WW+1)];
+  assign cabs_dina = `SIGN_EXT(data_slice_a,WORD_WIDTH,32);
+  assign cabs_dinb = `SIGN_EXT(data_slice_b,WORD_WIDTH,32);
 
   math_cabs_32 #()
   math_cabs (
@@ -142,12 +146,12 @@ module axis_cabs_serial #(
     .ena (enable_int),
     .dina (cabs_dina),
     .dinb (cabs_dinb),
-    .dout (cabs_dout[33:0])
+    .dout (cabs_dout)
   );
 
   shift_reg #(
     .WIDTH (COUNT_WIDTH),
-    .DEPTH (CABS_DELAY-1)
+    .DEPTH (CABS_DELAY)
   ) shift_reg_count (
     .clk (clk),
     .ena (enable_int),
@@ -157,7 +161,7 @@ module axis_cabs_serial #(
 
   shift_reg #(
     .WIDTH (1),
-    .DEPTH (CABS_DELAY-1)
+    .DEPTH (CABS_DELAY)
   ) shift_reg_done (
     .clk (clk),
     .ena (enable_int),
@@ -169,7 +173,7 @@ module axis_cabs_serial #(
 
   always @(posedge clk) begin
     if (enable_int) begin
-      cabs_mem[count_out] <= cabs_dout;
+      cabs_mem[count_out] <= cabs_dout[WC:0];
     end
   end
 
@@ -202,7 +206,7 @@ module axis_cabs_serial #(
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
-    .DEPTH (CABS_DELAY)
+    .DEPTH (CABS_DELAY+1)
   ) shift_reg_data (
     .clk (clk),
     .ena (enable_int),

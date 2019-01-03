@@ -19,9 +19,9 @@ module axis_bit_corr #(
   // parameters
 
   parameter   NUM_PARALLEL = 8,
-  parameter   SLAVE_WIDTH = 128,
-  parameter   MASTER_WIDTH = 256,
-  parameter   ADDER_WIDTH = 20,
+  parameter   SLAVE_WIDTH = 64,
+  parameter   MASTER_WIDTH = 128,
+  parameter   ADDER_WIDTH = 12,
   parameter   CORR_NUM = 0,
 
   // derived parameters
@@ -175,7 +175,7 @@ module axis_bit_corr #(
       .addra (count),
       .dina (adder_out[n-1]),
       .douta (),
-      .clkb (),
+      .clkb (1'b0),
       .rstb (1'b0),
       .enb (enable_int),
       .regceb (1'b1),

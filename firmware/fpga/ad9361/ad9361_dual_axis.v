@@ -15,19 +15,25 @@ module ad9361_dual_axis #(
 
   // parameters
 
-  parameter   VALID_ALL = 0,
-  parameter   INDEP_CLOCKS = 0,
+  parameter   SAMPS_WIDTH = 128,
+  parameter   REDUCE_PRECISION = 0,
   parameter   REVERSE_DATA = 0,
+  parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
   parameter   AXIS_BURST_LENGTH = 512,
 
   // derived parameters
 
   localparam  COUNT_WIDTH = log2(AXIS_BURST_LENGTH),
+  localparam  WORD_WIDTH = SAMPS_WIDTH / 8,
+  localparam  PRECISION = 12 - REDUCE_PRECISION,
 
   // bit width parameters
 
-  localparam  N0 = COUNT_WIDTH - 1
+  localparam  WS = SAMPS_WIDTH - 1,
+  localparam  WC = COUNT_WIDTH - 1,
+  localparam  WW = WORD_WIDTH - 1,
+  localparam  W0 = PRECISION - 1
 
 ) (
 
@@ -53,7 +59,7 @@ module ad9361_dual_axis #(
   output            m_axis_tvalid,
   input             m_axis_tready,
   output            m_axis_tlast,
-  output  [127:0]   m_axis_tdata
+  output  [ WS:0]   m_axis_tdata
 
 );
 
@@ -63,19 +69,19 @@ module ad9361_dual_axis #(
   // internal registers
 
   reg               data_frame = 'b0;
-  reg     [127:0]   data_packed = 'b0;
+  reg     [ WS:0]   data_packed = 'b0;
   reg               m_axis_tvalid_reg = 'b0;
-  reg     [ N0:0]   m_axis_count = 'b0;
+  reg     [ WC:0]   m_axis_count = 'b0;
 
-  // clock domain boundary synchronization
-
-  reg     [127:0]   m_axis_sync0_data = 'b0;
-  reg     [127:0]   m_axis_sync1_data = 'b0;
+  reg     [ WS:0]   m_axis_sync0_data = 'b0;
+  reg     [ WS:0]   m_axis_sync1_data = 'b0;
   reg               m_axis_sync0_update = 'b0;
   reg               m_axis_sync1_update = 'b0;
   reg               m_axis_update_delay = 'b0;
 
   // internal signals
+
+  wire    [ W0:0]   data_format [0:7];
 
   wire              valid_int;
 
@@ -85,13 +91,7 @@ module ad9361_dual_axis #(
 
   // input data domain
 
-  generate
-  if (VALID_ALL != 0) begin
-    assign valid_int = valid_0 & valid_1 & valid_2 & valid_3;
-  end else begin
-    assign valid_int = valid_0 | valid_1 | valid_2 | valid_3;
-  end
-  endgenerate
+  assign valid_int = valid_0 | valid_1 | valid_2 | valid_3;
 
   always @(posedge data_clk) begin
     if (valid_int) begin
@@ -101,33 +101,31 @@ module ad9361_dual_axis #(
     end
   end
 
+  // format data to desired precision
+
+  assign data_format[0] = data_q3 >>> REDUCE_PRECISION;
+  assign data_format[1] = data_i3 >>> REDUCE_PRECISION;
+  assign data_format[2] = data_q2 >>> REDUCE_PRECISION;
+  assign data_format[3] = data_i2 >>> REDUCE_PRECISION;
+  assign data_format[4] = data_q1 >>> REDUCE_PRECISION;
+  assign data_format[5] = data_i1 >>> REDUCE_PRECISION;
+  assign data_format[6] = data_q0 >>> REDUCE_PRECISION;
+  assign data_format[7] = data_i0 >>> REDUCE_PRECISION;
+
+  // pack sample data
+
+  genvar n;
   generate
-  if (REVERSE_DATA == 0) begin
-
+  for (n = 0; n < 8; n = n + 1) begin
+    localparam n0 = n * WORD_WIDTH;
+    localparam n1 = n0 + WW;
     always @(posedge data_clk) begin
-      data_packed[15:0] <= `SIGN_EXT(data_q3,12,16); // axi spec: byte align
-      data_packed[31:16] <= `SIGN_EXT(data_i3,12,16);
-      data_packed[47:32] <= `SIGN_EXT(data_q2,12,16);
-      data_packed[63:48] <= `SIGN_EXT(data_i2,12,16);
-      data_packed[79:64] <= `SIGN_EXT(data_q1,12,16);
-      data_packed[95:80] <= `SIGN_EXT(data_i1,12,16);
-      data_packed[111:96] <= `SIGN_EXT(data_q0,12,16);
-      data_packed[127:112] <= `SIGN_EXT(data_i0,12,16);
+      if (REVERSE_DATA) begin
+        data_packed[n1:n0] <= `SIGN_EXT(data_format[7-n],PRECISION,WORD_WIDTH);
+      end else begin
+        data_packed[n1:n0] <= `SIGN_EXT(data_format[n],PRECISION,WORD_WIDTH);
+      end
     end
-
-  end else begin
-
-    always @(posedge data_clk) begin
-      data_packed[15:0] <= `SIGN_EXT(data_i0,12,16);
-      data_packed[31:16] <= `SIGN_EXT(data_q0,12,16);
-      data_packed[47:32] <= `SIGN_EXT(data_i1,12,16);
-      data_packed[63:48] <= `SIGN_EXT(data_q1,12,16);
-      data_packed[79:64] <= `SIGN_EXT(data_i2,12,16);
-      data_packed[95:80] <= `SIGN_EXT(data_q2,12,16);
-      data_packed[111:96] <= `SIGN_EXT(data_i3,12,16);
-      data_packed[127:112] <= `SIGN_EXT(data_q3,12,16);
-    end
-
   end
   endgenerate
 

@@ -3,11 +3,11 @@
 // Engineer: Frank Liu
 //
 // Description: Parameterizable shift register utility, Xilinx devices.
-// DEPTH = 0 implies a 1-cycle shift register.
+// DEPTH must be >= 1 (DEPTH = 1 implies a 1-cycle shift register).
 //
 // enable  :  active-high
 // reset   :  N/A
-// latency :  N/A
+// latency :  variable
 // output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +18,7 @@ module shift_reg #(
 
   parameter   WIDTH = 1,
   parameter   DEPTH = 7,
+  parameter   USE_FFS = 1,
 
   // derived parameters
 
@@ -27,7 +28,9 @@ module shift_reg #(
   // bit width parameters
 
   localparam  W0 = WIDTH - 1,
-  localparam  W1 = NUM_CASCADE
+  localparam  D0 = DEPTH - 1,
+  localparam  N0 = NUM_CASCADE,
+  localparam  DL = DEPTH_LAST - 1
 
 ) (
 
@@ -43,65 +46,83 @@ module shift_reg #(
 
 );
 
+  // internal registers
+
+  reg     [ D0:0]   shift_ff [W0:0];
+
   // internal signals
 
-  wire    [ W1:0]   shift [W0:0];
+  wire    [ N0:0]   shift [W0:0];
 
-  // shift register implementation
-
-  genvar i, j;
+  genvar n, c;
   generate
-  for (i = 0; i < WIDTH; i = i + 1) begin : shift_gen
+  for (n = 0; n < WIDTH; n = n + 1) begin
 
-    // assign input
+    if (USE_FFS) begin
 
-    assign shift[i][W1] = din[i];
+      // initialize flip-flops
 
-    // use SRL16 for short shift registers
+      initial begin
+        shift_ff[n] <= 'b0;
+      end
 
-    if (DEPTH < 16) begin
+      // shift register implementation
 
-      // single SRL16 for short shift registers
+      always @(posedge clk) begin
+        if (ena) begin
+          shift_ff[n] <= {shift_ff[n][D0-1:0], din[n]};
+        end
+      end
 
-      SRL16E #(
-        .INIT(16'h0000)
-      ) SRL16E_inst (
-        .Q (dout[i]),
-        .A0 (DEPTH[0]),
-        .A1 (DEPTH[1]),
-        .A2 (DEPTH[2]),
-        .A3 (DEPTH[3]),
-        .CE (ena),
-        .CLK (clk),
-        .D (shift[i][0])
-      );
+      // assign outputs
+
+      assign dout[n] = shift_ff[n][D0];
 
     end else begin
 
-      // cascade SRL32 for long shift registers
+      // assign inputs
 
-      for (j = 0; j < NUM_CASCADE; j = j + 1) begin : casc_gen
+      assign shift[n][N0] = din[n];
+
+      // LUTRAM-based shift register
+
+      if (DEPTH < 16) begin // single SRL16 for short shift registers
+        SRL16E #(
+          .INIT(16'h0000)
+        ) SRL16E_inst (
+          .Q (dout[n]),
+          .A0 (D0[0]),
+          .A1 (D0[1]),
+          .A2 (D0[2]),
+          .A3 (D0[3]),
+          .CE (ena),
+          .CLK (clk),
+          .D (shift[n][0])
+        );
+      end else begin // cascade SRL32 for long shift registers
+        for (c = 0; c < NUM_CASCADE; c = c + 1) begin
+          SRLC32E #(
+            .INIT (32'h00000000)
+          ) SRLC32E_inst (
+            .Q (),
+            .Q31 (shift[n][c]),
+            .A (5'd31),
+            .CE (ena),
+            .CLK (clk),
+            .D (shift[n][c+1])
+          );
+        end
         SRLC32E #(
           .INIT (32'h00000000)
         ) SRLC32E_inst (
-          .Q (),
-          .Q31 (shift[i][j]),
-          .A (5'd31),
+          .Q (dout[n]),
+          .Q31 (),
+          .A (DL),
           .CE (ena),
           .CLK (clk),
-          .D (shift[i][j+1])
+          .D (shift[n][0])
         );
       end
-      SRLC32E #(
-        .INIT (32'h00000000)
-      ) SRLC32E_inst (
-        .Q (dout[i]),
-        .Q31 (),
-        .A (DEPTH_LAST[4:0]),
-        .CE (ena),
-        .CLK (clk),
-        .D (shift[i][0])
-      );
 
     end
 

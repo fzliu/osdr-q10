@@ -164,7 +164,7 @@ module ad9361_samp_filt #(
     );
 
     // absolute value
-    
+
     math_cabs_32 #(
     ) math_cabs (
       .clk (clk),

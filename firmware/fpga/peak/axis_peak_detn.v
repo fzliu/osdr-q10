@@ -114,8 +114,8 @@ module axis_peak_detn #(
 
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
-    localparam n0 = n * CHANNEL_WIDTH;
-    localparam n1 = n0 + WC;
+    localparam n0 = n * CHANNEL_WIDTH;  // channel-based separation
+    localparam n1 = n0 + WC;            // word width = true width
     assign has_peak[n] = (s_axis_tdata_abs_d[n1:n0] >
         ((data_abs_avg[n1:n0] + 1'b1) << PEAK_THRESH_SHIFT));
   end
@@ -175,7 +175,7 @@ module axis_peak_detn #(
   assign m_axis_tlast = m_axis_tlast_reg;
 
   // SIMULATION
-  
+
   wire      [ WC:0]   _s_axis_tdata_abs_unpack [0:NC];
   wire      [ WC:0]   _data_abs_avg_unpack [0:NC];
 

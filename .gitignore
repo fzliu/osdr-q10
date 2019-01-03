@@ -3,3 +3,4 @@
 *.qpg
 *.qtl
 *.wlf
+**/*.runs
