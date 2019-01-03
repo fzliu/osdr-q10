@@ -114,8 +114,8 @@ module axis_peak_detn #(
 
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
-    localparam n0 = n * CHANNEL_WIDTH;  // channel-based separation
-    localparam n1 = n0 + WC;            // word width = true width
+    localparam n0 = n * CHANNEL_WIDTH;
+    localparam n1 = n0 + WC;
     assign has_peak[n] = (s_axis_tdata_abs_d[n1:n0] >
         ((data_abs_avg[n1:n0] + 1'b1) << PEAK_THRESH_SHIFT));
   end
@@ -167,7 +167,7 @@ module axis_peak_detn #(
   always @(posedge clk) begin
     m_axis_tvalid_reg <= mem_ready;
     m_axis_tdata_reg <= mem_dout;
-    m_axis_tlast_reg <= (mem_addr == 1'b1);
+    m_axis_tlast_reg <= ~m_axis_tlast & ~&mem_addr;
   end
 
   assign m_axis_tvalid = m_axis_tvalid_reg;

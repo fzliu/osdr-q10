@@ -46,7 +46,7 @@ module math_mult_35 (
 
   shift_reg #(
     .WIDTH (17),
-    .DEPTH (0)
+    .DEPTH (1)
   ) shift_reg_mult_2_a (
     .clk (clk),
     .ena (ena),
@@ -56,7 +56,7 @@ module math_mult_35 (
 
   shift_reg #(
     .WIDTH (25),
-    .DEPTH (1)
+    .DEPTH (2)
   ) shift_reg_mult_3_a (
     .clk (clk),
     .ena (ena),
@@ -66,7 +66,7 @@ module math_mult_35 (
 
   shift_reg #(
     .WIDTH (18),
-    .DEPTH (0)
+    .DEPTH (1)
   ) shift_reg_mult_2_b (
     .clk (clk),
     .ena (ena),
@@ -406,7 +406,7 @@ module math_mult_35 (
 
   shift_reg #(
     .WIDTH (17),
-    .DEPTH (2)
+    .DEPTH (3)
   ) shift_reg_dout_l (
     .clk (clk),
     .ena (ena),
@@ -416,7 +416,7 @@ module math_mult_35 (
 
   shift_reg #(
     .WIDTH (17),
-    .DEPTH (0)
+    .DEPTH (1)
   ) shift_reg_dout_m (
     .clk (clk),
     .ena (ena),
