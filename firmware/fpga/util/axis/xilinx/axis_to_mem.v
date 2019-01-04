@@ -17,7 +17,7 @@ module axis_to_mem #(
 
   // parameters
 
-  parameter   MEMORY_TYPE = "distributed",
+  parameter   MEMORY_TYPE = "auto",
   parameter   MEMORY_DEPTH = 32,
   parameter   DATA_WIDTH = 32,
   parameter   READ_LATENCY = 1,
@@ -54,7 +54,7 @@ module axis_to_mem #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
 
   // internal registers
 
@@ -109,8 +109,8 @@ module axis_to_mem #(
     .MEMORY_PRIMITIVE (MEMORY_TYPE),
     .CLOCKING_MODE ("common_clock"),
     .MEMORY_INIT_FILE ("none"),
-    .MEMORY_INIT_PARAM (""),
-    .USE_MEM_INIT (1),
+    .MEMORY_INIT_PARAM ("0"),
+    .USE_MEM_INIT (0),
     .WAKEUP_TIME ("disable_sleep"),
     .MESSAGE_CONTROL (0),
     .ECC_MODE ("no_ecc"),
@@ -134,7 +134,7 @@ module axis_to_mem #(
     .dina (s_axis_tdata),
     .injectsbiterra (1'b0),
     .injectdbiterra (1'b0),
-    .clkb (clk),
+    .clkb (1'b0),
     .rstb (rst),
     .enb (1'b1),
     .regceb (1'b1),

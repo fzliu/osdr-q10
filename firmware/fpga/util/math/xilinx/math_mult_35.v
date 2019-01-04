@@ -28,8 +28,6 @@ module math_mult_35 (
 
 );
 
-  // internal registers
-
   // internal signals
 
   wire    [ 16:0]   mult_2_a;   // dina, lower bits, delay 1

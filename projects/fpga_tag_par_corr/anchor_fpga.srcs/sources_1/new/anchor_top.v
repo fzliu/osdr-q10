@@ -255,7 +255,7 @@ module anchor_top #(
   axis_fifo_async #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
-    .FIFO_DEPTH (16384)
+    .FIFO_DEPTH (65536)
   ) axis_fifo_async (
     .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
@@ -274,7 +274,8 @@ module anchor_top #(
     .NUM_DISTRIB (NUM_TAGS),
     .DATA_WIDTH (SAMPS_WIDTH),
     .USE_FIFOS (1),
-    .FIFO_TYPE ("block")
+    .FIFO_TYPE ("block"),
+    .FIFO_LATENCY (4)
   ) axis_distrib (
     .clk (c_clk),
     .rst (1'b0),

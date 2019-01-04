@@ -59,7 +59,7 @@ module ad9361_samp_filt #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
   `include "sign_ext.vh"
 
   // internal signals

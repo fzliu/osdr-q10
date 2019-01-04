@@ -3,12 +3,14 @@
 // Engineer: Frank Liu
 //
 // Description: Parameterized module which computes the moving average of the
-// inputs (aka boxcar filter).
+// inputs (aka boxcar filter). This module is synchronous, and is computed by
+// adding the newest value while subtracting the oldest. This module must be
+// reset before use. No overflow checking is performed.
 //
-// Revision: N/A
-// Additional Comments: This module is synchronous, and is computed by adding
-// the newest value while subtracting the oldest. This module must be reset
-// before use. No overflow checking is performed.
+// enable  :  active-high
+// reset   :  active-high
+// latency :  3 cycles
+// output  :  registered
 //
 // TODO(fzliu): Implement this with distributed RAM and SRLs.
 //
@@ -51,12 +53,9 @@ module filt_boxcar #(
 
   // internal registers
 
+  reg     [ WD:0]   sum_diff = 'b0;
   reg     [ WD:0]   sum_reg = 'b0;
-
-  // internal signals
-
-  wire    [ WD:0]   sum_step;
-  wire    [ WD:0]   sum_out;
+  reg     [ WD:0]   avg_out_reg = 'b0;
 
   // initialize shift register memory
 
@@ -87,20 +86,29 @@ module filt_boxcar #(
 
   always @(posedge clk) begin
     if (rst) begin
-      sum_reg <= {DATA_WIDTH{1'b0}};
+      sum_diff <= 'b0;
     end else if (ena) begin
-      sum_reg <= sum_out;
+      sum_diff <= data_in - shift[LF];
     end
   end
 
-  assign sum_step = sum_reg + data_in;
-  assign sum_out = sum_step - shift[LF];
+  always @(posedge clk) begin
+    if (rst) begin
+      sum_reg <= 'b0;
+    end else if (ena) begin
+      sum_reg <= sum_reg + sum_diff;
+    end
+  end
 
   // assign output
 
-  assign avg_out = sum_reg[WD] ?
+  always @(posedge clk) begin
+    avg_out_reg <= sum_reg[WD] ?
                    -(-sum_reg >> FILTER_POWER) :
                    sum_reg >> FILTER_POWER;
+  end
+
+  assign avg_out = avg_out_reg;
 
 endmodule
 

@@ -60,7 +60,7 @@ module tag_data_buff #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
 
   // internal registers
 
@@ -106,8 +106,8 @@ module tag_data_buff #(
     .WR_DATA_COUNT_WIDTH (0),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
-    .READ_MODE ("fwft"),
-    .FIFO_READ_LATENCY (0),
+    .READ_MODE ("std"),
+    .FIFO_READ_LATENCY (1),
     .READ_DATA_WIDTH (READ_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),

@@ -70,7 +70,7 @@ module shift_reg #(
 
       always @(posedge clk) begin
         if (ena) begin
-          shift_ff[n] <= {shift_ff[n][D0-1:0], din[n]};
+          shift_ff[n] <= (D0 == 0) ? din[n] : {shift_ff[n][D0-1:0], din[n]};
         end
       end
 

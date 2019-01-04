@@ -20,7 +20,8 @@ module axis_distrib #(
   parameter   NUM_DISTRIB = 6,
   parameter   DATA_WIDTH = 256,
   parameter   USE_FIFOS = 0,
-  parameter   FIFO_TYPE = "distributed",
+  parameter   FIFO_TYPE = "auto",
+  parameter   FIFO_LATENCY = 2,
 
   // derived parameters
 
@@ -55,7 +56,7 @@ module axis_distrib #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
 
   // internal registers
 
@@ -130,7 +131,8 @@ module axis_distrib #(
       axis_fifo_sync #(
         .MEMORY_TYPE (FIFO_TYPE),
         .DATA_WIDTH (DATA_WIDTH),
-        .FIFO_DEPTH (16)
+        .FIFO_DEPTH (16),
+        .READ_LATENCY (FIFO_LATENCY)
       ) axis_fifo_sync (
         .clk (clk),
         .rst (rst),

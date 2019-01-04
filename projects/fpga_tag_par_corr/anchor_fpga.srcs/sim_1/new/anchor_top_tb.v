@@ -11,12 +11,12 @@ module anchor_top_tb;
 
   // parameters
 
-  parameter   NUM_TAGS = 1;
-  parameter   CORR_OFFSET = 19;
+  parameter   NUM_TAGS = 5;
+  parameter   CORR_OFFSET = 15;
   parameter   PEAK_THRESH_MULT = 8;
   
-  parameter   SAMPS_WIDTH = 128;
-  parameter   DATA_WIDTH = 256;
+  parameter   SAMPS_WIDTH = 64;
+  parameter   DATA_WIDTH = 128;
 
   localparam  INPUT_WIDTH = NUM_TAGS * SAMPS_WIDTH;
   localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH;

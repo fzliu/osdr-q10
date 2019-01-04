@@ -28,11 +28,11 @@ localparam            NUM_CORRS = $num_corrs,
 localparam            CORR_LENGTH = $corr_length,
 localparam            CORRS_WIDTH = NUM_CORRS * CORR_LENGTH,
 
-localparam            LC = CORR_LENGTH - 1,
-localparam            WR = CORRS_WIDTH - 1,
+localparam            L0 = CORR_LENGTH - 1,
+localparam            W0 = CORRS_WIDTH - 1,
 
-localparam  [ WR:0]   CORRELATORS =
-$correlators
+localparam  [ W0:0]   CORRELATORS =
+$correlators,
 """)
 
 

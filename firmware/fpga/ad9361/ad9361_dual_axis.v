@@ -63,7 +63,7 @@ module ad9361_dual_axis #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
   `include "sign_ext.vh"
 
   // internal registers

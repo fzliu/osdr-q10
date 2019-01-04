@@ -22,7 +22,12 @@ module axis_bit_corr #(
   parameter   SLAVE_WIDTH = 64,
   parameter   MASTER_WIDTH = 128,
   parameter   ADDER_WIDTH = 12,
+  parameter   REPLICATION = 20,
   parameter   CORR_NUM = 0,
+
+  // correlator parameters
+
+  `include "correlators.vh"
 
   // derived parameters
 
@@ -39,8 +44,7 @@ module axis_bit_corr #(
   localparam  WW = WAVE_WIDTH - 1,
   localparam  WF = FILT_WIDTH - 1,
   localparam  WN = COUNT_WIDTH - 1,
-
-  `include "correlators.vh"
+  localparam  NR = REPLICATION - 1
 
 ) (
 
@@ -62,7 +66,8 @@ module axis_bit_corr #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
+  `include "func_sqrt.vh"
   `include "sign_ext.vh"
 
   `define CORR(i,j) CORRELATORS[W0-(i*CORR_LENGTH+j)]
@@ -89,12 +94,11 @@ module axis_bit_corr #(
 
   wire              enable_int;
   wire              batch_done;
-  wire    [ WN:0]   count;
+  (*dont_touch="true"*) wire    [ WN:0]   count [0:NR];
 
-  wire    [ WA:0]   adder_in0;
-  wire    [ WA:0]   adder_in1 [0:LR];
-  wire    [ WA:0]   adder_out [0:LR];
-
+  (*dont_touch="true"*) wire    [ WA:0]   adder_in0 [0:NR];
+  wire    [ WA:0]   adder_in1 [0:L0];
+  wire    [ WA:0]   adder_out [0:L0];
 
   // initialize final memory column
 
@@ -107,6 +111,13 @@ module axis_bit_corr #(
   end
   endgenerate
 
+  // slave interface
+
+  assign batch_done = (count[0] == NP);
+  assign enable_int = ~(valid_out & m_axis_tvalid) & s_axis_tvalid;
+  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
+  assign s_axis_frame = s_axis_tvalid & s_axis_tready;
+
   // unpack input data
 
   generate
@@ -117,29 +128,32 @@ module axis_bit_corr #(
   end
   endgenerate
 
-  // slave interface
-
-  assign batch_done = (count == NP);
-  assign enable_int = ~(valid_out & m_axis_tvalid) & s_axis_tvalid;
-  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
-  assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
   // counter (for tracking current input set) logic
+  // replicate this module many times to improve timing
 
-  counter #(
-    .LOWER (0),
-    .UPPER (NP),
-    .WRAPAROUND (0)
-  ) counter (
-    .clk (clk),
-    .rst (s_axis_frame),  // bus data is "transferred" upon completion
-    .ena (enable_int),
-    .value (count)
-  );
+  generate
+  for (n = 0; n < REPLICATION; n = n + 1) begin
+    counter #(
+      .LOWER (0),
+      .UPPER (NP),
+      .WRAPAROUND (0)
+    ) counter (
+      .clk (clk),
+      .rst (s_axis_frame),  // bus data is "transferred" upon completion
+      .ena (enable_int),
+      .value (count[n])
+    );
+  end
+  endgenerate
 
   // first adder input - s_axis_tdata module input
 
-  assign adder_in0 = `SIGN_EXT(data_in[count],WAVE_WIDTH,ADDER_WIDTH);
+  generate
+  for (n = 0; n < REPLICATION; n = n + 1) begin
+    assign adder_in0[n] = `SIGN_EXT(data_in[count[n]],WAVE_WIDTH,ADDER_WIDTH);
+  end
+  endgenerate
 
   // second adder input - previous value in chain
 
@@ -147,40 +161,45 @@ module axis_bit_corr #(
 
   generate
   for (n = 1; n < CORR_LENGTH; n = n + 1) begin
-    xpm_memory_dpdistram # (
+    localparam nc = n * REPLICATION / CORR_LENGTH;
+    xpm_memory_sdpram # (
       .MEMORY_SIZE (NUM_PARALLEL * ADDER_WIDTH),
+      .MEMORY_PRIMITIVE ("distributed"),
       .CLOCKING_MODE ("common_clock"),
       .MEMORY_INIT_FILE ("none"),
       .MEMORY_INIT_PARAM ("0"),
-      .USE_MEM_INIT (1),
+      .USE_MEM_INIT (0),
+      .WAKEUP_TIME ("disable_sleep"),
       .MESSAGE_CONTROL (0),
+      .ECC_MODE ("no_ecc"),
+      .AUTO_SLEEP_TIME (0),
       .USE_EMBEDDED_CONSTRAINT (0),
       .MEMORY_OPTIMIZATION ("true"),
       .WRITE_DATA_WIDTH_A (ADDER_WIDTH),
-      .READ_DATA_WIDTH_A (ADDER_WIDTH),
       .BYTE_WRITE_WIDTH_A (ADDER_WIDTH),
       .ADDR_WIDTH_A (COUNT_WIDTH),
-      .READ_RESET_VALUE_A ("0"),
-      .READ_LATENCY_A (1),
       .READ_DATA_WIDTH_B (ADDER_WIDTH),
       .ADDR_WIDTH_B (COUNT_WIDTH),
       .READ_RESET_VALUE_B ("0"),
-      .READ_LATENCY_B (1)
-    ) xpm_memory_dpdistram (
+      .READ_LATENCY_B (1),
+      .WRITE_MODE_B ("read_first")
+    ) xpm_memory_sdpram_inst (
+      .sleep (1'b0),
       .clka (clk),
-      .rsta (1'b0),
       .ena (enable_int),
-      .regcea (1'b0),
       .wea (1'b1),
-      .addra (count),
+      .addra (count[nc]),
       .dina (adder_out[n-1]),
-      .douta (),
+      .injectsbiterra (1'b0),
+      .injectdbiterra (1'b0),
       .clkb (1'b0),
       .rstb (1'b0),
       .enb (enable_int),
       .regceb (1'b1),
-      .addrb (s_axis_tvalid ? count + 1'b1 : count),
-      .doutb (adder_in1[n])
+      .addrb (s_axis_tvalid ? count[nc] + 1'b1 : count[nc]),
+      .doutb (adder_in1[n]),
+      .sbiterrb (),
+      .dbiterrb ()
     );
   end
   endgenerate
@@ -189,9 +208,10 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
+    localparam nc = n * REPLICATION / CORR_LENGTH;
     assign adder_out[n] = `CORR(CORR_NUM,n) ?
-                          adder_in1[n] + adder_in0 :
-                          adder_in1[n] - adder_in0;
+                          adder_in1[n] + adder_in0[nc] :
+                          adder_in1[n] - adder_in0[nc];
   end
   endgenerate
 
@@ -199,7 +219,7 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (enable_int) begin
-      output_mem[count] <= adder_out[LR];
+      output_mem[count[NR]] <= adder_out[L0];
     end
   end
 
@@ -248,7 +268,7 @@ module axis_bit_corr #(
 
   // SIMULATION
   
-  wire      [ LR:0]   _corr;
+  wire      [ L0:0]   _corr;
   wire      [ WF:0]   _m_axis_tdata_unpack [0:NP];
 
   generate

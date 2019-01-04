@@ -54,7 +54,7 @@ module axis_cabs_serial #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
   `include "sign_ext.vh"
 
   // internal memories

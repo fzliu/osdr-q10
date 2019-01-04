@@ -51,7 +51,7 @@ module axis_fan_out #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
 
   // internal registers
 

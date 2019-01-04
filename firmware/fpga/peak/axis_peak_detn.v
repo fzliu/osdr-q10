@@ -17,7 +17,7 @@ module axis_peak_detn #(
   // parameters
 
   parameter   NUM_CHANNELS = 4,
-  parameter   CHANNEL_WIDTH = 64,
+  parameter   CHANNEL_WIDTH = 32,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
 
@@ -58,7 +58,7 @@ module axis_peak_detn #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
 
   // internal registers
 
@@ -145,7 +145,7 @@ module axis_peak_detn #(
   // internal memory instantiation
 
   axis_to_mem #(
-    .MEMORY_TYPE ("distributed"),
+    .MEMORY_TYPE ("auto"),
     .MEMORY_DEPTH (BURST_LENGTH),
     .DATA_WIDTH (DATA_WIDTH),
     .READ_LATENCY (0)
@@ -167,7 +167,7 @@ module axis_peak_detn #(
   always @(posedge clk) begin
     m_axis_tvalid_reg <= mem_ready;
     m_axis_tdata_reg <= mem_dout;
-    m_axis_tlast_reg <= ~m_axis_tlast & ~&mem_addr;
+    m_axis_tlast_reg <= ~m_axis_tlast & ~|mem_addr;
   end
 
   assign m_axis_tvalid = m_axis_tvalid_reg;

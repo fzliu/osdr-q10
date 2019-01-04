@@ -25,7 +25,7 @@ module oh_to_bin #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
 
   reg     [ WO:0]   out;
 

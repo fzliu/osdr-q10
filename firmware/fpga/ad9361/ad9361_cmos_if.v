@@ -59,7 +59,7 @@ module ad9361_cmos_if #(
 
 );
 
-  `include "log2_func.vh"
+  `include "func_log2.vh"
 
   // internal signals
 

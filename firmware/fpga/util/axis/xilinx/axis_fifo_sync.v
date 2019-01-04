@@ -15,9 +15,10 @@ module axis_fifo_sync #(
 
   // parameters
 
-  parameter   MEMORY_TYPE = "distributed",
-  parameter   DATA_WIDTH = 256,
+  parameter   MEMORY_TYPE = "auto",
+  parameter   DATA_WIDTH = 72,
   parameter   FIFO_DEPTH = 16,
+  parameter   READ_LATENCY = 2,
 
   // bit width parameters
 
@@ -76,12 +77,12 @@ module axis_fifo_sync #(
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("1000"),
     .READ_MODE ("fwft"),
-    .FIFO_READ_LATENCY (1),
+    .FIFO_READ_LATENCY (READ_LATENCY),
     .READ_DATA_WIDTH (DATA_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
     .WAKEUP_TIME (0)
-  ) axis_sample_fifo (
+  ) xpm_fifo_sync (
     .sleep (1'b0),
     .rst (rst),
     .wr_clk (clk),
