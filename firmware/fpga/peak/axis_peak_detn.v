@@ -153,7 +153,7 @@ module axis_peak_detn #(
     .MEMORY_TYPE ("auto"),
     .MEMORY_DEPTH (BURST_LENGTH),
     .DATA_WIDTH (DATA_WIDTH),
-    .READ_LATENCY (0)
+    .READ_LATENCY (1)
   ) axis_to_mem (
     .clk (clk),
     .rst (1'b0),
@@ -162,22 +162,32 @@ module axis_peak_detn #(
     .s_axis_tdata (s_axis_tdata),
     .s_axis_tlast (1'b0),
     .addr (mem_addr),
-    .dout (mem_dout)
+    .dout (m_axis_tdata)
   );
 
   // master interface
 
   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
 
-  always @(posedge clk) begin
-    m_axis_tvalid_reg <= mem_ready;
-    m_axis_tdata_reg <= mem_dout;
-    m_axis_tlast_reg <= ~m_axis_tlast & ~|mem_addr;
-  end
+  shift_reg #(
+    .WIDTH (1),
+    .DEPTH (1)
+  ) shift_reg_valid (
+    .clk (clk),
+    .ena (1'b1),
+    .din (mem_ready),
+    .dout (m_axis_tvalid)
+  );
 
-  assign m_axis_tvalid = m_axis_tvalid_reg;
-  assign m_axis_tdata = m_axis_tdata_reg;
-  assign m_axis_tlast = m_axis_tlast_reg;
+  shift_reg #(
+    .WIDTH (1),
+    .DEPTH (1)
+  ) shift_reg_last (
+    .clk (clk),
+    .ena (1'b1),
+    .din (~|mem_addr),
+    .dout (m_axis_tlast)
+  );
 
   // SIMULATION
 

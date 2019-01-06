@@ -352,15 +352,15 @@
     <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7k160tfbg676-2" ConstrsSet="constrs_1" Description="Orion default strategy for anchor FPGA synthesis" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Orion_Default" Flow="Vivado Synthesis 2017">
-          <Desc>Orion default synthesis strategy.</Desc>
+          <Desc>Orion default strategy for anchor FPGA synthesis</Desc>
         </StratHandle>
         <Step Id="synth_design">
-          <Option Id="ShregMinSize">32</Option>
           <Option Id="ReTiming">1</Option>
+          <Option Id="ShregMinSize">32</Option>
           <Option Id="NoCombineLuts">1</Option>
           <Option Id="FsmExtraction">1</Option>
-          <Option Id="ResourceSharing">2</Option>
           <Option Id="KeepEquivalentRegisters">1</Option>
+          <Option Id="ResourceSharing">2</Option>
         </Step>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
@@ -369,9 +369,7 @@
     </Run>
     <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7k160tfbg676-2" ConstrsSet="constrs_1" Description="" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/impl_1" SynthRun="synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Orion_Default" Flow="Vivado Implementation 2017">
-          <Desc>Orion default implementation strategy.</Desc>
-        </StratHandle>
+        <StratHandle Name="Orion_Default" Flow="Vivado Implementation 2017"/>
         <Step Id="init_design"/>
         <Step Id="opt_design">
           <Option Id="Directive">6</Option>
