@@ -176,6 +176,7 @@ R11
 R12
 R13
 vanchor_top
+!s10a 1546598174
 !s110 1546591639
 !i10b 1
 !s100 hIk@;SJnjBR0Wmkea=2do2
@@ -198,13 +199,14 @@ R11
 R12
 R13
 vanchor_top_tb
-Z23 !s110 1546591640
+!s10a 1546764155
+!s110 1546764163
 !i10b 1
-!s100 BZoPlVNN[gK`_g@5Y;Q5G1
-Ic3@OjioF]P1R9gJXjCH1V2
+!s100 :3d@V_B0A5K5OMSJX2fiZ0
+Ik2MF_E5M=^<ln90mRnF;d0
 R3
 R0
-w1546591614
+w1546764155
 8../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v
 F../../../../anchor_fpga.srcs/sim_1/new/anchor_top_tb.v
 R21
@@ -212,7 +214,7 @@ R7
 r1
 !s85 0
 31
-R22
+!s108 1546764162.000000
 R9
 R10
 !i113 1
@@ -220,13 +222,14 @@ R11
 R12
 R13
 vaxis_bit_corr
-R23
+!s10a 1546764068
+!s110 1546764115
 !i10b 1
-!s100 YbW1S7FRDOC856=PU^IbT3
-I<mNX9V]45V5NHXmkX:U@n1
+!s100 1CnYFW`<3_ID9nJ8eK^Gm3
+IlhcnRcW5O30no2:]OBL@12
 R3
 R0
-w1546591467
+w1546764068
 8../../../../../../firmware/fpga/xcorr/axis_bit_corr.v
 F../../../../../../firmware/fpga/xcorr/axis_bit_corr.v
 F../../../../../../firmware/fpga/xcorr/correlators.vh
@@ -238,7 +241,7 @@ R7
 r1
 !s85 0
 31
-R22
+!s108 1546764114.000000
 R9
 R10
 !i113 1
@@ -247,7 +250,7 @@ R12
 R13
 vaxis_cabs_serial
 R1
-Z24 !s110 1546580775
+Z23 !s110 1546580775
 !i10b 1
 !s100 9`KG3naf;<]NCKQ8;QoT22
 I8k5dalD@P1ie0hTI=N63h1
@@ -305,7 +308,7 @@ w1546589593
 8../../../../../../firmware/fpga/util/axis/axis_distrib.v
 F../../../../../../firmware/fpga/util/axis/axis_distrib.v
 R5
-Z25 L0 16
+Z24 L0 16
 R7
 r1
 !s85 0
@@ -319,7 +322,7 @@ R12
 R13
 vaxis_fan_in
 R1
-R24
+R23
 !i10b 1
 !s100 ZJ^j]ChX5NVh8=<V5U@=o1
 I:Q1emn1A39`jXG=Tb2Aog1
@@ -329,7 +332,7 @@ R4
 8../../../../../../firmware/fpga/util/axis/axis_fan_in.v
 F../../../../../../firmware/fpga/util/axis/axis_fan_in.v
 R5
-R25
+R24
 R7
 r1
 !s85 0
@@ -365,7 +368,8 @@ R11
 R12
 R13
 vaxis_fifo_sync
-R23
+!s10a 1546591299
+!s110 1546591640
 !i10b 1
 !s100 o^Qg38o_H8HS1YRRnJl@h0
 I9]XA`zG_QF4ZDER<dl66A0
@@ -387,14 +391,13 @@ R11
 R12
 R13
 vaxis_peak_detn
-!s10a 1546581035
-!s110 1546581072
+Z25 !s110 1546774134
 !i10b 1
-!s100 LFi^o_i4]Y8GaW6<jnfbK3
-I_m1[@VXa7<ITmFZPaE@bj1
+!s100 Qb@d:Q900@g_[eDk6gPAl0
+IW6^Cb^>KaEOMZGo;YTkOQ3
 R3
 R0
-w1546581035
+w1546774121
 8../../../../../../firmware/fpga/peak/axis_peak_detn.v
 F../../../../../../firmware/fpga/peak/axis_peak_detn.v
 R5
@@ -403,7 +406,7 @@ R7
 r1
 !s85 0
 31
-!s108 1546581071.000000
+!s108 1546774133.000000
 R9
 R10
 !i113 1
@@ -412,7 +415,7 @@ R12
 R13
 vaxis_to_mem
 R1
-R24
+R23
 !i10b 1
 !s100 bL2QUlZZ]A3BbgL97[MMm1
 Ie57eA;oA[@@mj@jQUJB^;1
@@ -422,7 +425,7 @@ R4
 8../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v
 F../../../../../../firmware/fpga/util/axis/xilinx/axis_to_mem.v
 R5
-R25
+R24
 R7
 r1
 !s85 0
@@ -436,7 +439,7 @@ R12
 R13
 vcounter
 R1
-R24
+R23
 !i10b 1
 !s100 NDa^O^0YFh]=EQR4UnZbB3
 I?l6aX1nd8NkQm@`TT0VE?1
@@ -482,7 +485,7 @@ R11
 R12
 R13
 vglbl
-R23
+R25
 !i10b 1
 !s100 JWZ^meD<P7inSF0<1SiO32
 IHANT?><<>G9J5i]G9zVT[0
@@ -496,7 +499,7 @@ R7
 r1
 !s85 0
 31
-!s108 1546591640.000000
+!s108 1546774134.000000
 !s107 glbl.v|
 !s90 -work|xil_defaultlib|glbl.v|
 !i113 1
@@ -620,7 +623,7 @@ R12
 R13
 voh_to_bin
 R1
-R24
+R23
 !i10b 1
 !s100 k;gVbC:Qe?hkNFYWELLeg3
 IZ=^Z]4gZ2llXMLPo5INBL3

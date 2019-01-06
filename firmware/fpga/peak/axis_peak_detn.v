@@ -26,6 +26,7 @@ module axis_peak_detn #(
   localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
   localparam  COUNT_WIDTH = log2(BURST_LENGTH),
   localparam  ADDR_WIDTH = log2(BURST_LENGTH - 1),
+  localparam  BOXCAR_WIDTH = CHANNEL_WIDTH / 2 + ADDR_WIDTH - 1,
   localparam  PEAK_THRESH_SHIFT = log2(PEAK_THRESH_MULT - 1),
 
   // bit width parameters
@@ -34,7 +35,8 @@ module axis_peak_detn #(
   localparam  WC = CHANNEL_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
   localparam  WN = COUNT_WIDTH - 1,
-  localparam  WA = ADDR_WIDTH - 1
+  localparam  WA = ADDR_WIDTH - 1,
+  localparam  WB = BOXCAR_WIDTH - 1
 
 ) (
 
@@ -62,8 +64,10 @@ module axis_peak_detn #(
 
   // internal registers
 
-  reg     [ WN:0]   mem_count = 'b0;
+  reg     [ NC:0]   has_peak = 'b0;
   reg               has_peak_any_d = 'b0;
+
+  reg     [ WN:0]   mem_count = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
@@ -71,7 +75,6 @@ module axis_peak_detn #(
 
   // internal signals
 
-  wire    [ NC:0]   has_peak;
   wire              burst_start;
   wire    [ WD:0]   data_abs_avg;
   wire    [ WD:0]   s_axis_tdata_abs_d;
@@ -98,9 +101,9 @@ module axis_peak_detn #(
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin : boxcar_gen
     localparam n0 = n * CHANNEL_WIDTH;
-    localparam n1 = n0 + WC;
+    localparam n1 = n0 + WB;
     filt_boxcar #(
-      .DATA_WIDTH (CHANNEL_WIDTH),
+      .DATA_WIDTH (BOXCAR_WIDTH),
       .FILTER_POWER (ADDR_WIDTH)
     ) filt_boxcar (
       .clk (clk),
@@ -115,9 +118,11 @@ module axis_peak_detn #(
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
     localparam n0 = n * CHANNEL_WIDTH;
-    localparam n1 = n0 + WC;
-    assign has_peak[n] = (s_axis_tdata_abs_d[n1:n0] >
-        ((data_abs_avg[n1:n0] + 1'b1) << PEAK_THRESH_SHIFT));
+    localparam n1 = n0 + WB;
+    always @(posedge clk) begin
+      has_peak[n] <= (s_axis_tdata_abs_d[n1:n0] >
+          ((data_abs_avg[n1:n0] + 1'b1) << PEAK_THRESH_SHIFT));
+    end
   end
   endgenerate
 
