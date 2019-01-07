@@ -211,13 +211,7 @@ module ad9361_cmos_if #(
   assign txnrx = 1'b0;
 
   generate
-  if (REALTIME_ENABLE == 0) begin
-
-    always @* begin
-      enable_reg = 1'b0;
-    end
-
-  end else begin
+  if (REALTIME_ENABLE) begin
 
     always @(posedge rx_clk) begin
       if (rt_count > 1'b0) begin
@@ -227,6 +221,12 @@ module ad9361_cmos_if #(
         rt_count <= rt_count;
         enable_reg <= 1'b0;
       end
+    end
+
+  end else begin
+
+    always @* begin
+      enable_reg = 1'b0;
     end
 
   end

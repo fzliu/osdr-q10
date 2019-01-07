@@ -45,6 +45,10 @@ module axis_fifo_sync #(
 
 );
 
+  // internal registers
+
+  reg               ready_override = 1'b1;
+
   // internal signals
 
   wire              fifo_wr_rst_busy;
@@ -63,10 +67,14 @@ module axis_fifo_sync #(
 
   assign s_axis_tready = ~fifo_full;
 
-  // fifo instantitation
+  // fifo glue logic
 
   assign fifo_write = s_axis_tvalid & s_axis_tready;
   assign fifo_din = s_axis_tdata;
+
+  assign fifo_read = m_axis_tvalid & m_axis_tready;
+
+  // fifo instantitation
 
   xpm_fifo_sync #(
     .FIFO_MEMORY_TYPE (MEMORY_TYPE),
@@ -109,8 +117,6 @@ module axis_fifo_sync #(
     .sbiterr (),
     .dbiterr ()
   );
-
-  assign fifo_read = m_axis_tready & m_axis_tvalid;
 
   // master interface
 

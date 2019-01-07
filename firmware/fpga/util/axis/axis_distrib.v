@@ -19,6 +19,7 @@ module axis_distrib #(
 
   parameter   NUM_DISTRIB = 6,
   parameter   DATA_WIDTH = 256,
+  parameter   PIPELINE_READY = 1,
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_LATENCY = 2,
@@ -60,6 +61,7 @@ module axis_distrib #(
 
   // internal registers
 
+  reg               s_axis_tready_reg = 'b0;
   reg     [ ND:0]   ready_all = 'b0;
 
   reg     [ ND:0]   distrib_valid = 'b0;
@@ -75,8 +77,20 @@ module axis_distrib #(
 
   // slave interface
 
+  generate
+  if (PIPELINE_READY) begin
+    always @(posedge clk) begin
+      s_axis_tready_reg <= &(ready_all_next);
+    end
+  end else begin
+    always @* begin
+      s_axis_tready_reg = &(ready_all_next);
+    end
+  end
+  endgenerate
+
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = &(ready_all_next);
+  assign s_axis_tready = s_axis_tready_reg;
 
   // internal logic
 

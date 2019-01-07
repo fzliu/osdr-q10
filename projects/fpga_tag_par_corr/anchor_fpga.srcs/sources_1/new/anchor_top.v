@@ -2,8 +2,10 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AD9361 top-level module. Handles the default dual-AD9361
-// configuration used by the Orion anchor.
+// Description: Anchor top-level module. Uses bit correlation and approximate
+// absolute value to perform peak detection. Detected peaks are sliced out
+// and placed inside a FIFO for consumption by the microprocessor through the
+// EBI bus.
 //
 // enable  :  N/A
 // reset   :  N/A
@@ -274,6 +276,7 @@ module anchor_top #(
   axis_distrib #(
     .NUM_DISTRIB (NUM_TAGS),
     .DATA_WIDTH (SAMPS_WIDTH),
+    .PIPELINE_READY (1),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
     .FIFO_LATENCY (3)

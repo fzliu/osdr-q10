@@ -3,7 +3,8 @@
 // Engineer: 耿慧慧
 //
 // Description: A fast base-2 anti-logarithm function
-// The input and output have binary points: In: xxxxxx.yyyy_yy; Out: xxxx_xxxx_xxxx_xxxx.yyyy_yyyy.
+// The input and output have binary points:
+// In: xxxxxx.yyyy_yy; Out: xxxx_xxxx_xxxx_xxxx.yyyy_yyyy.
 //
 // enable  :  N/A
 // reset   :  active-high

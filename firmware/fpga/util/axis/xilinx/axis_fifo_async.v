@@ -64,10 +64,14 @@ module axis_fifo_async #(
 
   assign s_axis_tready = ~fifo_full;
 
-  // fifo instantitation
+  // fifo glue logic
 
   assign fifo_write = s_axis_tvalid & s_axis_tready;
   assign fifo_din = s_axis_tdata;
+
+  assign fifo_read = m_axis_tvalid & m_axis_tready;
+
+  // fifo instantitation
 
   xpm_fifo_async #(
     .FIFO_MEMORY_TYPE (MEMORY_TYPE),
@@ -78,7 +82,7 @@ module axis_fifo_async #(
     .WR_DATA_COUNT_WIDTH (0),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("1000"),
-    .READ_MODE ("fwft"),  // "std": no output (bug?)
+    .READ_MODE ("fwft"),
     .FIFO_READ_LATENCY (READ_LATENCY),
     .READ_DATA_WIDTH (DATA_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
@@ -113,8 +117,6 @@ module axis_fifo_async #(
     .sbiterr (),
     .dbiterr ()
   );
-
-  assign fifo_read = m_axis_tready & m_axis_tvalid;
 
   // master interface
 

@@ -28,7 +28,6 @@ module math_log2_64 (
 
   reg       [ 5:0]         priencout1 = 'b0;
   reg       [ 3:0]         lut_out = 'b0;
-  reg       [ 3:0]         lut_out_reg = 'b0;
   reg       [ 5:0]         priencout2 = 'b0;
   reg       [ 5:0]         priencout3 = 'b0;
   reg       [59:0]         barrelin = 'b0;

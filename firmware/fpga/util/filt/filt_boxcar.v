@@ -103,9 +103,11 @@ module filt_boxcar #(
   // assign output
 
   always @(posedge clk) begin
-    avg_out_reg <= sum_reg[WD] ?
-                   -(-sum_reg >> FILTER_POWER) :
-                   sum_reg >> FILTER_POWER;
+    if (rst) begin
+      avg_out_reg <= 'b0;
+    end else begin
+      avg_out_reg <= sum_reg >>> FILTER_POWER;
+    end
   end
 
   assign avg_out = avg_out_reg;
