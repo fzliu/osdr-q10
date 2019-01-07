@@ -254,15 +254,14 @@ module anchor_top #(
 
   // clock conversion
 
-  axis_fifo_async #(
+  axis_fifo_sync #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
     .FIFO_DEPTH (65536),
     .READ_LATENCY (3)
-  ) axis_fifo_async (
-    .s_axis_clk (d_clk),
-    .s_axis_rst (1'b0),
-    .m_axis_clk (c_clk),
+  ) axis_fifo_sync (
+    .clk (d_clk),
+    .rst (1'b0),
     .s_axis_tvalid (ad9361_axis_tvalid),
     .s_axis_tready (ad9361_axis_tready),
     .s_axis_tdata (ad9361_axis_tdata),
@@ -276,13 +275,13 @@ module anchor_top #(
   axis_distrib #(
     .NUM_DISTRIB (NUM_TAGS),
     .DATA_WIDTH (SAMPS_WIDTH),
-    .PIPELINE_READY (1),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
     .FIFO_LATENCY (3)
   ) axis_distrib (
-    .clk (c_clk),
-    .rst (1'b0),
+    .s_axis_clk (d_clk),
+    .s_axis_rst (1'b0),
+    .m_axis_clk (c_clk),
     .s_axis_tvalid (fifo_axis_tvalid),
     .s_axis_tready (fifo_axis_tready),
     .s_axis_tdata (fifo_axis_tdata),
@@ -306,7 +305,7 @@ module anchor_top #(
       .SLAVE_WIDTH (SAMPS_WIDTH),
       .MASTER_WIDTH (DATA_WIDTH),
       .ADDER_WIDTH (ADDER_WIDTH),
-      .SHIFT_DEPTH (2),
+      .SHIFT_DEPTH (1),
       .CORR_NUM (n + CORR_OFFSET)
     ) axis_bit_corr (
       .clk (c_clk),

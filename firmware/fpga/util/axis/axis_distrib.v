@@ -19,7 +19,6 @@ module axis_distrib #(
 
   parameter   NUM_DISTRIB = 6,
   parameter   DATA_WIDTH = 256,
-  parameter   PIPELINE_READY = 1,
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_LATENCY = 2,
@@ -40,8 +39,9 @@ module axis_distrib #(
 
   // core interface
 
-  input             clk,
-  input             rst,
+  input             s_axis_clk,
+  input             s_axis_rst,
+  input             m_axis_clk,
 
   // slave interface
 
@@ -61,7 +61,6 @@ module axis_distrib #(
 
   // internal registers
 
-  reg               s_axis_tready_reg = 'b0;
   reg     [ ND:0]   ready_all = 'b0;
 
   reg     [ ND:0]   distrib_valid = 'b0;
@@ -77,25 +76,13 @@ module axis_distrib #(
 
   // slave interface
 
-  generate
-  if (PIPELINE_READY) begin
-    always @(posedge clk) begin
-      s_axis_tready_reg <= &(ready_all_next);
-    end
-  end else begin
-    always @* begin
-      s_axis_tready_reg = &(ready_all_next);
-    end
-  end
-  endgenerate
-
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = s_axis_tready_reg;
+  assign s_axis_tready = &(ready_all_next);
 
   // internal logic
 
-  always @(posedge clk) begin
-    if (rst | s_axis_frame) begin
+  always @(posedge s_axis_clk) begin
+    if (s_axis_rst | s_axis_frame) begin
       ready_all <= 'b0;
     end else begin
       ready_all <= ready_all_next;
@@ -113,8 +100,8 @@ module axis_distrib #(
   for (n = 0; n < NUM_DISTRIB; n = n + 1) begin
     localparam n0 = n * DATA_WIDTH;
     localparam n1 = n0 + WD;
-    always @(posedge clk) begin
-      if (rst) begin
+    always @(posedge s_axis_clk) begin
+      if (s_axis_rst) begin
         distrib_valid[n] <= 'b0;
         distrib_data[n1:n0] <= 'b0;
       end else if (~ready_all_next[n]) begin
@@ -142,14 +129,15 @@ module axis_distrib #(
     for (n = 0; n < NUM_DISTRIB; n = n + 1) begin
       localparam n0 = n * DATA_WIDTH;
       localparam n1 = n0 + WD;
-      axis_fifo_sync #(
+      axis_fifo_async #(
         .MEMORY_TYPE (FIFO_TYPE),
         .DATA_WIDTH (DATA_WIDTH),
         .FIFO_DEPTH (16),
         .READ_LATENCY (FIFO_LATENCY)
-      ) axis_fifo_sync (
-        .clk (clk),
-        .rst (rst),
+      ) axis_fifo_async (
+        .s_axis_clk (s_axis_clk),
+        .s_axis_rst (s_axis_rst),
+        .m_axis_clk (m_axis_clk),
         .s_axis_tvalid (distrib_valid[n]),
         .s_axis_tready (distrib_ready[n]),
         .s_axis_tdata (distrib_data[n1:n0]),

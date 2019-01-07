@@ -355,11 +355,11 @@
           <Desc>Orion default synthesis strategy.</Desc>
         </StratHandle>
         <Step Id="synth_design">
-          <Option Id="NoCombineLuts">1</Option>
           <Option Id="ShregMinSize">16</Option>
+          <Option Id="NoCombineLuts">1</Option>
           <Option Id="FsmExtraction">1</Option>
-          <Option Id="KeepEquivalentRegisters">1</Option>
           <Option Id="ResourceSharing">2</Option>
+          <Option Id="KeepEquivalentRegisters">1</Option>
         </Step>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>

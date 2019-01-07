@@ -3,10 +3,10 @@ create_clock -period 2.500 -name {VIRTUAL_pll_out[2]} -waveform {0.000 1.250}
 create_clock -period 20.000 -name {VIRTUAL_pll_out[0]} -waveform {0.000 10.000}
 set_multicycle_path -setup -from [get_clocks {pll_out[0]}] -to [get_clocks {VIRTUAL_pll_out[0]}] 2
 
-set_clock_groups -name sys_ss_async0 -asynchronous -group [get_clocks -include_generated_clocks {a_rx_clk_in}] -group [get_clocks -include_generated_clocks {pll_out[0]}]
+set_clock_groups -name sys_ss_async0 -asynchronous -group [get_clocks -include_generated_clocks a_rx_clk_in] -group [get_clocks -include_generated_clocks {pll_out[0]}]
 set_clock_groups -name sys_ss_async1 -asynchronous -group [get_clocks -include_generated_clocks {pll_out[2]}] -group [get_clocks -include_generated_clocks {VIRTUAL_pll_out[2]}]
-set_clock_groups -name sys_ss_async2 -asynchronous -group [get_clocks -include_generated_clocks {a_rx_clk_in}] -group [get_clocks -include_generated_clocks {VIRTUAL_pll_out[2]}]
-set_clock_groups -name sys_ss_async3 -asynchronous -group [get_clocks -include_generated_clocks {a_rx_clk_in}] -group [get_clocks -include_generated_clocks {VIRTUAL_pll_out[0]}]
+set_clock_groups -name sys_ss_async2 -asynchronous -group [get_clocks -include_generated_clocks a_rx_clk_in] -group [get_clocks -include_generated_clocks {VIRTUAL_pll_out[2]}]
+set_clock_groups -name sys_ss_async3 -asynchronous -group [get_clocks -include_generated_clocks a_rx_clk_in] -group [get_clocks -include_generated_clocks {VIRTUAL_pll_out[0]}]
 set_clock_groups -name sys_ss_async4 -asynchronous -group [get_clocks -include_generated_clocks {VIRTUAL_pll_out[2]}] -group [get_clocks -include_generated_clocks {VIRTUAL_pll_out[0]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -min -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -max -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]
