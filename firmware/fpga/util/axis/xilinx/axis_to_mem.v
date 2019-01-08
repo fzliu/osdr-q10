@@ -9,7 +9,7 @@
 // enable  :  N/A
 // reset   :  active-high
 // latency :  N/A
-// output  :  unregistered
+// output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,8 @@ module axis_to_mem #(
   // memory read interface
 
   input   [ WA:0]   addr,
-  output  [ WD:0]   dout
+  output            valid,
+  output  [ WD:0]   data
 
 );
 
@@ -58,7 +59,7 @@ module axis_to_mem #(
 
   // internal registers
 
-  reg     [ W0:0]   valid = 'b0;
+  reg     [ W0:0]   has_data = 'b0;
 
   // internal signals
 
@@ -76,14 +77,14 @@ module axis_to_mem #(
 
   generate
   genvar i;
-  for (i = 0; i < MEMORY_DEPTH; i = i + 1) begin: valid_gen
+  for (i = 0; i < MEMORY_DEPTH; i = i + 1) begin
     always @(posedge clk) begin
       if (rst | s_axis_tlast) begin
-        valid[i] <= 1'b0;
+        has_data[i] <= 1'b0;
       end else if (s_axis_tvalid) begin
-        valid[i] <= (wr_addr == i) ? 1'b1 : valid[i];
+        has_data[i] <= (wr_addr == i) ? 1'b1 : has_data[i];
       end else begin
-        valid[i] <= valid[i];
+        has_data[i] <= has_data[i];
       end
     end
   end
@@ -139,14 +140,22 @@ module axis_to_mem #(
     .enb (1'b1),
     .regceb (1'b1),
     .addrb (rd_addr),
-    .doutb (rd_data),
+    .doutb (data),
     .sbiterrb (),
     .dbiterrb ()
   );
 
-  // output value
+  // output valid
 
-  assign dout = valid[wr_addr] ? rd_data : {DATA_WIDTH{1'b0}};
+  shift_reg #(
+    .WIDTH (1),
+    .DEPTH (READ_LATENCY)
+  ) shift_reg (
+    .clk (clk),
+    .ena (1'b1),
+    .din (has_data[wr_addr]),
+    .dout (valid)
+  );
 
 endmodule
 

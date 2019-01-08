@@ -81,7 +81,7 @@ module axis_peak_detn #(
 
   wire              mem_ready;
   wire    [ WA:0]   mem_addr;
-  wire    [ WD:0]   mem_dout;
+  wire              mem_valid;
 
   wire              m_axis_frame;
 
@@ -162,7 +162,8 @@ module axis_peak_detn #(
     .s_axis_tdata (s_axis_tdata),
     .s_axis_tlast (1'b0),
     .addr (mem_addr),
-    .dout (m_axis_tdata)
+    .valid (mem_valid),   // ignore this signal
+    .data (m_axis_tdata)
   );
 
   // master interface

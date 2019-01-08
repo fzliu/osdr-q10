@@ -118,13 +118,7 @@ module axis_distrib #(
   // assign outputs
 
   generate
-  if (USE_FIFOS == 0) begin
-
-    assign distrib_ready = m_axis_tready;
-    assign m_axis_tvalid = distrib_valid;
-    assign m_axis_tdata = distrib_data;
-
-  end else begin
+  if (USE_FIFOS) begin
 
     for (n = 0; n < NUM_DISTRIB; n = n + 1) begin
       localparam n0 = n * DATA_WIDTH;
@@ -146,6 +140,12 @@ module axis_distrib #(
         .m_axis_tdata (m_axis_tdata[n1:n0])
       );
     end
+
+  end else begin
+
+    assign distrib_ready = m_axis_tready;
+    assign m_axis_tvalid = distrib_valid;
+    assign m_axis_tdata = distrib_data;
 
   end
   endgenerate

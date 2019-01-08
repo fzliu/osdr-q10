@@ -252,16 +252,17 @@ module anchor_top #(
     .m_axis_tlast ()
   );
 
-  // clock conversion
+  // clock conversion (data -> master) and buffering
 
-  axis_fifo_sync #(
+  axis_fifo_async #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
     .FIFO_DEPTH (65536),
     .READ_LATENCY (3)
   ) axis_fifo_sync (
-    .clk (d_clk),
-    .rst (1'b0),
+    .s_axis_clk (d_clk),
+    .s_axis_rst (1'b0),
+    .m_axis_clk (m_clk),
     .s_axis_tvalid (ad9361_axis_tvalid),
     .s_axis_tready (ad9361_axis_tready),
     .s_axis_tdata (ad9361_axis_tdata),
@@ -270,7 +271,7 @@ module anchor_top #(
     .m_axis_tdata (fifo_axis_tdata)
   );
 
-  // distribute to correlators
+  // distribute to correlators (master -> compute)
 
   axis_distrib #(
     .NUM_DISTRIB (NUM_TAGS),
@@ -279,7 +280,7 @@ module anchor_top #(
     .FIFO_TYPE ("block"),
     .FIFO_LATENCY (3)
   ) axis_distrib (
-    .s_axis_clk (d_clk),
+    .s_axis_clk (m_clk),
     .s_axis_rst (1'b0),
     .m_axis_clk (c_clk),
     .s_axis_tvalid (fifo_axis_tvalid),
@@ -305,7 +306,7 @@ module anchor_top #(
       .SLAVE_WIDTH (SAMPS_WIDTH),
       .MASTER_WIDTH (DATA_WIDTH),
       .ADDER_WIDTH (ADDER_WIDTH),
-      .SHIFT_DEPTH (1),
+      .SHIFT_DEPTH (2),
       .CORR_NUM (n + CORR_OFFSET)
     ) axis_bit_corr (
       .clk (c_clk),
@@ -356,15 +357,20 @@ module anchor_top #(
   end
   endgenerate
 
-  // axi-stream fanin
+  // axi-stream fan-in (compute -> master)
 
   axis_fan_in #(
     .NUM_FANIN (NUM_TAGS),
     .DATA_WIDTH (DATA_WIDTH),
+    .USE_FIFOS (1),
+    .FIFO_TYPE ("block"),
+    .FIFO_LATENCY (3),
     .USE_AXIS_TLAST (1)
   ) axis_fan_in (
-    .clk (c_clk),
-    .rst (1'b0),
+    .s_axis_clk (c_clk),
+    .s_axis_rst (1'b0),
+    .m_axis_clk (m_clk),
+    .m_axis_rst (1'b0),
     .s_axis_tvalid (peak_axis_tvalid),
     .s_axis_tready (peak_axis_tready),
     .s_axis_tdata (peak_axis_tdata),
@@ -385,7 +391,7 @@ module anchor_top #(
     .READ_WIDTH (EBI_WIDTH),
     .MEMORY_TYPE ("block")
   ) tag_data_buff (
-    .clk (c_clk),
+    .clk (m_clk),
     .s_axis_tvalid (fanin_axis_tvalid),
     .s_axis_tready (fanin_axis_tready),
     .s_axis_tdata (fanin_axis_tdata),
