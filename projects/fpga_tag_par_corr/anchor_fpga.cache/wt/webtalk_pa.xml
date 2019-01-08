@@ -3,10 +3,10 @@
 <!--The data in this file is primarily intended for consumption by Xilinx tools.
 The structure and the elements are likely to change over the next few releases.
 This means code written to parse this file will need to be revisited each subsequent release.-->
-<application name="pa" timeStamp="Mon Jan  7 22:32:08 2019">
+<application name="pa" timeStamp="Tue Jan  8 08:39:45 2019">
 <section name="Project Information" visible="false">
 <property name="ProjectID" value="8395c3c3cebb43349e414bdcd69cf048" type="ProjectID"/>
-<property name="ProjectIteration" value="69" type="ProjectIteration"/>
+<property name="ProjectIteration" value="70" type="ProjectIteration"/>
 </section>
 <section name="PlanAhead Usage" visible="true">
 <item name="Project Data">
@@ -33,7 +33,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="OpenProject" value="6" type="JavaHandler"/>
 <property name="RecustomizeCore" value="99" type="JavaHandler"/>
 <property name="ReportTimingSummary" value="19" type="JavaHandler"/>
-<property name="RunImplementation" value="75" type="JavaHandler"/>
+<property name="RunImplementation" value="76" type="JavaHandler"/>
 <property name="RunSynthesis" value="55" type="JavaHandler"/>
 <property name="SaveDesign" value="2" type="JavaHandler"/>
 <property name="SaveFileProxyHandler" value="34" type="JavaHandler"/>
@@ -45,7 +45,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="TclStore" value="2" type="JavaHandler"/>
 <property name="TimingConstraintsWizard" value="3" type="JavaHandler"/>
 <property name="ToggleCreatePblockMode" value="1" type="JavaHandler"/>
-<property name="ToolsSettings" value="100" type="JavaHandler"/>
+<property name="ToolsSettings" value="101" type="JavaHandler"/>
 <property name="ToolsTemplates" value="87" type="JavaHandler"/>
 <property name="ViewTaskImplementation" value="46" type="JavaHandler"/>
 <property name="ViewTaskProjectManager" value="1" type="JavaHandler"/>
@@ -65,7 +65,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="BaseDialog_CANCEL" value="251" type="GuiHandlerData"/>
 <property name="BaseDialog_CLOSE" value="80" type="GuiHandlerData"/>
 <property name="BaseDialog_NO" value="17" type="GuiHandlerData"/>
-<property name="BaseDialog_OK" value="523" type="GuiHandlerData"/>
+<property name="BaseDialog_OK" value="524" type="GuiHandlerData"/>
 <property name="BaseDialog_YES" value="12" type="GuiHandlerData"/>
 <property name="ClosePlanner_YES" value="1" type="GuiHandlerData"/>
 <property name="CmdMsgDialog_OK" value="68" type="GuiHandlerData"/>
@@ -88,11 +88,11 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="ExpRunPropPanels_DESCRIPTION" value="1" type="GuiHandlerData"/>
 <property name="ExpRunTreePanel_EXP_RUN_TREE_TABLE" value="131" type="GuiHandlerData"/>
 <property name="FamilyChooserPanel_SPECIFY_OPTIONS" value="3" type="GuiHandlerData"/>
-<property name="FileSetPanel_FILE_SET_PANEL_TREE" value="3157" type="GuiHandlerData"/>
+<property name="FileSetPanel_FILE_SET_PANEL_TREE" value="3165" type="GuiHandlerData"/>
 <property name="FileSetPanel_MESSAGES" value="16" type="GuiHandlerData"/>
 <property name="FileSetPanel_USED_IN" value="3" type="GuiHandlerData"/>
 <property name="FilterToolBar_SHOW_ALL" value="3" type="GuiHandlerData"/>
-<property name="FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE" value="761" type="GuiHandlerData"/>
+<property name="FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE" value="764" type="GuiHandlerData"/>
 <property name="GettingStartedView_CLEAR_LIST" value="1" type="GuiHandlerData"/>
 <property name="GettingStartedView_OPEN_PROJECT" value="4" type="GuiHandlerData"/>
 <property name="HACGCIPSymbol_SHOW_DISABLED_PORTS" value="6" type="GuiHandlerData"/>
@@ -230,7 +230,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="SelectMenu_HIGHLIGHT" value="1" type="GuiHandlerData"/>
 <property name="SelectMenu_MARK" value="1" type="GuiHandlerData"/>
 <property name="SettingsDialog_OPTIONS_TREE" value="69" type="GuiHandlerData"/>
-<property name="SettingsDialog_PROJECT_TREE" value="174" type="GuiHandlerData"/>
+<property name="SettingsDialog_PROJECT_TREE" value="176" type="GuiHandlerData"/>
 <property name="SettingsThirdPartyToolsPage_SPECIFY_MODELSIM_COMPILED_LIBRARY_PATH" value="1" type="GuiHandlerData"/>
 <property name="SettingsThirdPartyToolsPage_SPECIFY_MODELSIM_INSTALL_PATH" value="1" type="GuiHandlerData"/>
 <property name="SettingsWebTalkPage_ENABLE_WEBTALK_TO_SEND_SOFTWARE_IP" value="2" type="GuiHandlerData"/>
@@ -266,7 +266,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="StaleRunDialog_OPEN_DESIGN" value="6" type="GuiHandlerData"/>
 <property name="StaleRunDialog_YES" value="5" type="GuiHandlerData"/>
 <property name="StateMonitor_RESET_RUN" value="4" type="GuiHandlerData"/>
-<property name="SyntheticaGettingStartedView_RECENT_PROJECTS" value="127" type="GuiHandlerData"/>
+<property name="SyntheticaGettingStartedView_RECENT_PROJECTS" value="128" type="GuiHandlerData"/>
 <property name="SyntheticaStateMonitor_CANCEL" value="11" type="GuiHandlerData"/>
 <property name="TclConsoleView_CLEAR_ALL_OUTPUT" value="2" type="GuiHandlerData"/>
 <property name="TclConsoleView_TCL_CONSOLE_CODE_EDITOR" value="137" type="GuiHandlerData"/>
@@ -277,11 +277,6 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="TimingItemFlatTablePanel_TABLE" value="290" type="GuiHandlerData"/>
 <property name="VerilogOptionsChooserPanel_SPECIFY_COMPILATION_OPTIONS_FOR_VERILOG" value="4" type="GuiHandlerData"/>
 <property name="XPG_TabbedPane_TABBED_PANE" value="19" type="GuiHandlerData"/>
-</item>
-<item name="Other">
-<property name="GuiMode" value="9" type="GuiMode"/>
-<property name="BatchMode" value="0" type="BatchMode"/>
-<property name="TclMode" value="8" type="TclMode"/>
 </item>
 </section>
 </application>
