@@ -38,7 +38,7 @@ module anchor_top_tb;
   reg     [ 11:0]   b_rx_data_p0 = 'b0;
   reg     [ 11:0]   b_rx_data_p1 = 'b0;
 
-  reg               ebi_nrde = 'b0;
+  reg               ebi_nrde = 'b1;
 
   wire              ready;
   wire    [ 15:0]   ebi_data;
@@ -95,6 +95,15 @@ module anchor_top_tb;
     a_rx_data_p1 <= 'b0;
     b_rx_data_p0 <= 'b0;
     b_rx_data_p1 <= 'b0;
+  end
+
+  integer j;
+  initial begin
+    #14000;
+    for (j = 0; j < 132; j = j + 1) begin
+      #100 ebi_nrde = 1'b0;
+      #100 ebi_nrde = 1'b1;
+    end
   end
 
   // anchor_top

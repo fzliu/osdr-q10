@@ -19,9 +19,9 @@ module tag_data_buff #(
   parameter   NUM_TAGS = 20,
   parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 64,
-  parameter   FIFO_DEPTH = 1024,
+  parameter   FIFO_DEPTH = 128,
   parameter   READ_WIDTH = 16,
-  parameter   MEMORY_TYPE = "distributed",
+  parameter   MEMORY_TYPE = "block",
 
   // derived parameters
 

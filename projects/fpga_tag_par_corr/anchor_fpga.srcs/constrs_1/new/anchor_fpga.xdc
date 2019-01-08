@@ -234,8 +234,6 @@ set_property PACKAGE_PIN B14 [get_ports {a_rx_data_p0[8]}]
 set_property PACKAGE_PIN C14 [get_ports {a_rx_data_p0[9]}]
 set_property PACKAGE_PIN A14 [get_ports {a_rx_data_p0[10]}]
 set_property PACKAGE_PIN D14 [get_ports {a_rx_data_p0[11]}]
-
-
 set_property PACKAGE_PIN G10 [get_ports {a_rx_data_p1[0]}]
 set_property PACKAGE_PIN F9 [get_ports {a_rx_data_p1[1]}]
 set_property PACKAGE_PIN G11 [get_ports {a_rx_data_p1[2]}]

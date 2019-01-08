@@ -172,7 +172,7 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_din (
     .clk (clk),
-    .ena (enable_int),
+    .ena (1'b1),  //enable_int
     .din (s_axis_tdata_unpack[count]),
     .dout (data_in)
   );
@@ -209,7 +209,7 @@ module axis_bit_corr #(
     ) xpm_memory_sdpram_inst (
       .sleep (1'b0),
       .clka (clk),
-      .ena (1'b1),  //enable_int
+      .ena (enable_int),  //1'b1
       .wea (1'b1),
       .addra (ram_addra),
       .dina (adder_out[n-1]),
@@ -240,7 +240,7 @@ module axis_bit_corr #(
   // output "memory"
 
   always @(posedge clk) begin
-    if (1'b1) begin   //enable_int
+    if (enable_int) begin   //1'b1
       output_mem[ram_addra] <= adder_out[L0];
     end
   end

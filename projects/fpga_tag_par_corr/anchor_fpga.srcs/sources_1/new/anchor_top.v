@@ -107,7 +107,11 @@ module anchor_top #(
 
   input             ebi_nrde,
   output  [ WE:0]   ebi_data,
-  output            ready
+  output            ready,
+
+  // LED interface
+
+  output  [  7:0]   led_out
 
 );
 
@@ -388,6 +392,7 @@ module anchor_top #(
     .NUM_TAGS (NUM_TAGS),
     .NUM_CHANNELS (NUM_CHANNELS),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
+    .FIFO_DEPTH (64),
     .READ_WIDTH (EBI_WIDTH),
     .MEMORY_TYPE ("block")
   ) tag_data_buff (
@@ -401,5 +406,9 @@ module anchor_top #(
     .ready (ready),
     .data_out (ebi_data)
   );
+
+  // output leds
+
+  assign led_out = 8'b0;
 
 endmodule

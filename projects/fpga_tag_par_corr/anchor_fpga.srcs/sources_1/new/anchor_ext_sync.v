@@ -25,7 +25,7 @@ module anchor_ext_sync (
   ) xpm_cdc_single_rd_ena (
     .src_clk (),
     .src_in (~ebi_nrde),
-    .dest_clk (c_clk),
+    .dest_clk (m_clk),
     .dest_out (rd_ena)
   );
 
