@@ -64,6 +64,7 @@ module axis_peak_detn #(
 
   // internal registers
 
+  reg     [ NC:0]   thresh = 'b0;
   reg     [ NC:0]   has_peak = 'b0;
   reg               has_peak_any_d = 'b0;
 
@@ -101,7 +102,7 @@ module axis_peak_detn #(
 
   genvar n;
   generate
-  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin : boxcar_gen
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WB;
     filt_boxcar #(
@@ -122,9 +123,10 @@ module axis_peak_detn #(
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WB;
     always @(posedge clk) begin
-      has_peak[n] <= (s_axis_tdata_abs_d[n1:n0] >
-          ((data_abs_avg[n1:n0] + 1'b1) << PEAK_THRESH_SHIFT));
+      thresh[n] <= (data_abs_avg[n1:n0] + 1'b1) << PEAK_THRESH_SHIFT;
+      has_peak[n] <= s_axis_tdata_abs_d[n1:n0] > thresh[n];
     end
+
   end
   endgenerate
 
@@ -132,7 +134,7 @@ module axis_peak_detn #(
     has_peak_any_d <= |has_peak;
   end
 
-  assign burst_start = (|has_peak) & ~has_peak_any_d & ~mem_ready;
+  assign burst_start = |has_peak & ~has_peak_any_d & ~mem_ready;
 
   // memory control logic
 
