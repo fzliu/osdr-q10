@@ -67,10 +67,13 @@ module axis_peak_detn #(
   reg     [ NC:0]   has_peak = 'b0;
   reg               has_peak_any_d = 'b0;
 
-  reg     [ WN:0]   mem_count = 'b0;
+  reg               mem_ready = 'b0;
+  reg               has_new_data = 'b0;
+  reg               has_new_data_d = 'b0;
+  reg               has_last_data = 'b0;
+  reg               has_last_data_d = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
-  reg     [ WD:0]   m_axis_tdata_reg = 'b0;
   reg               m_axis_tlast_reg = 'b0;
 
   // internal signals
@@ -79,7 +82,6 @@ module axis_peak_detn #(
   wire    [ WD:0]   data_abs_avg;
   wire    [ WD:0]   s_axis_tdata_abs_d;
 
-  wire              mem_ready;
   wire    [ WA:0]   mem_addr;
   wire              mem_valid;
 
@@ -90,7 +92,7 @@ module axis_peak_detn #(
   shift_reg #(
     .WIDTH (DATA_WIDTH),
     .DEPTH (BURST_LENGTH / 2)
-  ) shift_reg (
+  ) shift_reg_data (
     .clk (clk),
     .ena (s_axis_tvalid),
     .din (s_axis_tdata_abs),
@@ -130,30 +132,56 @@ module axis_peak_detn #(
     has_peak_any_d <= |has_peak;
   end
 
-  assign burst_start = (|has_peak) & ~has_peak_any_d;
+  assign burst_start = (|has_peak) & ~has_peak_any_d & ~mem_ready;
 
   // memory control logic
 
-  assign mem_ready = (mem_count > 1'b0);
-  assign mem_addr = (mem_count - 1'b1);
+  counter #(
+    .LOWER (0),
+    .UPPER (BURST_LENGTH - 1),
+    .WRAPAROUND (1)
+  ) counter (
+    .clk (clk),
+    .rst (burst_start),
+    .ena (mem_ready & m_axis_frame),
+    .value (mem_addr)
+  );
 
   always @(posedge clk) begin
-    if (mem_ready) begin
-      mem_count <= mem_count - m_axis_frame;
+    if (has_last_data) begin
+      mem_ready <= 1'b0;
     end else if (burst_start) begin
-      mem_count <= BURST_LENGTH;
+      mem_ready <= 1'b1;
     end else begin
-      mem_count <= mem_count;
+      mem_ready <= mem_ready;
     end
+  end
+
+  always @(posedge clk) begin
+    if (mem_ready & m_axis_frame) begin
+      has_new_data <= 1'b1;
+      has_last_data <= &(mem_addr + 1'b1);
+    end else if (burst_start) begin
+      has_new_data <= 1'b1;
+      has_last_data <= 1'b0;
+    end else begin
+      has_new_data <= 1'b0;
+      has_last_data <= 1'b0;
+    end
+  end
+
+  always @(posedge clk) begin
+    has_new_data_d <= has_new_data;
+    has_last_data_d <= has_last_data;
   end
 
   // internal memory instantiation
 
   axis_to_mem #(
-    .MEMORY_TYPE ("auto"),
+    .MEMORY_TYPE ("block"),
     .MEMORY_DEPTH (BURST_LENGTH),
     .DATA_WIDTH (DATA_WIDTH),
-    .READ_LATENCY (1)
+    .READ_LATENCY (2)
   ) axis_to_mem (
     .clk (clk),
     .rst (1'b0),
@@ -170,25 +198,21 @@ module axis_peak_detn #(
 
   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
 
-  shift_reg #(
-    .WIDTH (1),
-    .DEPTH (1)
-  ) shift_reg_valid (
-    .clk (clk),
-    .ena (1'b1),
-    .din (mem_ready),
-    .dout (m_axis_tvalid)
-  );
+  always @(posedge clk) begin
+    if (m_axis_frame) begin
+      m_axis_tvalid_reg <= 1'b0;
+      m_axis_tlast_reg <= 1'b0;
+    end else if (has_new_data_d) begin
+      m_axis_tvalid_reg <= 1'b1;
+      m_axis_tlast_reg <= has_last_data_d;
+    end else begin
+      m_axis_tvalid_reg <= m_axis_tvalid;
+      m_axis_tlast_reg <= m_axis_tlast;
+    end
+  end
 
-  shift_reg #(
-    .WIDTH (1),
-    .DEPTH (1)
-  ) shift_reg_last (
-    .clk (clk),
-    .ena (1'b1),
-    .din (~|mem_addr),
-    .dout (m_axis_tlast)
-  );
+  assign m_axis_tvalid = m_axis_tvalid_reg;
+  assign m_axis_tlast = m_axis_tlast_reg;
 
   // SIMULATION
 

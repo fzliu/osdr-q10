@@ -176,10 +176,6 @@ module anchor_top #(
 
   wire              rd_ena;
 
-  // multi-chip sync
-
-  assign sync_out = sync_in;
-
   // clock generation
 
   anchor_clk_gen #()
@@ -193,13 +189,14 @@ module anchor_top #(
 
   // synchronize external signals
 
-  anchor_ext_sync #()
-  anchor_ext_sync (
-    .d_clk (d_clk),
-    .m_clk (m_clk),
-    .c_clk (c_clk),
-    .ebi_nrde (ebi_nrde),
-    .rd_ena (rd_ena)
+  xpm_cdc_single #(
+    .DEST_SYNC_FF (2),
+    .SRC_INPUT_REG (0)
+  ) xpm_cdc_single_rd_ena (
+    .src_clk (),
+    .src_in (~ebi_nrde),
+    .dest_clk (m_clk),
+    .dest_out (rd_ena)
   );
 
   // dual-9361 controller
@@ -234,6 +231,7 @@ module anchor_top #(
     .b_resetb (b_resetb),
     .b_enable (b_enable),
     .b_txnrx (b_txnrx),
+    .sync_out (sync_out),
     .a_spi_sck (a_spi_sck),
     .a_spi_di (a_spi_di),
     .a_spi_do (a_spi_do),
@@ -249,6 +247,7 @@ module anchor_top #(
     .spi_miso (spi_miso),
     .spi_cs_a (spi_cs_a),
     .spi_cs_b (spi_cs_b),
+    .sync_in (sync_in),
     .m_axis_clk (d_clk),
     .m_axis_tvalid (ad9361_axis_tvalid),
     .m_axis_tready (ad9361_axis_tready),
@@ -262,7 +261,7 @@ module anchor_top #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
     .FIFO_DEPTH (65536),
-    .READ_LATENCY (3)
+    .READ_LATENCY (2)
   ) axis_fifo_sync (
     .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
@@ -282,7 +281,7 @@ module anchor_top #(
     .DATA_WIDTH (SAMPS_WIDTH),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (3)
+    .FIFO_LATENCY (2)
   ) axis_distrib (
     .s_axis_clk (m_clk),
     .s_axis_rst (1'b0),
@@ -310,7 +309,7 @@ module anchor_top #(
       .SLAVE_WIDTH (SAMPS_WIDTH),
       .MASTER_WIDTH (DATA_WIDTH),
       .ADDER_WIDTH (ADDER_WIDTH),
-      .SHIFT_DEPTH (2),
+      .SHIFT_DEPTH (1),
       .CORR_NUM (n + CORR_OFFSET)
     ) axis_bit_corr (
       .clk (c_clk),
@@ -368,7 +367,7 @@ module anchor_top #(
     .DATA_WIDTH (DATA_WIDTH),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (3),
+    .FIFO_LATENCY (2),
     .USE_AXIS_TLAST (1)
   ) axis_fan_in (
     .s_axis_clk (c_clk),
@@ -409,6 +408,13 @@ module anchor_top #(
 
   // output leds
 
-  assign led_out = 8'b0;
+  assign led_out[0] = a_rx_frame_in;
+  assign led_out[1] = 1'b0;
+  assign led_out[2] = 1'b0;
+  assign led_out[3] = b_rx_frame_in;
+  assign led_out[4] = ad9361_axis_tvalid;
+  assign led_out[5] = |corr_axis_tvalid;
+  assign led_out[6] = |peak_axis_tvalid;
+  assign led_out[7] = ready;
 
 endmodule

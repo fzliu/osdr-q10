@@ -77,6 +77,7 @@ module axis_bit_corr #(
 
   // internal registers
 
+  reg               batch_done_out_d = 'b0;
   reg               valid_out = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
@@ -172,7 +173,7 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_din (
     .clk (clk),
-    .ena (1'b1),  //enable_int
+    .ena (enable_int),  //1'b1
     .din (s_axis_tdata_unpack[count]),
     .dout (data_in)
   );
@@ -259,7 +260,7 @@ module axis_bit_corr #(
 
   shift_reg #(
     .WIDTH (1),
-    .DEPTH (SHIFT_DEPTH + 1)
+    .DEPTH (SHIFT_DEPTH)
   ) shift_reg_done (
     .clk (clk),
     .ena (1'b1),
@@ -268,7 +269,11 @@ module axis_bit_corr #(
   );
 
   always @(posedge clk) begin
-    if (batch_done & ~batch_done_out) begin
+    batch_done_out_d <= batch_done_out;
+  end
+
+  always @(posedge clk) begin
+    if (batch_done_out & ~batch_done_out_d) begin
       valid_out <= 1'b1;
     end else if (m_axis_frame | ~m_axis_tvalid) begin
       valid_out <= 1'b0;
@@ -295,7 +300,7 @@ module axis_bit_corr #(
   assign m_axis_tdata = m_axis_tdata_reg;
 
   // SIMULATION
-  
+
   wire      [ L0:0]   _correlator;
   wire      [ WF:0]   _m_axis_tdata_unpack [0:NP];
 

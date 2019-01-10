@@ -147,7 +147,8 @@ module anchor_top_tb;
     .sync_in (1'bz),
     .ebi_nrde (ebi_nrde),
     .ebi_data (ebi_data),
-    .ready (ready)
+    .ready (ready),
+    .led_out ()
   ); 
 
   // add signals to wave

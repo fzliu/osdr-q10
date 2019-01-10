@@ -34,7 +34,7 @@
     <Option Name="DSAVendor" Val="xilinx"/>
     <Option Name="DSANumComputeUnits" Val="60"/>
     <Option Name="WTXSimLaunchSim" Val="0"/>
-    <Option Name="WTModelSimLaunchSim" Val="287"/>
+    <Option Name="WTModelSimLaunchSim" Val="300"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
     <Option Name="WTVcsLaunchSim" Val="0"/>
@@ -90,13 +90,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../firmware/fpga/ad9361/ad9361_dual_spi.v">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../firmware/fpga/ad9361/ad9361_samp_filt.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -105,13 +98,6 @@
         </FileInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/new/anchor_clk_gen.v">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/new/anchor_ext_sync.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -256,14 +242,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../firmware/fpga/util/axis/xilinx/axis_fifo_sync.v">
-        <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="anchor_top"/>
@@ -356,10 +334,8 @@
           <Desc>Orion default synthesis strategy.</Desc>
         </StratHandle>
         <Step Id="synth_design">
-          <Option Id="NoCombineLuts">1</Option>
-          <Option Id="ShregMinSize">16</Option>
-          <Option Id="FsmExtraction">1</Option>
-          <Option Id="KeepEquivalentRegisters">1</Option>
+          <Option Id="ShregMinSize">5</Option>
+          <Option Id="Directive">3</Option>
           <Option Id="ResourceSharing">2</Option>
         </Step>
       </Strategy>
@@ -367,7 +343,7 @@
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2017"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
     </Run>
-    <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7k160tfbg676-2" ConstrsSet="constrs_1" Description="" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/impl_1" SynthRun="synth_1" IncludeInArchive="true">
+    <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7k160tfbg676-2" ConstrsSet="constrs_1" Description="Orion default implementation strategy." WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/impl_1" SynthRun="synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Orion_Default" Flow="Vivado Implementation 2017">
           <Desc>Orion default implementation strategy.</Desc>
@@ -383,9 +359,10 @@
         </Step>
         <Step Id="post_place_power_opt_design"/>
         <Step Id="phys_opt_design" EnableStepBool="1">
-          <Option Id="Directive">4</Option>
+          <Option Id="Directive">2</Option>
         </Step>
         <Step Id="route_design">
+          <Option Id="MoreOptsStr"><![CDATA[-tns_cleanup]]></Option>
           <Option Id="Directive">1</Option>
         </Step>
         <Step Id="post_route_phys_opt_design" EnableStepBool="1">

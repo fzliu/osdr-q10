@@ -55,6 +55,7 @@ module ad9361_dual #(
   output            b_resetb,
   output            b_enable,
   output            b_txnrx,
+  output            sync_out,
 
   // physical interface (spi_a)
 
@@ -79,6 +80,7 @@ module ad9361_dual #(
   output            spi_miso,
   input             spi_cs_a,
   input             spi_cs_b,
+  input             sync_in,
 
   // axi-stream interface
 
@@ -119,6 +121,10 @@ module ad9361_dual #(
   wire              valid_3_sf;
   wire    [ 11:0]   data_i3_sf;
   wire    [ 11:0]   data_q3_sf;
+
+  // multi-chip sync
+
+  assign sync_out = sync_in;
 
   // receive_a
 
@@ -172,22 +178,15 @@ module ad9361_dual #(
 
   // spi
 
-  ad9361_dual_spi #(
-  ) ad9361_dual_spi (
-    .a_spi_sck (a_spi_sck),
-    .a_spi_di (a_spi_di),
-    .a_spi_do (a_spi_do),
-    .a_spi_cs (a_spi_cs),
-    .b_spi_sck (b_spi_sck),
-    .b_spi_di (b_spi_di),
-    .b_spi_do (b_spi_do),
-    .b_spi_cs (b_spi_cs),
-    .spi_sck (spi_sck),
-    .spi_mosi (spi_mosi),
-    .spi_miso (spi_miso),
-    .spi_cs_a (spi_cs_a),
-    .spi_cs_b (spi_cs_b)
-  );
+  assign a_spi_sck = ~spi_cs_a ? spi_sck : 1'b0;
+  assign a_spi_di = ~spi_cs_a ? spi_mosi : 1'b0;
+  assign a_spi_cs = spi_cs_a;
+
+  assign b_spi_sck = ~spi_cs_b ? spi_sck : 1'b0;
+  assign b_spi_di = ~spi_cs_b ? spi_mosi : 1'b0;
+  assign b_spi_cs = spi_cs_b;
+
+  assign spi_miso = ~a_spi_cs ? a_spi_do : (~b_spi_cs ? b_spi_do : 1'b0);
 
   // sample filter
 
