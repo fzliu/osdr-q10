@@ -309,6 +309,7 @@ module anchor_top #(
       .SLAVE_WIDTH (SAMPS_WIDTH),
       .MASTER_WIDTH (DATA_WIDTH),
       .ADDER_WIDTH (ADDER_WIDTH),
+      .USE_STALL_SIGNAL (0),
       .SHIFT_DEPTH (2),
       .CORR_NUM (n + CORR_OFFSET)
     ) axis_bit_corr (
@@ -326,7 +327,8 @@ module anchor_top #(
     axis_cabs_serial #(
       .NUM_CHANNELS (NUM_CHANNELS),
       .CHANNEL_WIDTH (CHANNEL_WIDTH),
-      .CABS_DELAY (CABS_DELAY)
+      .CABS_DELAY (CABS_DELAY),
+      .USE_STALL_SIGNAL (0)
     ) axis_cabs_serial (
       .clk (c_clk),
       .s_axis_tvalid (corr_axis_tvalid[n]),

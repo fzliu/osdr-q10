@@ -4,6 +4,12 @@
 //
 // Description: Complex absolute value and serializes it with input data.
 //
+// Parameters
+// NUM_CHANNELS: total number of anchor channels (number of antennas)
+// CHANNEL_WIDTH: total data width of each channel
+// CABS_DELAY: number of clock cycles of delay for absolute value module
+// USE_STALL_SIGNAL: set to 0 if the downstream module accepts data faster
+//
 // enable  :  N/A
 // reset   :  N/A
 // latency :  CABS_DELAY + 1
@@ -18,6 +24,7 @@ module axis_cabs_serial #(
   parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 32,
   parameter   CABS_DELAY = 1,
+  parameter   USE_STALL_SIGNAL = 1,
 
   // derived parameters
 
@@ -76,11 +83,13 @@ module axis_cabs_serial #(
   wire              s_axis_frame;
   wire              m_axis_frame;
 
+  wire              stall;
+  wire              batch_done;
   wire              enable_int;
+  wire              batch_done_out;
+
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
-  wire              batch_done;
-  wire              batch_done_out;
 
   wire    [ WW:0]   data_slice_a;
   wire    [ WW:0]   data_slice_b;
@@ -114,9 +123,13 @@ module axis_cabs_serial #(
 
   // slave interface
 
+  generate
+    assign stall = USE_STALL_SIGNAL ? valid_out & m_axis_tvalid : 1'b0;
+  endgenerate
+
   assign batch_done = (count == NC);
-  assign enable_int = ~(valid_out & m_axis_tvalid) & s_axis_tvalid;
-  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
+  assign enable_int = ~stall & s_axis_tvalid;
+  assign s_axis_tready = ~stall & batch_done;
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
   // channel counter

@@ -2,9 +2,11 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AXI-stream multi-channel peak detector. Uses a simple threshold
-// algorithm to determine peak indices.
+// Description
+// AXI-stream multi-channel peak detector. Uses a simple thresholm algorithm to
+// determine peak indices.
 //
+// Signals
 // enable  :  N/A
 // reset   :  active-high
 // latency :  N/A
@@ -62,9 +64,12 @@ module axis_peak_detn #(
 
   `include "func_log2.vh"
 
+  // internal memories
+
+  reg     [ WB:0]   thresh [0:NC];
+
   // internal registers
 
-  reg     [ NC:0]   thresh = 'b0;
   reg     [ NC:0]   has_peak = 'b0;
   reg               has_peak_any_d = 'b0;
 

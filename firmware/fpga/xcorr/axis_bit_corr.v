@@ -2,11 +2,21 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AXI-stream bit (-1 and 1) correlator implementation using
-// adders. The module clock frequency should be at least that of the input
-// clock multiplied by the number of channels. The number of parallel channels
-// must be a power of two.
+// Description
+// AXI-stream bit (-1 and 1) correlator implementation using adders. The module
+// clock frequency should be at least that of the input clock multiplied by the
+// number of channels. The number of parallel channels must be a power of two.
+// Computes y[n] = x[n] * h[n].
 //
+// Parameters
+// NUM_PARALLEL: number of parallel input data streams (must be power of 2)
+// SLAVE_WIDTH: width of the axi-stream slave (input) data bus
+// MASTER_WIDTH: width of the axi-stream master (output) data bus
+// USE_STALL_SIGNAL: set to 0 if the downstream module accepts data faster
+// SHIFT_DEPTH: internal pipeline depth for timing closure
+// CORR_NUM: index into correlators.vh which determines h[n]
+//
+// Signals
 // enable  :  N/A
 // reset   :  active-high
 // latency :  variable (dependent on correlator length)
@@ -22,6 +32,7 @@ module axis_bit_corr #(
   parameter   SLAVE_WIDTH = 64,
   parameter   MASTER_WIDTH = 128,
   parameter   ADDER_WIDTH = 12,
+  parameter   USE_STALL_SIGNAL = 1,
   parameter   SHIFT_DEPTH = 1,
   parameter   CORR_NUM = 0,
 
@@ -90,8 +101,9 @@ module axis_bit_corr #(
 
   wire    [ WW:0]   s_axis_tdata_unpack [0:NP];
 
-  wire              enable_int;
+  wire              stall;
   wire              batch_done;
+  wire              enable_int;
   wire    [ WN:0]   count;
 
   wire    [ WW:0]   data_in;
@@ -128,9 +140,13 @@ module axis_bit_corr #(
 
   // slave interface
 
+  generate
+    assign stall = USE_STALL_SIGNAL ? valid_out & m_axis_tvalid : 1'b0;
+  endgenerate
+
   assign batch_done = (count == NP);
-  assign enable_int = ~(valid_out & m_axis_tvalid) & s_axis_tvalid;
-  assign s_axis_tready = ~(valid_out & m_axis_tvalid) & batch_done;
+  assign enable_int = ~stall & s_axis_tvalid;
+  assign s_axis_tready = ~stall & batch_done;
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
   // counter (for tracking current input set) logic
