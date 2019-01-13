@@ -10,6 +10,7 @@
 // enable  :  N/A
 // reset   :  N/A
 // latency :  N/A
+// output  :  unregistered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +18,7 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 1,
+  parameter   NUM_TAGS = 5,
   parameter   CORR_OFFSET = 0,
 
   parameter   NUM_CHANNELS = 4,
@@ -261,7 +262,7 @@ module anchor_top #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
     .FIFO_DEPTH (65536),
-    .READ_LATENCY (2)
+    .READ_LATENCY (3)
   ) axis_fifo_sync (
     .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
@@ -281,7 +282,7 @@ module anchor_top #(
     .DATA_WIDTH (SAMPS_WIDTH),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (2)
+    .FIFO_LATENCY (3)
   ) axis_distrib (
     .s_axis_clk (m_clk),
     .s_axis_rst (1'b0),
@@ -369,7 +370,7 @@ module anchor_top #(
     .DATA_WIDTH (DATA_WIDTH),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (2),
+    .FIFO_LATENCY (3),
     .USE_AXIS_TLAST (1)
   ) axis_fan_in (
     .s_axis_clk (c_clk),

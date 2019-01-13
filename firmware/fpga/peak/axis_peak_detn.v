@@ -6,6 +6,12 @@
 // AXI-stream multi-channel peak detector. Uses a simple thresholm algorithm to
 // determine peak indices.
 //
+// Parameters
+// NUM_CHANNELS: total number of anchor channels (number of antennas)
+// CHANNEL_WIDTH: total data width of each channel
+// BURST_LENGTH: length around detected peaks to store samples for
+// PEAK_THRESH_MULT: minimum multiplier for detected peaks, must be 2^N
+//
 // Signals
 // enable  :  N/A
 // reset   :  active-high

@@ -2,7 +2,8 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Complex absolute value and serializes it with input data.
+// Description
+// Complex absolute value and serializes it with input data.
 //
 // Parameters
 // NUM_CHANNELS: total number of anchor channels (number of antennas)
@@ -10,6 +11,7 @@
 // CABS_DELAY: number of clock cycles of delay for absolute value module
 // USE_STALL_SIGNAL: set to 0 if the downstream module accepts data faster
 //
+// Signals
 // enable  :  N/A
 // reset   :  N/A
 // latency :  CABS_DELAY + 1
