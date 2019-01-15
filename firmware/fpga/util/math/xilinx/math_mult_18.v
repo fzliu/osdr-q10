@@ -28,6 +28,10 @@ module math_mult_18 (
 
 );
 
+  // internal signals
+
+  wire    [ 47:0]   mult_p;
+
   // DSP multiplier
 
   DSP48E1 #(
@@ -58,16 +62,16 @@ module math_mult_18 (
     .PREG (1)
   ) DSP48E1 (
     .ACOUT (),
-    .BCOUT (mult_1_bc),
+    .BCOUT (),
     .CARRYCASCOUT (),
     .MULTSIGNOUT (),
-    .PCOUT (mult_pc[0]),
+    .PCOUT (),
     .OVERFLOW (),
     .PATTERNBDETECT (),
     .PATTERNDETECT (),
     .UNDERFLOW (),
     .CARRYOUT (),
-    .P (dout),
+    .P (mult_p),
     .ACIN (),
     .BCIN (),
     .CARRYCASCIN (),
@@ -76,9 +80,9 @@ module math_mult_18 (
     .ALUMODE (4'b0000),
     .CARRYINSEL (3'b000),
     .CLK (clk),
-    .INMODE (5'b10001),
+    .INMODE (5'b00000),
     .OPMODE (7'b0000101),
-    .A (dina),
+    .A ({5'h00, dina}),
     .B (dinb),
     .C (),
     .CARRYIN (1'b0),
@@ -107,5 +111,9 @@ module math_mult_18 (
     .RSTM (rst),
     .RSTP (rst)
   );
+
+  // connect outputs
+
+  assign dout = mult_p[42:0];
 
 endmodule

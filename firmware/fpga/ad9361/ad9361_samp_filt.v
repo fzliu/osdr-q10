@@ -69,7 +69,7 @@ module ad9361_samp_filt #(
   wire    [ 11:0]   data_iq [0:7];
   wire    [ 11:0]   data_out_iq [0:7];
 
-  wire    [ 33:0]   abs_dout [0:3];
+  wire    [ 16:0]   abs_dout [0:3];
   wire    [ WA:0]   avg_dout [0:3];
   wire    [ WN:0]   pad_count [0:3];
   wire              data_pass [0:3];
@@ -165,13 +165,13 @@ module ad9361_samp_filt #(
 
     // absolute value
 
-    math_cabs_32 #(
+    math_cabs_16 #(
     ) math_cabs (
       .clk (clk),
       .rst (1'b0),
       .ena (1'b1),
-      .dina (`SIGN_EXT(data_iq[a],12,32)),
-      .dinb (`SIGN_EXT(data_iq[b],12,32)),
+      .dina (`SIGN_EXT(data_iq[a],12,16)),
+      .dinb (`SIGN_EXT(data_iq[b],12,16)),
       .dout (abs_dout[n])
     );
 

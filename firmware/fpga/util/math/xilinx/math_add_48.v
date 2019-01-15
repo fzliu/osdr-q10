@@ -36,6 +36,10 @@ module math_add_48 #(
 
   reg     [ 48:0]  dout_reg = 'b0;
 
+  // internal signals
+
+  wire    [  3:0]  carry_out;
+
   // adder implementation
 
   generate
@@ -79,7 +83,7 @@ module math_add_48 #(
       .MREG (0),
       .OPMODEREG (0),
       .PREG (1)
-    ) DSP48E1_l (
+    ) DSP48E1 (
       .ACOUT (),
       .BCOUT (),
       .CARRYCASCOUT (),
@@ -89,7 +93,7 @@ module math_add_48 #(
       .PATTERNBDETECT (),
       .PATTERNDETECT (),
       .UNDERFLOW (),
-      .CARRYOUT (dout[48]),
+      .CARRYOUT (carry_out),
       .P (dout[47:0]),
       .ACIN (),
       .BCIN (),
@@ -103,7 +107,7 @@ module math_add_48 #(
       .OPMODE (7'b0001111),
       .A (dina[47:18]),
       .B (dina[17:0]),
-      .C (dinb[47:0]),
+      .C (dinb),
       .CARRYIN (1'b0),
       .D (),
       .CEA1 (ena),
@@ -130,6 +134,8 @@ module math_add_48 #(
       .RSTM (1'b0),
       .RSTP (rst)
     );
+
+    assign dout[48] = carry_out[3];
 
   end
   endgenerate

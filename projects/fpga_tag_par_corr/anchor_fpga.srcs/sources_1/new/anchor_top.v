@@ -18,7 +18,7 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 5,
+  parameter   NUM_TAGS = 1,
   parameter   CORR_OFFSET = 0,
 
   parameter   NUM_CHANNELS = 4,
@@ -27,7 +27,7 @@ module anchor_top #(
   parameter   SAMPS_WIDTH = 64,
   parameter   EBI_WIDTH = 16,
 
-  parameter   CABS_DELAY = 14,
+  parameter   CABS_DELAY = 10,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
 

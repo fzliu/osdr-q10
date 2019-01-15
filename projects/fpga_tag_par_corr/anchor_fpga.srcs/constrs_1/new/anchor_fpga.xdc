@@ -44,6 +44,8 @@ set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -min -add_delay 0.00
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -max -add_delay 0.000 [get_ports b_rx_frame_in]
 set_input_delay -clock [get_clocks a_rx_clk_in] -min -add_delay 0.000 [get_ports b_rx_frame_in]
 set_input_delay -clock [get_clocks a_rx_clk_in] -max -add_delay 0.000 [get_ports b_rx_frame_in]
+set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -min -add_delay 0.000 [get_ports ebi_nrde]
+set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -max -add_delay 0.000 [get_ports ebi_nrde]
 set_input_delay -clock [get_clocks {VIRTUAL_pll_out[2]}] -min -add_delay 0.000 [get_ports ebi_nrde]
 set_input_delay -clock [get_clocks {VIRTUAL_pll_out[2]}] -max -add_delay 0.000 [get_ports ebi_nrde]
 set_output_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -min -add_delay 0.000 [get_ports {ebi_data[*]}]

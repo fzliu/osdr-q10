@@ -214,7 +214,7 @@ module axis_bit_corr #(
       .ECC_MODE ("no_ecc"),
       .AUTO_SLEEP_TIME (0),
       .USE_EMBEDDED_CONSTRAINT (0),
-      .MEMORY_OPTIMIZATION ("true"),
+      .MEMORY_OPTIMIZATION ("false"),
       .WRITE_DATA_WIDTH_A (ADDER_WIDTH),
       .BYTE_WRITE_WIDTH_A (ADDER_WIDTH),
       .ADDR_WIDTH_A (COUNT_WIDTH),

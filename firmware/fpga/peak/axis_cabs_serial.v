@@ -33,6 +33,8 @@ module axis_cabs_serial #(
   localparam  WORD_WIDTH = CHANNEL_WIDTH / 2,
   localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
   localparam  COUNT_WIDTH = log2(NUM_CHANNELS - 1),
+  localparam  ABS_WIDTH = (WORD_WIDTH <= 16) ? 16 : 32,
+  localparam  PAD_WIDTH = CHANNEL_WIDTH - ABS_WIDTH,
 
   // bit width parameters
 
@@ -40,7 +42,8 @@ module axis_cabs_serial #(
   localparam  WC = CHANNEL_WIDTH - 1,
   localparam  WW = WORD_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
-  localparam  WN = COUNT_WIDTH - 1
+  localparam  WN = COUNT_WIDTH - 1,
+  localparam  WB = ABS_WIDTH - 1
 
 ) (
 
@@ -68,7 +71,7 @@ module axis_cabs_serial #(
 
   // internal memories
 
-  reg     [ WC:0]   cabs_mem [0:NC];
+  reg     [ WB:0]   cabs_mem [0:NC];
 
   // internal registers
 
@@ -83,7 +86,6 @@ module axis_cabs_serial #(
 
   wire    [ WC:0]   s_axis_tdata_unpack [0:NC];
   wire              s_axis_frame;
-  wire              m_axis_frame;
 
   wire              stall;
   wire              batch_done;
@@ -93,14 +95,17 @@ module axis_cabs_serial #(
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
 
-  wire    [ WW:0]   data_slice_a;
-  wire    [ WW:0]   data_slice_b;
-  wire    [ 31:0]   cabs_dina;
-  wire    [ 31:0]   cabs_dinb;
-  wire    [ 33:0]   cabs_dout;
+  wire    [ WW:0]   data_in_a;
+  wire    [ WW:0]   data_in_b;
+  wire    [ WB:0]   cabs_dina;
+  wire    [ WB:0]   cabs_dinb;
+  wire              cabs_msb;
+  wire    [ WB:0]   cabs_dout;
 
   wire    [ WD:0]   data_out;
   wire    [ WD:0]   data_abs_out;
+
+  wire              m_axis_frame;
 
   // initialize final memory column
 
@@ -149,20 +154,38 @@ module axis_cabs_serial #(
 
   // absolute value module
 
-  assign data_slice_a = s_axis_tdata_unpack[count][WW:0];
-  assign data_slice_b = s_axis_tdata_unpack[count][WC:(WW+1)];
-  assign cabs_dina = `SIGN_EXT(data_slice_a,WORD_WIDTH,32);
-  assign cabs_dinb = `SIGN_EXT(data_slice_b,WORD_WIDTH,32);
+  assign data_in_a = s_axis_tdata_unpack[count][WW:0];
+  assign data_in_b = s_axis_tdata_unpack[count][WC:(WW+1)];
+  assign cabs_dina = `SIGN_EXT(data_in_a,WORD_WIDTH,ABS_WIDTH);
+  assign cabs_dinb = `SIGN_EXT(data_in_b,WORD_WIDTH,ABS_WIDTH);
 
-  math_cabs_32 #()
-  math_cabs (
-    .clk (clk),
-    .rst (1'b0),
-    .ena (enable_int),
-    .dina (cabs_dina),
-    .dinb (cabs_dinb),
-    .dout (cabs_dout)
-  );
+  generate
+  if (CHANNEL_WIDTH <= 32) begin
+
+    math_cabs_16 #()
+    math_cabs (
+      .clk (clk),
+      .rst (1'b0),
+      .ena (enable_int),
+      .dina (cabs_dina),
+      .dinb (cabs_dinb),
+      .dout ({cabs_msb, cabs_dout})
+    );
+
+  end else begin
+
+    math_cabs_32 #()
+    math_cabs (
+      .clk (clk),
+      .rst (1'b0),
+      .ena (enable_int),
+      .dina (cabs_dina),
+      .dinb (cabs_dinb),
+      .dout ({cabs_msb, cabs_dout})
+    );
+
+  end
+  endgenerate
 
   shift_reg #(
     .WIDTH (COUNT_WIDTH),
@@ -188,7 +211,7 @@ module axis_cabs_serial #(
 
   always @(posedge clk) begin
     if (enable_int) begin
-      cabs_mem[count_out] <= cabs_dout[WC:0];
+      cabs_mem[count_out] <= cabs_dout; // overflow unlikely; discard MSB
     end
   end
 
@@ -196,7 +219,7 @@ module axis_cabs_serial #(
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin : repack_gen
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WC;
-    assign data_abs_out[n1:n0] = cabs_mem[n];
+    assign data_abs_out[n1:n0] = {{PAD_WIDTH{1'b0}}, cabs_mem[n]};
   end
   endgenerate
 
