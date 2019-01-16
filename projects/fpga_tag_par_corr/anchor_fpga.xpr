@@ -34,7 +34,7 @@
     <Option Name="DSAVendor" Val="xilinx"/>
     <Option Name="DSANumComputeUnits" Val="60"/>
     <Option Name="WTXSimLaunchSim" Val="0"/>
-    <Option Name="WTModelSimLaunchSim" Val="316"/>
+    <Option Name="WTModelSimLaunchSim" Val="327"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
     <Option Name="WTVcsLaunchSim" Val="0"/>
@@ -235,7 +235,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../firmware/fpga/util/math/math_pow2_12.v">
+      <File Path="$PPRDIR/../../firmware/fpga/util/math/math_pow2_9.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -360,9 +360,9 @@
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Orion_Default" Flow="Vivado Synthesis 2017"/>
         <Step Id="synth_design">
+          <Option Id="Directive">1</Option>
           <Option Id="ResourceSharing">2</Option>
           <Option Id="ShregMinSize">10</Option>
-          <Option Id="Directive">1</Option>
         </Step>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>

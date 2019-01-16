@@ -2,15 +2,20 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Anchor top-level module. Uses bit correlation and approximate
-// absolute value to perform peak detection. Detected peaks are sliced out
-// and placed inside a FIFO for consumption by the microprocessor through the
-// EBI bus.
+// Description
+// Anchor top-level module. Uses bit correlation and approximate absolute value
+// to perform peak detection. Detected peaks are sliced out and placed inside a
+// FIFO for consumption by the microprocessor through the EBI bus.
+//
+// Parameters
+// NUM_TAGS: number of tags to support
+// PRECISION: desired precision of the input data bus, must be <= 12
+// CORR_OFFSET: index of the first (zeroth) correlator to use
 //
 // enable  :  N/A
 // reset   :  N/A
 // latency :  N/A
-// output  :  unregistered
+// output  :  N/A
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +23,8 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 1,
+  parameter   NUM_TAGS = 5,
+  parameter   PRECISION = 6,
   parameter   CORR_OFFSET = 0,
 
   parameter   NUM_CHANNELS = 4,
@@ -210,7 +216,7 @@ module anchor_top #(
     .DATA_PASS_VALUE (64),
     .FILTER_LENGTH (16),
     .SAMPS_WIDTH (SAMPS_WIDTH),
-    .REDUCE_PRECISION (6),
+    .PRECISION (PRECISION),
     .REVERSE_DATA (0),
     .INDEP_CLOCKS (0),
     .USE_AXIS_TLAST (0)
@@ -307,6 +313,7 @@ module anchor_top #(
 
     axis_bit_corr #(
       .NUM_PARALLEL (NUM_CHANNELS * 2),
+      .PRECISION (PRECISION),
       .SLAVE_WIDTH (SAMPS_WIDTH),
       .MASTER_WIDTH (DATA_WIDTH),
       .ADDER_WIDTH (ADDER_WIDTH),
@@ -394,7 +401,7 @@ module anchor_top #(
     .NUM_TAGS (NUM_TAGS),
     .NUM_CHANNELS (NUM_CHANNELS),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
-    .FIFO_DEPTH (64),
+    .FIFO_DEPTH (128),
     .READ_WIDTH (EBI_WIDTH),
     .MEMORY_TYPE ("block")
   ) tag_data_buff (

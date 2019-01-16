@@ -29,6 +29,7 @@ module axis_bit_corr #(
   // parameters
 
   parameter   NUM_PARALLEL = 8,
+  parameter   PRECISION = 6,
   parameter   SLAVE_WIDTH = 64,
   parameter   MASTER_WIDTH = 128,
   parameter   ADDER_WIDTH = 12,
@@ -49,6 +50,7 @@ module axis_bit_corr #(
   // bit width parameters
 
   localparam  NP = NUM_PARALLEL - 1,
+  localparam  PR = PRECISION - 1,
   localparam  WS = SLAVE_WIDTH - 1,
   localparam  WM = MASTER_WIDTH - 1,
   localparam  WA = ADDER_WIDTH - 1,
@@ -97,8 +99,6 @@ module axis_bit_corr #(
   // internal signals
 
   wire              s_axis_frame;
-  wire              m_axis_frame;
-
   wire    [ WW:0]   s_axis_tdata_unpack [0:NP];
 
   wire              stall;
@@ -106,16 +106,17 @@ module axis_bit_corr #(
   wire              enable_int;
   wire    [ WN:0]   count;
 
-  wire    [ WW:0]   data_in;
   wire    [ WN:0]   ram_addra;
   wire    [ WN:0]   ram_addrb;
 
+  wire    [ PR:0]   data_in;
   wire    [ WA:0]   adder_in0;
   wire    [ WA:0]   adder_in1 [0:L0];
   wire    [ WA:0]   adder_out [0:L0];
 
   wire              batch_done_out;
   wire    [ WM:0]   output_pack;
+  wire              m_axis_frame;
 
   // initialize final memory column
 
@@ -185,16 +186,16 @@ module axis_bit_corr #(
   // first adder input - s_axis_tdata module input
 
   shift_reg #(
-    .WIDTH (WAVE_WIDTH),
+    .WIDTH (PRECISION),
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_din (
     .clk (clk),
     .ena (enable_int),  //1'b1
-    .din (s_axis_tdata_unpack[count]),
+    .din (s_axis_tdata_unpack[count][PR:0]),
     .dout (data_in)
   );
 
-  assign adder_in0 = `SIGN_EXT(data_in,WAVE_WIDTH,ADDER_WIDTH);
+  assign adder_in0 = `SIGN_EXT(data_in,PRECISION,ADDER_WIDTH);
 
   // second adder input - previous value in chain
 

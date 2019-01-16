@@ -82,12 +82,12 @@ module math_cabs_32 (
 
   // pow2 (4 decimal places)
 
-  math_pow2_12 #()
-  math_pow2_12 (
+  math_pow2_9 #()
+  math_pow2_9 (
     .clk (clk),
     .ena (ena),
     .rst (rst),
-    .din ({1'b0, log_out, 1'b0}),
+    .din (log_out[9:1]),
     .dout (pow_out)
   );
 

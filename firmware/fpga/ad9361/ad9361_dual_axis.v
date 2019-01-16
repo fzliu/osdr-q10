@@ -16,7 +16,7 @@ module ad9361_dual_axis #(
   // parameters
 
   parameter   SAMPS_WIDTH = 128,
-  parameter   REDUCE_PRECISION = 0,
+  parameter   PRECISION = 12,
   parameter   REVERSE_DATA = 0,
   parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
@@ -26,14 +26,14 @@ module ad9361_dual_axis #(
 
   localparam  COUNT_WIDTH = log2(AXIS_BURST_LENGTH),
   localparam  WORD_WIDTH = SAMPS_WIDTH / 8,
-  localparam  PRECISION = 12 - REDUCE_PRECISION,
+  localparam  REDUCE_PRECISION = 12 - PRECISION,
 
   // bit width parameters
 
   localparam  WS = SAMPS_WIDTH - 1,
   localparam  WC = COUNT_WIDTH - 1,
   localparam  WW = WORD_WIDTH - 1,
-  localparam  W0 = PRECISION - 1
+  localparam  PR = PRECISION - 1
 
 ) (
 
@@ -81,7 +81,7 @@ module ad9361_dual_axis #(
 
   // internal signals
 
-  wire    [ W0:0]   data_format [0:7];
+  wire    [ PR:0]   data_format [0:7];
 
   wire              valid_int;
 

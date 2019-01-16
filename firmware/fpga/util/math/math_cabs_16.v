@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Company: 奥新智能
-// Engineer: 耿慧��?
+// Engineer: 耿慧慧
 //
 // Description: The absolute value of the complex number. 9-cycle delay.
 //
@@ -82,12 +82,12 @@ module math_cabs_16 (
 
   // pow2
 
-  math_pow2_12 #()
-  math_pow2_12 (
+  math_pow2_9 #()
+  math_pow2_9 (
     .clk (clk),
     .ena (ena),
     .rst (rst),
-    .din ({2'b0, log_out, 1'b0}),
+    .din ({1'b0, log_out[8:1]}),
     .dout (pow_out)
   );
 

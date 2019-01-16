@@ -18,7 +18,7 @@ module ad9361_dual #(
   parameter   DATA_PASS_VALUE = 20,
   parameter   FILTER_LENGTH = 16,
   parameter   SAMPS_WIDTH = 64,
-  parameter   REDUCE_PRECISION = 0,
+  parameter   PRECISION = 12,
   parameter   REVERSE_DATA = 0,
   parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
@@ -249,7 +249,7 @@ module ad9361_dual #(
 
   ad9361_dual_axis #(
     .SAMPS_WIDTH (SAMPS_WIDTH),
-    .REDUCE_PRECISION (REDUCE_PRECISION),
+    .PRECISION (PRECISION),
     .REVERSE_DATA (REVERSE_DATA),
     .INDEP_CLOCKS (INDEP_CLOCKS),
     .USE_AXIS_TLAST (USE_AXIS_TLAST)
