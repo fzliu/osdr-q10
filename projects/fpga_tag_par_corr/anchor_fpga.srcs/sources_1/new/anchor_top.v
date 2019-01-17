@@ -212,7 +212,7 @@ module anchor_top #(
     .DEVICE_TYPE ("7SERIES"),
     .REALTIME_ENABLE (1),
     .USE_SAMPLE_FILTER (1),
-    .NUM_PAD_SAMPS (15),
+    .NUM_PAD_SAMPS (31),
     .DATA_PASS_VALUE (64),
     .FILTER_LENGTH (16),
     .SAMPS_WIDTH (SAMPS_WIDTH),
@@ -268,7 +268,7 @@ module anchor_top #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
     .FIFO_DEPTH (65536),
-    .READ_LATENCY (3)
+    .READ_LATENCY (2)
   ) axis_fifo_sync (
     .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
@@ -377,7 +377,7 @@ module anchor_top #(
     .DATA_WIDTH (DATA_WIDTH),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (3),
+    .FIFO_LATENCY (2),
     .USE_AXIS_TLAST (1)
   ) axis_fan_in (
     .s_axis_clk (c_clk),
