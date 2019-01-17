@@ -3,6 +3,7 @@
 // Engineer: 耿慧慧
 //
 // Description: The absolute value of the complex number. 14-cycle delay.
+// Input data is signed. Output data is unsigned.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +19,7 @@ module math_cabs_32 (
 
   input    [ 31:0]  dina,
   input    [ 31:0]  dinb,
-  output   [ 32:0]  dout
+  output   [ 31:0]  dout
 
 );
 
@@ -30,7 +31,7 @@ module math_cabs_32 (
   wire     [ 69:0]  mult_b_out;
   wire     [ 96:0]  add_out;
   wire     [  9:0]  log_out;
-  wire     [ 33:0]  pow_out;
+  wire     [ 31:0]  pow_out;
 
 
   // multiply_a
@@ -87,13 +88,13 @@ module math_cabs_32 (
     .clk (clk),
     .ena (ena),
     .rst (rst),
-    .din (log_out[9:1]),
+    .din (log_out[9:1]),  //log_out >> 1
     .dout (pow_out)
   );
 
   // assign output
 
-  assign dout = pow_out[32:0];
+  assign dout = pow_out[31:0];
 
 endmodule
 

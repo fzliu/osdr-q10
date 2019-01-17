@@ -18,7 +18,7 @@ module math_cabs_16 (
 
   input    [ 15:0]  dina,
   input    [ 15:0]  dinb,
-  output   [ 16:0]  dout
+  output   [ 15:0]  dout
 
 );
 
@@ -30,10 +30,10 @@ module math_cabs_16 (
   wire     [ 42:0]  mult_b_out;
   wire     [ 48:0]  add_out;
   wire     [  8:0]  log_out;
-  wire     [ 33:0]  pow_out;
+  wire     [ 31:0]  pow_out;
 
 
-  // mult_a
+  // multiply_a
 
   math_mult_18 #()
   math_mult_18_a (
@@ -45,7 +45,7 @@ module math_cabs_16 (
     .dout (mult_a_out)
   );
 
-  // mult_b
+  // multiply_b
 
   math_mult_18 #()
   math_mult_18_b (
@@ -58,18 +58,18 @@ module math_cabs_16 (
   );
 
   // add
-
+    
   math_add_48 #()
   math_add_48 (
     .clk (clk),
     .ena (ena),
     .rst (rst),
-    .dina ({5'h00, mult_a_out}),  // mult_a_out is positive
-    .dinb ({5'h00, mult_b_out}),  // mult_b_out is positive
+    .dina ({5'h0000000, mult_a_out}),  // mult_a_out is positive
+    .dinb ({5'h0000000, mult_b_out}),  // mult_b_out is positive
     .dout (add_out)
   );
 
-  // log2
+  // log2 (6 decimal places)
 
   math_log2_32 #()
   math_log2_32 (
@@ -80,21 +80,19 @@ module math_cabs_16 (
     .dout (log_out)
   );
 
-  // pow2
-
+  // pow2 (4 decimal places)
+  
   math_pow2_9 #()
   math_pow2_9 (
     .clk (clk),
     .ena (ena),
     .rst (rst),
-    .din ({1'b0, log_out[8:1]}),
+    .din ({1'b0, log_out[8:1]}),  //log_out >> 1
     .dout (pow_out)
   );
 
-  // assign output
-
-  assign dout = pow_out[16:0];
-
+  assign dout = pow_out[15:0];
+  
 endmodule
 
 ////////////////////////////////////////////////////////////////////////////////

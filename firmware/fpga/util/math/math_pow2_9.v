@@ -6,9 +6,9 @@
 // The input and output have binary points:
 // In: xxxxxx.yyyy; Out: xxxx_xxxx_xxxx_xxxx.yyyy_yyyy.
 //
-// enable  :  N/A
+// enable  :  active-high
 // reset   :  active-high
-// latency :  0 cycles
+// latency :  ? cycles
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +23,7 @@ module math_pow2_9 (
   // data interface
 
   input   [ 8:0]   din,
-  output  [33:0]   dout
+  output  [31:0]   dout
 
 );
 
@@ -32,7 +32,7 @@ module math_pow2_9 (
   reg     [ 3:0]   barrelshfcnt = 'b0;
   reg     [22:0]   lut_out = 'b0;
   reg     [39:0]   dout1 = 'b0;
-  wire    [54:0]   tmp1 = ({1'b1, lut_out} << barrelshfcnt);
+  wire    [54:0]   tmp1 = ({1'b1, lut_out}  <<  barrelshfcnt);
 
   always @(posedge clk) begin
     if (rst) begin
@@ -50,7 +50,7 @@ module math_pow2_9 (
   // The equation is: output = (2^(input/16)-1) * 2^23
   // For larger tables, better to generate a separate data file using a program!
 
- always @(posedge clk) begin
+  always @(posedge clk) begin
     if (rst) begin
       lut_out <= 'b0;
     end else if (ena) begin
@@ -75,8 +75,6 @@ module math_pow2_9 (
       endcase
     end
   end
-
-
 
 endmodule
 

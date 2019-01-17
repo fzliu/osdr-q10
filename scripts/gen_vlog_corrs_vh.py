@@ -11,7 +11,7 @@ from scipy.io import loadmat
 # argparse
 parser = argparse.ArgumentParser(description="Generate a correlators.vh Verilog header.")
 parser.add_argument("-i", "--in-file", type=str, default="codes_gold_127.mat", help="path to bits")
-parser.add_argument("-o", "--out-file", type=str, default="axis_xcorr_all.v", help="output filename")
+parser.add_argument("-o", "--out-file", type=str, default="correlators.vh", help="output filename")
 
 
 # module template
