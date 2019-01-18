@@ -99,7 +99,6 @@ module axis_cabs_serial #(
   wire    [ WW:0]   data_in_b;
   wire    [ WB:0]   cabs_dina;
   wire    [ WB:0]   cabs_dinb;
-  wire              cabs_msb;
   wire    [ WB:0]   cabs_dout;
 
   wire    [ WD:0]   data_out;
@@ -169,7 +168,7 @@ module axis_cabs_serial #(
       .ena (enable_int),
       .dina (cabs_dina),
       .dinb (cabs_dinb),
-      .dout ({cabs_msb, cabs_dout})
+      .dout (cabs_dout)
     );
 
   end else begin
@@ -181,7 +180,7 @@ module axis_cabs_serial #(
       .ena (enable_int),
       .dina (cabs_dina),
       .dinb (cabs_dinb),
-      .dout ({cabs_msb, cabs_dout})
+      .dout (cabs_dout)
     );
 
   end

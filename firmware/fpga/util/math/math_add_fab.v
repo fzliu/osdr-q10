@@ -3,7 +3,7 @@
 // Engineer: Frank Liu
 //
 // Description
-// Signed variable bit width fabric-based adder.
+// Signed, variable bit width, fabric-based adder.
 //
 // Parameters
 // WIDTH: adder bit width
@@ -56,6 +56,7 @@ module math_add_fab #(
   wire    [ WA:0]   b [0:NS];       // B inputs to all sub-adders
   wire    [ WA:0]   sum [0:NS];     // A+B outputs of all sub-adders
   wire    [ NS:0]   carry;          // carry outputs to next adder
+  wire    [ NS:0]   unused;
 
   // adder implementation
 
@@ -79,7 +80,7 @@ module math_add_fab #(
       shift_reg #(
         .WIDTH (2 * ADD_WIDTH),
         .DEPTH (n)
-      ) shift_reg_a_i (
+      ) shift_reg_in (
         .clk (clk),
         .ena (ena),
         .din ({dina[n1:n0], dinb[n1:n0]}),
@@ -95,7 +96,8 @@ module math_add_fab #(
     if (n == 0) begin
       assign {carry[n], sum[n]} = a[n] + b[n];
     end else begin
-      assign {carry[n], sum[n]} = a[n] + b[n] + carry_d[n-1];
+      assign {carry[n], sum[n], unused[n]} =
+          {a[n], carry_d[n-1]} + {b[n], carry_d[n-1]};
     end
 
     // output shift register
@@ -103,8 +105,8 @@ module math_add_fab #(
     if (n != NS) begin
       shift_reg #(
         .WIDTH (ADD_WIDTH),
-        .DEPTH (NS)
-      ) shift_reg_a_i (
+        .DEPTH (NS - n)
+      ) shift_reg_out (
         .clk (clk),
         .ena (ena),
         .din (sum[n]),
