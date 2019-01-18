@@ -28,11 +28,11 @@ module axis_bit_corr #(
 
   // parameters
 
-  parameter   NUM_PARALLEL = 8,
+  parameter   NUM_PARALLEL = 8,     //TODO(fzliu): ensure this is pow of 2
   parameter   PRECISION = 6,
   parameter   SLAVE_WIDTH = 64,
   parameter   MASTER_WIDTH = 128,
-  parameter   ADDER_WIDTH = 12,
+  parameter   ADDER_WIDTH = 12,     //TODO(fzliu): ensure this is mult of 2
   parameter   USE_STALL_SIGNAL = 1,
   parameter   SHIFT_DEPTH = 1,
   parameter   CORR_NUM = 0,
@@ -106,8 +106,8 @@ module axis_bit_corr #(
   wire              enable_int;
   wire    [ WN:0]   count;
 
-  wire    [ WN:0]   ram_addra;
-  wire    [ WN:0]   ram_addrb;
+  wire    [ WN:0]   wr_addr;
+  wire    [ WN:0]   rd_addr;
 
   wire    [ PR:0]   data_in;
   wire    [ WA:0]   adder_in0;
@@ -168,9 +168,9 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_wr_addr (
     .clk (clk),
-    .ena (1'b1),
-    .din (count),
-    .dout (ram_addra)
+    .ena (enable_int),
+    .din (count - 1'b1),
+    .dout (wr_addr)
   );
 
   shift_reg #(
@@ -178,9 +178,9 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_rd_addr (
     .clk (clk),
-    .ena (1'b1),
-    .din (enable_int ? count + 1'b1 : count),
-    .dout (ram_addrb)
+    .ena (enable_int),
+    .din (count + 1'b1),  //enable_int ? count + 1'b1 : count
+    .dout (rd_addr)
   );
 
   // first adder input - s_axis_tdata module input
@@ -229,15 +229,15 @@ module axis_bit_corr #(
       .clka (clk),
       .ena (enable_int),  //1'b1
       .wea (1'b1),
-      .addra (ram_addra),
+      .addra (wr_addr),
       .dina (adder_out[n-1]),
       .injectsbiterra (1'b0),
       .injectdbiterra (1'b0),
       .clkb (1'b0),
       .rstb (1'b0),
-      .enb (1'b1),  //enable_int
+      .enb (enable_int),  //1'b1
       .regceb (1'b1),
-      .addrb (ram_addrb),
+      .addrb (rd_addr),
       .doutb (adder_in1[n]),
       .sbiterrb (),
       .dbiterrb ()
@@ -249,9 +249,22 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
+    math_add_fab #(
+      .WIDTH (ADDER_WIDTH),
+      .LATENCY (1)
+    ) math_add_fab (
+      .clk (clk),
+      .rst (1'b0),
+      .ena (enable_int),
+      .dina (adder_in1[n]),
+      .dinb (`CORR(CORR_NUM,n) ? adder_in0 : -adder_in0),
+      .dout (adder_out[n])
+    );
+    /*
     assign adder_out[n] = `CORR(CORR_NUM,n) ?
                           adder_in1[n] + adder_in0 :
                           adder_in1[n] - adder_in0;
+    */
   end
   endgenerate
 
@@ -259,7 +272,7 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (enable_int) begin   //1'b1
-      output_mem[ram_addra] <= adder_out[L0];
+      output_mem[wr_addr] <= adder_out[L0];
     end
   end
 
@@ -280,7 +293,7 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_done (
     .clk (clk),
-    .ena (1'b1),
+    .ena (enable_int),
     .din (batch_done),
     .dout (batch_done_out)
   );

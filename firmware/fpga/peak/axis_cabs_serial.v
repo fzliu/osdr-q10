@@ -163,7 +163,7 @@ module axis_cabs_serial #(
   if (CHANNEL_WIDTH <= 32) begin
 
     math_cabs_16 #()
-    math_cabs (
+    math_cabs_16 (
       .clk (clk),
       .rst (1'b0),
       .ena (enable_int),
@@ -175,7 +175,7 @@ module axis_cabs_serial #(
   end else begin
 
     math_cabs_32 #()
-    math_cabs (
+    math_cabs_32 (
       .clk (clk),
       .rst (1'b0),
       .ena (enable_int),
