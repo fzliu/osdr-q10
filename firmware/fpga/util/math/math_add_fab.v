@@ -95,7 +95,7 @@ module math_add_fab #(
     if (n == 0) begin
       assign {carry[n], sum[n]} = a[n] + b[n];
     end else begin
-      assign {carry[n], sum[n]} = a[n] + b[n] + carry[n-1];
+      assign {carry[n], sum[n]} = a[n] + b[n] + carry_d[n-1];
     end
 
     // output shift register
