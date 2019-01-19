@@ -86,6 +86,7 @@ module axis_bit_corr #(
 
   // internal memories
 
+  reg     [ WA:0]   adder_out [0:L0];
   reg     [ WA:0]   output_mem [0:NP];
 
   // internal registers
@@ -112,15 +113,24 @@ module axis_bit_corr #(
   wire    [ PR:0]   data_in;
   wire    [ WA:0]   adder_in0;
   wire    [ WA:0]   adder_in1 [0:L0];
-  wire    [ WA:0]   adder_out [0:L0];
 
   wire              batch_done_out;
   wire    [ WM:0]   output_pack;
   wire              m_axis_frame;
 
-  // initialize final memory column
+  // initialize adder output registers
 
   genvar n;
+  generate
+  for (n = 0; n < CORR_LENGTH; n = n + 1) begin
+    initial begin
+      adder_out[n] <= 'b0;
+    end
+  end
+  endgenerate
+
+  // initialize final memory column
+
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     initial begin
@@ -249,7 +259,7 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    math_add_fab #(
+    /*math_add_fab #(
       .WIDTH (ADDER_WIDTH),
       .LATENCY (1)
     ) math_add_fab (
@@ -259,12 +269,12 @@ module axis_bit_corr #(
       .dina (adder_in1[n]),
       .dinb (`CORR(CORR_NUM,n) ? adder_in0 : -adder_in0),
       .dout (adder_out[n])
-    );
-    /*
-    assign adder_out[n] = `CORR(CORR_NUM,n) ?
-                          adder_in1[n] + adder_in0 :
-                          adder_in1[n] - adder_in0;
-    */
+    );*/
+    always @(posedge clk) begin
+      adder_out[n] <= `CORR(CORR_NUM,n) ?
+                       adder_in1[n] + adder_in0 :
+                       adder_in1[n] - adder_in0;
+    end
   end
   endgenerate
 

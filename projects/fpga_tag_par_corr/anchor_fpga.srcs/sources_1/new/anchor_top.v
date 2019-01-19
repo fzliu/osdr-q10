@@ -23,11 +23,11 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 5,
+  parameter   NUM_TAGS = 10,
+  parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   CORR_OFFSET = 0,
 
-  parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 32,
   parameter   ADDER_WIDTH = 12,
   parameter   SAMPS_WIDTH = 64,
