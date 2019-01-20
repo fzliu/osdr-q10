@@ -28,11 +28,11 @@ module axis_bit_corr #(
 
   // parameters
 
-  parameter   NUM_PARALLEL = 8,     //TODO(fzliu): ensure this is pow of 2
+  parameter   NUM_PARALLEL = 8,     //T ODO(fzliu): ensure this is pow of 2
   parameter   PRECISION = 6,
   parameter   SLAVE_WIDTH = 64,
   parameter   MASTER_WIDTH = 128,
-  parameter   ADDER_WIDTH = 12,     //TODO(fzliu): ensure this is mult of 2
+  parameter   ADDER_WIDTH = 12,     // TODO(fzliu): ensure this is mult of 2
   parameter   USE_STALL_SIGNAL = 1,
   parameter   SHIFT_DEPTH = 1,
   parameter   CORR_NUM = 0,

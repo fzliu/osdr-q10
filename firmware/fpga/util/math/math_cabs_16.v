@@ -64,8 +64,8 @@ module math_cabs_16 (
     .clk (clk),
     .ena (ena),
     .rst (rst),
-    .dina ({5'h0000000, mult_a_out}),  // mult_a_out is positive
-    .dinb ({5'h0000000, mult_b_out}),  // mult_b_out is positive
+    .dina ({5'h00, mult_a_out}),  // mult_a_out is positive
+    .dinb ({5'h00, mult_b_out}),  // mult_b_out is positive
     .dout (add_out)
   );
 

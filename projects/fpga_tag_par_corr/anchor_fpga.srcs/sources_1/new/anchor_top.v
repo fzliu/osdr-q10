@@ -267,7 +267,7 @@ module anchor_top #(
   axis_fifo_async #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
-    .FIFO_DEPTH (65536),
+    .FIFO_DEPTH (131072),
     .READ_LATENCY (2)
   ) axis_fifo_sync (
     .s_axis_clk (d_clk),
