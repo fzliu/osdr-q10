@@ -47,55 +47,37 @@ module filt_boxcar #(
 
 );
 
-  // shift register
-
-  reg     [ WD:0]   shift [LF:0];
-
   // internal registers
 
   reg     [ WD:0]   sum_diff = 'b0;
   reg     [ WD:0]   sum_reg = 'b0;
   reg     [ WD:0]   avg_out_reg = 'b0;
 
-  // initialize shift register memory
+  // internal signals
 
-  genvar n;
-  generate
-  for (n = 0; n < FILTER_LENGTH; n = n + 1) begin
-    initial begin
-      shift[n] = 'b0;
-    end
-  end
-  endgenerate
+  wire    [ WD:0]   shift_out;
 
-  // shift register implementation
+  // shift register instantiation
 
-  generate
-  for (n = 0; n < FILTER_LENGTH; n = n + 1) begin
-    always @(posedge clk) begin
-      if (rst) begin
-        shift[n] <= 'b0;
-      end else if (ena) begin
-        shift[n] <= (n == 0) ? data_in : shift[n-1];
-      end
-    end
-  end
-  endgenerate
+  shift_reg #(
+    .WIDTH (DATA_WIDTH),
+    .DEPTH (FILTER_LENGTH)
+  ) shift_reg (
+    .clk (clk),
+    .rst (rst),
+    .ena (ena),
+    .din (data_in),
+    .dout (shift_out)
+  );
 
   // boxcar filter implementation
 
   always @(posedge clk) begin
     if (rst) begin
       sum_diff <= 'b0;
-    end else if (ena) begin
-      sum_diff <= data_in - shift[LF];
-    end
-  end
-
-  always @(posedge clk) begin
-    if (rst) begin
       sum_reg <= 'b0;
     end else if (ena) begin
+      sum_diff <= data_in - shift_out;
       sum_reg <= sum_reg + sum_diff;
     end
   end
@@ -106,7 +88,7 @@ module filt_boxcar #(
     if (rst) begin
       avg_out_reg <= 'b0;
     end else begin
-      avg_out_reg <= sum_reg >>> FILTER_POWER;
+      avg_out_reg <= (sum_reg >>> FILTER_POWER);
     end
   end
 

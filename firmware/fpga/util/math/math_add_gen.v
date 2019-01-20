@@ -3,7 +3,7 @@
 // Engineer: Frank Liu
 //
 // Description
-// Signed, variable bit width, fabric-based adder.
+// Signed generic (i.e. fabric-based with variable bit width) adder.
 //
 // Parameters
 // WIDTH: adder bit width
@@ -82,6 +82,7 @@ module math_add_fab #(
         .DEPTH (n)
       ) shift_reg_in (
         .clk (clk),
+        .rst (rst),
         .ena (ena),
         .din ({dina[n1:n0], dinb[n1:n0]}),
         .dout ({a[n], b[n]})
@@ -108,6 +109,7 @@ module math_add_fab #(
         .DEPTH (NS - n)
       ) shift_reg_out (
         .clk (clk),
+        .rst (rst),
         .ena (ena),
         .din (sum[n]),
         .dout (dout[n1:n0])

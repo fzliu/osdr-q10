@@ -45,6 +45,7 @@ module math_add_96 (
     .DEPTH (1)
   ) shift_reg_dinb_u (
     .clk (clk),
+    .rst (rst),
     .ena (ena),
     .din (dinb[95:48]),
     .dout (dinb_u_d)
@@ -217,6 +218,7 @@ module math_add_96 (
     .DEPTH (1)
   ) shift_reg_dout_l (
     .clk (clk),
+    .rst (rst),
     .ena (ena),
     .din (dout_l),
     .dout (dout[47:0])

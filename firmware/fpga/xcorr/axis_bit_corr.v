@@ -18,7 +18,7 @@
 //
 // Signals
 // enable  :  N/A
-// reset   :  active-high
+// reset   :  N/A
 // latency :  variable (dependent on correlator length)
 // output  :  registered
 //
@@ -28,7 +28,7 @@ module axis_bit_corr #(
 
   // parameters
 
-  parameter   NUM_PARALLEL = 8,     //T ODO(fzliu): ensure this is pow of 2
+  parameter   NUM_PARALLEL = 8,     // TODO(fzliu): ensure this is pow of 2
   parameter   PRECISION = 6,
   parameter   SLAVE_WIDTH = 64,
   parameter   MASTER_WIDTH = 128,
@@ -178,6 +178,7 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_wr_addr (
     .clk (clk),
+    .rst (1'b0),
     .ena (enable_int),
     .din (count - 1'b1),
     .dout (wr_addr)
@@ -188,6 +189,7 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_rd_addr (
     .clk (clk),
+    .rst (1'b0),
     .ena (enable_int),
     .din (count + 1'b1),  //enable_int ? count + 1'b1 : count
     .dout (rd_addr)
@@ -200,6 +202,7 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_din (
     .clk (clk),
+    .rst (1'b0),
     .ena (enable_int),  //1'b1
     .din (s_axis_tdata_unpack[count][PR:0]),
     .dout (data_in)
@@ -259,17 +262,6 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    /*math_add_fab #(
-      .WIDTH (ADDER_WIDTH),
-      .LATENCY (1)
-    ) math_add_fab (
-      .clk (clk),
-      .rst (1'b0),
-      .ena (enable_int),
-      .dina (adder_in1[n]),
-      .dinb (`CORR(CORR_NUM,n) ? adder_in0 : -adder_in0),
-      .dout (adder_out[n])
-    );*/
     always @(posedge clk) begin
       adder_out[n] <= `CORR(CORR_NUM,n) ?
                        adder_in1[n] + adder_in0 :
@@ -303,6 +295,7 @@ module axis_bit_corr #(
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_done (
     .clk (clk),
+    .rst (1'b0),
     .ena (enable_int),
     .din (batch_done),
     .dout (batch_done_out)

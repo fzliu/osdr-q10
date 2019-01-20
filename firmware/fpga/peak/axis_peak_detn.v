@@ -14,8 +14,8 @@
 //
 // Signals
 // enable  :  N/A
-// reset   :  active-high
-// latency :  N/A
+// reset   :  N/A
+// latency :  BURST_LENGTH
 // output  :  unregistered
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,8 +32,8 @@ module axis_peak_detn #(
   // derived parameters
 
   localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
-  localparam  COUNT_WIDTH = log2(BURST_LENGTH),
-  localparam  BOXCAR_WIDTH = CHANNEL_WIDTH / 2 + COUNT_WIDTH - 1,
+  localparam  COUNT_WIDTH = log2(BURST_LENGTH),   // + COUNT_WIDTH
+  localparam  BOXCAR_WIDTH = CHANNEL_WIDTH / 2,
   localparam  PEAK_THRESH_SHIFT = log2(PEAK_THRESH_MULT - 1),
 
   // bit width parameters
@@ -77,9 +77,6 @@ module axis_peak_detn #(
   reg     [ NC:0]   has_peak = 'b0;
   reg               has_peak_any_d = 'b0;
 
-  reg               m_axis_tvalid_reg = 'b0;
-  reg               m_axis_tlast_reg = 'b0;
-
   // internal signals
 
   wire              burst_start;
@@ -88,6 +85,7 @@ module axis_peak_detn #(
 
   wire    [ WN:0]   mem_count;
   wire              mem_ready;
+  wire              shift_ena;
 
   wire              m_axis_frame;
 
@@ -102,6 +100,7 @@ module axis_peak_detn #(
     .DEPTH (BURST_LENGTH / 2)
   ) shift_reg_data_abs (
     .clk (clk),
+    .rst (1'b0),
     .ena (s_axis_tvalid),
     .din (s_axis_tdata_abs),
     .dout (s_axis_tdata_abs_d)
@@ -157,7 +156,9 @@ module axis_peak_detn #(
     .value (mem_count)
   );
 
-  assign mem_ready = ~mem_count[WN];  // mem_count != BURST_LENGTH
+  assign mem_ready = ~mem_count[WN];    // mem_count != BURST_LENGTH
+  assign shift_ena = (m_axis_frame & mem_ready) |     // read enable
+                     (~s_axis_tvalid & ~mem_ready);   // write enable
 
   // master interface
 
@@ -168,7 +169,8 @@ module axis_peak_detn #(
     .DEPTH (BURST_LENGTH)
   ) shift_reg_data (
     .clk (clk),
-    .ena (~mem_ready | m_axis_tready),
+    .rst (1'b0),
+    .ena (shift_ena),
     .din (s_axis_tdata),
     .dout (m_axis_tdata)
   );

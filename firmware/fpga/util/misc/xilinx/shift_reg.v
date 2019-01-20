@@ -2,12 +2,14 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Parameterizable shift register utility, Xilinx devices.
-// DEPTH must be >= 1 (DEPTH = 1 implies a 1-cycle shift register).
+// Description
+// Parameterizable shift register utility, Xilinx devices. DEPTH must be >= 1
+// (DEPTH = 1 implies a 1-cycle shift register).
 //
+// Signals
 // enable  :  active-high
-// reset   :  N/A
-// latency :  variable
+// reset   :  active-high
+// latency :  DEPTH
 // output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +20,8 @@ module shift_reg #(
 
   parameter   WIDTH = 1,
   parameter   DEPTH = 7,
-  parameter   USE_FFS = 1,
+  parameter   USE_SRL = 0,
+  parameter   DEVICE = "7SERIES",
 
   // derived parameters
 
@@ -37,6 +40,7 @@ module shift_reg #(
   // master interface
 
   input             clk,
+  input             rst,
   input             ena,
 
   // data interface
@@ -54,39 +58,22 @@ module shift_reg #(
 
   wire    [ N0:0]   shift [W0:0];
 
+  // shift register implementation
+
   genvar n, c;
   generate
   for (n = 0; n < WIDTH; n = n + 1) begin
 
-    if (USE_FFS) begin
-
-      // initialize flip-flops
-
-      initial begin
-        shift_ff[n] <= 'b0;
-      end
-
-      // shift register implementation
-
-      always @(posedge clk) begin
-        if (ena) begin
-          shift_ff[n] <= (D0 == 0) ? din[n] : {shift_ff[n][D0-1:0], din[n]};
-        end
-      end
-
-      // assign outputs
-
-      assign dout[n] = shift_ff[n][D0];
-
-    end else begin
+    if (USE_SRL && DEVICE == "7SERIES") begin
 
       // assign inputs
 
       assign shift[n][N0] = din[n];
 
-      // LUTRAM-based shift register
+      if (DEPTH < 16) begin
 
-      if (DEPTH < 16) begin // single SRL16 for short shift registers
+        // single SRL16 for short shift registers
+
         SRL16E #(
           .INIT(16'h0000)
         ) SRL16E_inst (
@@ -99,7 +86,11 @@ module shift_reg #(
           .CLK (clk),
           .D (shift[n][0])
         );
-      end else begin // cascade SRL32 for long shift registers
+
+      end else begin
+
+        // cascade SRL32 for long shift registers
+
         for (c = 0; c < NUM_CASCADE; c = c + 1) begin
           SRLC32E #(
             .INIT (32'h00000000)
@@ -112,6 +103,7 @@ module shift_reg #(
             .D (shift[n][c+1])
           );
         end
+
         SRLC32E #(
           .INIT (32'h00000000)
         ) SRLC32E_inst (
@@ -122,7 +114,30 @@ module shift_reg #(
           .CLK (clk),
           .D (shift[n][0])
         );
+
       end
+
+    end else begin
+
+      // initialize flip-flops
+
+      initial begin
+        shift_ff[n] <= 'b0;
+      end
+
+      // shift flops LSB to MSB
+
+      always @(posedge clk) begin
+        if (rst) begin
+          shift_ff[n] <= 'b0;
+        end else if (ena) begin
+          shift_ff[n] <= (D0 == 0) ? din[n] : {shift_ff[n][D0-1:0], din[n]};
+        end
+      end
+
+      // assign outputs
+
+      assign dout[n] = shift_ff[n][D0];
 
     end
 

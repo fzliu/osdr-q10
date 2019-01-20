@@ -148,6 +148,7 @@ module ad9361_samp_filt #(
       .DEPTH (NUM_DELAY)
     ) shift_reg_iq0 (
       .clk (clk),
+      .rst (1'b0),
       .ena (1'b1),
       .din (data_iq[a]),
       .dout (data_out_iq[a])
@@ -158,6 +159,7 @@ module ad9361_samp_filt #(
       .DEPTH (NUM_DELAY)
     ) shift_reg_iq1 (
       .clk (clk),
+      .rst (1'b0),
       .ena (1'b1),
       .din (data_iq[b]),
       .dout (data_out_iq[b])

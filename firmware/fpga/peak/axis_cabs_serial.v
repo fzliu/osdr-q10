@@ -191,6 +191,7 @@ module axis_cabs_serial #(
     .DEPTH (CABS_DELAY)
   ) shift_reg_count (
     .clk (clk),
+    .rst (1'b0),
     .ena (enable_int),
     .din (count),
     .dout (count_out)
@@ -201,6 +202,7 @@ module axis_cabs_serial #(
     .DEPTH (CABS_DELAY)
   ) shift_reg_done (
     .clk (clk),
+    .rst (1'b0),
     .ena (enable_int),
     .din (batch_done),
     .dout (batch_done_out)
@@ -246,6 +248,7 @@ module axis_cabs_serial #(
     .DEPTH (CABS_DELAY+1)
   ) shift_reg_data (
     .clk (clk),
+    .rst (1'b0),
     .ena (enable_int),
     .din (s_axis_tdata),
     .dout (data_out)
