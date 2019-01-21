@@ -20,18 +20,20 @@ templ = Template("""
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: List of correlators used by the system.
+// Description
+// List of correlators used by the system. Note: the zeroth correlator is at
+// the bottom of the module.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-localparam            NUM_CORRS = $num_corrs,
+localparam            TOTAL_CORRS = $num_corrs,
 localparam            CORR_LENGTH = $corr_length,
-localparam            CORRS_WIDTH = NUM_CORRS * CORR_LENGTH,
+localparam            CORRS_WIDTH = TOTAL_CORRS * CORR_LENGTH,
 
 localparam            L0 = CORR_LENGTH - 1,
 localparam            W0 = CORRS_WIDTH - 1,
 
-localparam  [ W0:0]   CORRELATORS =
+localparam  [ 0:W0]   CORRELATORS =
 $correlators,
 """)
 
@@ -45,7 +47,7 @@ def main(args):
     (num_corrs, corr_length) = templates.shape
 
     corrs = "{"
-    for bits in templates:
+    for bits in templates[::-1]:
         line = ""
         for bit in bits:
             line += "1'b{0}, ".format(bit)

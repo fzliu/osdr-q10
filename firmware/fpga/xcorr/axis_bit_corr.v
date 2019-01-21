@@ -28,24 +28,29 @@ module axis_bit_corr #(
 
   // parameters
 
-  parameter   NUM_PARALLEL = 8,     // TODO(fzliu): ensure this is pow of 2
+  parameter   NUM_PARALLEL = 8,     // TODO(fzliu): ensure this is 2^N
   parameter   PRECISION = 6,
-  parameter   SLAVE_WIDTH = 64,
-  parameter   MASTER_WIDTH = 128,
-  parameter   ADDER_WIDTH = 12,     // TODO(fzliu): ensure this is mult of 2
+  parameter   SLAVE_WIDTH = 64,     // TODO(fzliu): compute using PRECISION
+  parameter   MASTER_WIDTH = 128,   // TODO(fzliu): compute using PRECISION
+  parameter   ADDER_WIDTH = 12,     // TODO(fzliu): ensure this is 2*N
   parameter   USE_STALL_SIGNAL = 1,
   parameter   SHIFT_DEPTH = 1,
-  parameter   CORR_NUM = 0,
 
   // correlator parameters
 
-  `include "correlators.vh"
+  parameter   NUM_CORRS = 1,        // TODO(fzliu): ensure this is 2^N
+  parameter   CORR_OFFSET = 0,
+  parameter   CORR_LENGTH = 1,
+  parameter   CORRELATORS = {1'b0},
+
+  localparam  N0 = NUM_CORRS - 1,
+  localparam  L0 = CORR_LENGTH - 1,
 
   // derived parameters
 
   localparam  WAVE_WIDTH = SLAVE_WIDTH / NUM_PARALLEL,
   localparam  FILT_WIDTH = MASTER_WIDTH / NUM_PARALLEL,
-  localparam  COUNT_WIDTH = log2(NUM_PARALLEL - 1),
+  localparam  COUNT_WIDTH = log2(NUM_PARALLEL * NUM_CORRS - 1),
 
   // bit width parameters
 
@@ -82,14 +87,16 @@ module axis_bit_corr #(
   `include "func_sqrt.vh"
   `include "sign_ext.vh"
 
-  `define CORR(i,j) CORRELATORS[W0-(i*CORR_LENGTH+j)]
+  `define CORRS(n) CORRELATORS[(n)*CORR_LENGTH+:CORR_LENGTH]
 
   // internal memories
 
   reg     [ WA:0]   adder_out [0:L0];
-  reg     [ WA:0]   output_mem [0:NP];
+  reg     [ WA:0]   output_ram [0:NP];
 
   // internal registers
+
+  reg     [ L0:0]   correlator = `CORRS(CORR_OFFSET);
 
   reg               batch_done_out_d = 'b0;
   reg               valid_out = 'b0;
@@ -103,15 +110,18 @@ module axis_bit_corr #(
   wire    [ WW:0]   s_axis_tdata_unpack [0:NP];
 
   wire              stall;
-  wire              batch_done;
   wire              enable_int;
-  wire    [ WN:0]   count;
+  wire              batch_done;
 
+  wire    [ WN:0]   count;
+  wire    [ WN:0]   count_prev;
+  wire    [ WN:0]   count_next;
   wire    [ WN:0]   wr_addr;
   wire    [ WN:0]   rd_addr;
 
+  wire              corr_idx;
   wire    [ PR:0]   data_in;
-  wire    [ WA:0]   adder_in0;
+  wire    [ WA:0]   adder_in0 [0:L0];
   wire    [ WA:0]   adder_in1 [0:L0];
 
   wire              batch_done_out;
@@ -124,7 +134,7 @@ module axis_bit_corr #(
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
     initial begin
-      adder_out[n] <= 'b0;
+      adder_out[n] = 'b0;
     end
   end
   endgenerate
@@ -134,7 +144,7 @@ module axis_bit_corr #(
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     initial begin
-      output_mem[n] <= 'b0;
+      output_ram[n] = 'b0;
     end
   end
   endgenerate
@@ -155,9 +165,8 @@ module axis_bit_corr #(
     assign stall = USE_STALL_SIGNAL ? valid_out & m_axis_tvalid : 1'b0;
   endgenerate
 
-  assign batch_done = (count == NP);
   assign enable_int = ~stall & s_axis_tvalid;
-  assign s_axis_tready = ~stall & batch_done;
+  assign s_axis_tready = ~stall & (count == NP);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
   // counter (for tracking current input set) logic
@@ -173,6 +182,12 @@ module axis_bit_corr #(
     .value (count)
   );
 
+  assign batch_done = (count % NUM_PARALLEL) == NP;
+  assign count_prev = count - 1'b1;
+  assign count_next = count + 1'b1;
+
+  // set read and write addresses based on current count
+
   shift_reg #(
     .WIDTH (COUNT_WIDTH),
     .DEPTH (SHIFT_DEPTH)
@@ -180,7 +195,7 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (count - 1'b1),
+    .din (count_prev),
     .dout (wr_addr)
   );
 
@@ -191,9 +206,21 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (count + 1'b1),  //enable_int ? count + 1'b1 : count
+    .din (count_next),  //enable_int ? count + 1'b1 : count
     .dout (rd_addr)
   );
+
+  // set correlator for current batch
+
+  assign corr_idx = count_next / NUM_PARALLEL;
+
+  always @(posedge clk) begin
+    if (enable_int & batch_done) begin
+      correlator <= `CORRS(corr_idx+CORR_OFFSET);
+    end else begin
+      correlator <= correlator;
+    end
+  end
 
   // first adder input - s_axis_tdata module input
 
@@ -208,7 +235,13 @@ module axis_bit_corr #(
     .dout (data_in)
   );
 
-  assign adder_in0 = `SIGN_EXT(data_in,PRECISION,ADDER_WIDTH);
+  generate
+  for (n = 0; n < CORR_LENGTH; n = n + 1) begin
+    assign adder_in0[n] = correlator[CORR_LENGTH-n-1] ?
+                          `SIGN_EXT(data_in,PRECISION,ADDER_WIDTH) :
+                          -`SIGN_EXT(data_in,PRECISION,ADDER_WIDTH);
+  end
+  endgenerate
 
   // second adder input - previous value in chain
 
@@ -263,9 +296,7 @@ module axis_bit_corr #(
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
     always @(posedge clk) begin
-      adder_out[n] <= `CORR(CORR_NUM,n) ?
-                       adder_in1[n] + adder_in0 :
-                       adder_in1[n] - adder_in0;
+      adder_out[n] <= adder_in1[n] + adder_in0[n];
     end
   end
   endgenerate
@@ -274,7 +305,7 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (enable_int) begin   //1'b1
-      output_mem[wr_addr] <= adder_out[L0];
+      output_ram[wr_addr] <= adder_out[L0];
     end
   end
 
@@ -284,11 +315,12 @@ module axis_bit_corr #(
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     localparam n0 = n * FILT_WIDTH;
     localparam n1 = n0 + WF;
-    assign output_pack[n1:n0] = `SIGN_EXT(output_mem[n],ADDER_WIDTH,FILT_WIDTH);
+    assign output_pack[n1:n0] = `SIGN_EXT(output_ram[n],ADDER_WIDTH,FILT_WIDTH);
   end
   endgenerate
 
   // valid_out logic
+  // this stage is required to prevent stalling
 
   shift_reg #(
     .WIDTH (1),
@@ -334,14 +366,7 @@ module axis_bit_corr #(
 
   // SIMULATION
 
-  wire      [ L0:0]   _correlator;
   wire      [ WF:0]   _m_axis_tdata_unpack [0:NP];
-
-  generate
-  for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    assign _correlator[n] = `CORR(CORR_NUM,n);
-  end
-  endgenerate
 
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin

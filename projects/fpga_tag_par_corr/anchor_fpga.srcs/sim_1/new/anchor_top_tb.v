@@ -40,7 +40,7 @@ module anchor_top_tb;
 
   reg               ebi_nrde = 'b1;
 
-  wire              ready;
+  wire              ebi_ready;
   wire    [ 15:0]   ebi_data;
 
   reg     [ 11:0]   mema0 [0:1051];
@@ -147,7 +147,7 @@ module anchor_top_tb;
     .sync_in (1'bz),
     .ebi_nrde (ebi_nrde),
     .ebi_data (ebi_data),
-    .ready (ready),
+    .ebi_ready (ebi_ready),
     .led_out ()
   ); 
 
@@ -173,6 +173,10 @@ module anchor_top_tb;
   wire    [ NT:0]   cabs_axis_tready = anchor_top.cabs_axis_tready;
   wire    [ WP:0]   cabs_axis_tdata = anchor_top.cabs_axis_tdata;
   wire    [ WP:0]   cabs_axis_tdata_abs = anchor_top.cabs_axis_tdata_abs;
+  wire    [ NT:0]   clkx_axis_tvalid = anchor_top.clkx_axis_tvalid;
+  wire    [ NT:0]   clkx_axis_tready = anchor_top.clkx_axis_tready;
+  wire    [ WP:0]   clkx_axis_tdata = anchor_top.clkx_axis_tdata;
+  wire    [ WP:0]   clkx_axis_tdata_abs = anchor_top.clkx_axis_tdata_abs;
   wire    [ NT:0]   peak_axis_tvalid = anchor_top.peak_axis_tvalid;
   wire    [ NT:0]   peak_axis_tready = anchor_top.peak_axis_tready;
   wire    [ WP:0]   peak_axis_tdata = anchor_top.peak_axis_tdata;

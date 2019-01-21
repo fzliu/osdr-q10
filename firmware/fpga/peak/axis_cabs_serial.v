@@ -71,7 +71,7 @@ module axis_cabs_serial #(
 
   // internal memories
 
-  reg     [ WB:0]   cabs_mem [0:NC];
+  reg     [ WB:0]   cabs_ram [0:NC];
 
   // internal registers
 
@@ -112,7 +112,7 @@ module axis_cabs_serial #(
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
     initial begin
-      cabs_mem[n] <= 'b0;
+      cabs_ram[n] <= 'b0;
     end
   end
   endgenerate
@@ -212,7 +212,7 @@ module axis_cabs_serial #(
 
   always @(posedge clk) begin
     if (enable_int) begin
-      cabs_mem[count_out] <= cabs_dout; // overflow unlikely; discard MSB
+      cabs_ram[count_out] <= cabs_dout; // overflow unlikely; discard MSB
     end
   end
 
@@ -220,7 +220,7 @@ module axis_cabs_serial #(
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin : repack_gen
     localparam n0 = n * CHANNEL_WIDTH;
     localparam n1 = n0 + WC;
-    assign data_abs_out[n1:n0] = {{PAD_WIDTH{1'b0}}, cabs_mem[n]};
+    assign data_abs_out[n1:n0] = {{PAD_WIDTH{1'b0}}, cabs_ram[n]};
   end
   endgenerate
 

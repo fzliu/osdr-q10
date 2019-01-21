@@ -32,8 +32,8 @@ module axis_peak_detn #(
   // derived parameters
 
   localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
-  localparam  COUNT_WIDTH = log2(BURST_LENGTH),   // + COUNT_WIDTH
-  localparam  BOXCAR_WIDTH = CHANNEL_WIDTH / 2,
+  localparam  COUNT_WIDTH = log2(BURST_LENGTH),
+  localparam  BOXCAR_WIDTH = CHANNEL_WIDTH / 2 + COUNT_WIDTH - 1,
   localparam  PEAK_THRESH_SHIFT = log2(PEAK_THRESH_MULT - 1),
 
   // bit width parameters

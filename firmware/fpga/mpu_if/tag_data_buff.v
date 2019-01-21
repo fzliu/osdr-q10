@@ -16,7 +16,7 @@ module tag_data_buff #(
 
   // parameters
 
-  parameter   NUM_TAGS = 20,
+  parameter   NUM_TAGS = 10,
   parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 64,
   parameter   FIFO_DEPTH = 128,
@@ -55,8 +55,8 @@ module tag_data_buff #(
   // microcontroller interface
 
   input             rd_ena,
-  output            ready,
-  output  [ WR:0]   data_out
+  output            rd_ready,
+  output  [ WR:0]   rd_data
 
 );
 
@@ -107,7 +107,7 @@ module tag_data_buff #(
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
     .READ_MODE ("std"),
-    .FIFO_READ_LATENCY (1),
+    .FIFO_READ_LATENCY (1),   // memory latch is OK for EBI bus
     .READ_DATA_WIDTH (READ_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
@@ -126,7 +126,7 @@ module tag_data_buff #(
     .wr_ack (),
     .wr_rst_busy (fifo_wr_rst_busy),
     .rd_en (rd_ena & ~rd_ena_d),
-    .dout (data_out),
+    .dout (rd_data),
     .empty (fifo_empty),
     .rd_rst_busy (fifo_rd_rst_busy),
     .prog_empty (),
@@ -142,7 +142,7 @@ module tag_data_buff #(
 
   // output control signals
 
-  assign ready = ~fifo_empty;
+  assign rd_ready = ~fifo_empty;
 
   // SIMULATION
   

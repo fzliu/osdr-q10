@@ -2,7 +2,8 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Anchor clock generation module.
+// Description
+// Anchor clock generation module.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,8 +24,9 @@ module anchor_clk_gen (
   wire              pll0_lock;
 
   /**
-   * Input: 61.44MHz (maximum)
-   * Output 0: 61.44MHz, -pi/2 phase shift
+   * Input: 50MHz (maximum)
+   * Output 0: 50MHz, -pi/2 phase shift
+   * Output 1: 200MHz
    */
 
   PLLE2_BASE #(
@@ -39,7 +41,7 @@ module anchor_clk_gen (
     .CLKOUT1_DIVIDE (4),
     .CLKOUT1_PHASE (0.000),
     .CLKOUT1_DUTY_CYCLE (0.500)
-  ) plle2_base_0 (
+  ) plle2_base (
     .CLKOUT0 (pll0_out[0]),
     .CLKOUT1 (pll0_out[1]),
     .CLKOUT2 (pll0_out[2]),
@@ -54,13 +56,13 @@ module anchor_clk_gen (
     .CLKFBIN (pll0_fb)
   );
 
-  BUFGCE bufgce_0_0 (
+  BUFGCE bufgce_0 (
     .I (pll0_out[0]),
     .CE (pll0_lock),
     .O (wr_clk)
   );
 
-  BUFGCE bufgce_0_1 (
+  BUFGCE bufgce_1 (
     .I (pll0_out[1]),
     .CE (pll0_lock),
     .O (rd_clk)

@@ -23,19 +23,22 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 12,
+  parameter   NUM_TAGS = 1,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   CORR_OFFSET = 0,
 
   parameter   CHANNEL_WIDTH = 32,
-  parameter   ADDER_WIDTH = 12,
   parameter   SAMPS_WIDTH = 64,
-  parameter   EBI_WIDTH = 16,
+  parameter   ADDER_WIDTH = 12,
 
   parameter   CABS_DELAY = 10,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
+
+  // correlator parameters
+
+  `include "correlators.vh"
 
   // derived parameters
 
@@ -47,7 +50,6 @@ module anchor_top #(
 
   localparam  NT = NUM_TAGS - 1,
   localparam  WS = SAMPS_WIDTH - 1,
-  localparam  WE = EBI_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
   localparam  WI = INPUT_WIDTH - 1,
   localparam  WP = PACKED_WIDTH - 1
@@ -113,8 +115,8 @@ module anchor_top #(
   // microprocessor interface (comms)
 
   input             ebi_nrde,
-  output  [ WE:0]   ebi_data,
-  output            ready,
+  output  [ 15:0]   ebi_data,
+  output            ebi_ready,
 
   // LED interface
 
@@ -139,7 +141,7 @@ module anchor_top #(
   wire              ad9361_axis_tready;
   wire    [ WS:0]   ad9361_axis_tdata;
 
-  // internal signals (clock conv axi-stream)
+  // internal signals (data buffer)
 
   wire              fifo_axis_tvalid;
   wire              fifo_axis_tready;
@@ -151,7 +153,7 @@ module anchor_top #(
   wire    [ NT:0]   distrib_axis_tready;
   wire    [ WI:0]   distrib_axis_tdata;
 
-  // internal signals (bitcorr)
+  // internal signals (bit correlation)
 
   wire    [ NT:0]   corr_axis_tvalid;
   wire    [ NT:0]   corr_axis_tready;
@@ -163,6 +165,13 @@ module anchor_top #(
   wire    [ NT:0]   cabs_axis_tready;
   wire    [ WP:0]   cabs_axis_tdata;
   wire    [ WP:0]   cabs_axis_tdata_abs;
+
+  // internal signals (clock domain crossing)
+
+  wire    [ NT:0]   clkx_axis_tvalid;
+  wire    [ NT:0]   clkx_axis_tready;
+  wire    [ WP:0]   clkx_axis_tdata;
+  wire    [ WP:0]   clkx_axis_tdata_abs;
 
   // internal signals (peak detect)
 
@@ -269,7 +278,7 @@ module anchor_top #(
     .DATA_WIDTH (SAMPS_WIDTH),
     .FIFO_DEPTH (131072),
     .READ_LATENCY (2)
-  ) axis_fifo_sync (
+  ) axis_fifo_async (
     .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
     .m_axis_clk (m_clk),
@@ -319,7 +328,10 @@ module anchor_top #(
       .ADDER_WIDTH (ADDER_WIDTH),
       .USE_STALL_SIGNAL (0),
       .SHIFT_DEPTH (2),
-      .CORR_NUM (n + CORR_OFFSET)
+      .NUM_CORRS (1),
+      .CORR_OFFSET (CORR_OFFSET + n),
+      .CORR_LENGTH (CORR_LENGTH),
+      .CORRELATORS (CORRELATORS)
     ) axis_bit_corr (
       .clk (c_clk),
       .s_axis_tvalid (distrib_axis_tvalid[n]),
@@ -348,6 +360,25 @@ module anchor_top #(
       .m_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0])
     );
 
+    // clock conversion (compute -> master)
+
+    axis_fifo_async #(
+      .MEMORY_TYPE ("block"),
+      .DATA_WIDTH (2 * DATA_WIDTH),
+      .FIFO_DEPTH (16),
+      .READ_LATENCY (2)
+    ) axis_fifo_async (
+      .s_axis_clk (c_clk),
+      .s_axis_rst (1'b0),
+      .m_axis_clk (m_clk),
+      .s_axis_tvalid (cabs_axis_tvalid[n]),
+      .s_axis_tready (cabs_axis_tready[n]),
+      .s_axis_tdata ({cabs_axis_tdata[j1:j0], cabs_axis_tdata_abs[j1:j0]}),
+      .m_axis_tvalid (clkx_axis_tvalid[n]),
+      .m_axis_tready (clkx_axis_tready[n]),
+      .m_axis_tdata ({clkx_axis_tdata[j1:j0], clkx_axis_tdata_abs[j1:j0]})
+    );
+
     // peak detection
 
     axis_peak_detn #(
@@ -356,11 +387,11 @@ module anchor_top #(
       .PEAK_THRESH_MULT (PEAK_THRESH_MULT),
       .BURST_LENGTH (BURST_LENGTH)
     ) axis_peak_detn (
-      .clk (c_clk),
-      .s_axis_tvalid (cabs_axis_tvalid[n]),
-      .s_axis_tready (cabs_axis_tready[n]),
-      .s_axis_tdata (cabs_axis_tdata[j1:j0]),
-      .s_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0]),
+      .clk (m_clk),
+      .s_axis_tvalid (clkx_axis_tvalid[n]),
+      .s_axis_tready (clkx_axis_tready[n]),
+      .s_axis_tdata (clkx_axis_tdata[j1:j0]),
+      .s_axis_tdata_abs (clkx_axis_tdata_abs[j1:j0]),
       .m_axis_tvalid (peak_axis_tvalid[n]),
       .m_axis_tready (peak_axis_tready[n]),
       .m_axis_tdata (peak_axis_tdata[j1:j0]),
@@ -370,18 +401,16 @@ module anchor_top #(
   end
   endgenerate
 
-  // axi-stream fan-in (compute -> master)
+  // axi-stream fan-in
 
   axis_fan_in #(
     .NUM_FANIN (NUM_TAGS),
     .DATA_WIDTH (DATA_WIDTH),
-    .USE_FIFOS (1),
-    .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (2),
+    .USE_FIFOS (0),
     .USE_AXIS_TLAST (1)
   ) axis_fan_in (
-    .s_axis_clk (c_clk),
-    .s_axis_rst (1'b0),
+    .s_axis_clk (),
+    .s_axis_rst (),
     .m_axis_clk (m_clk),
     .m_axis_rst (1'b0),
     .s_axis_tvalid (peak_axis_tvalid),
@@ -401,8 +430,8 @@ module anchor_top #(
     .NUM_TAGS (NUM_TAGS),
     .NUM_CHANNELS (NUM_CHANNELS),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
-    .FIFO_DEPTH (128),
-    .READ_WIDTH (EBI_WIDTH),
+    .FIFO_DEPTH (256),
+    .READ_WIDTH (16),
     .MEMORY_TYPE ("block")
   ) tag_data_buff (
     .clk (m_clk),
@@ -412,8 +441,8 @@ module anchor_top #(
     .s_axis_tlast (fanin_axis_tlast),
     .s_axis_tuser (fanin_axis_tuser),
     .rd_ena (rd_ena),
-    .ready (ready),
-    .data_out (ebi_data)
+    .rd_ready (ebi_ready),
+    .rd_data (ebi_data)
   );
 
   // output leds
@@ -425,6 +454,6 @@ module anchor_top #(
   assign led_out[4] = ad9361_axis_tvalid;
   assign led_out[5] = |corr_axis_tvalid;
   assign led_out[6] = |peak_axis_tvalid;
-  assign led_out[7] = ready;
+  assign led_out[7] = ebi_ready;
 
 endmodule

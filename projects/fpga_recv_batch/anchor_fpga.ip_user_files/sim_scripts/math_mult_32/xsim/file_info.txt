@@ -1,2 +1,0 @@
-math_mult_32_sim_netlist.v,verilog,xil_defaultlib,../../../../../../firmware/fpga/util/math/xilinx/math_mult_32/math_mult_32_sim_netlist.v,
-glbl.v,Verilog,xil_defaultlib,glbl.v
