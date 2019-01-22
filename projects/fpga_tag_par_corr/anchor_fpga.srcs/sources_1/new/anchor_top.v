@@ -23,7 +23,7 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 12,
+  parameter   NUM_TAGS = 3,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   CORR_OFFSET = 0,
@@ -130,67 +130,58 @@ module anchor_top #(
   wire              m_clk;    // main clock (moderate frequency)
   wire              c_clk;    // compute clock (high frequency)
 
-  // internal signals (sample data interface)
+  // internal signals (sample interface)
 
   wire              a_data_clk;
   wire              b_data_clk;
 
-  // internal signals (ad9361 axi-stream)
+  wire              valid_0;
+  wire              valid_1;
+  wire              valid_2;
+  wire              valid_3;
+
+  // internal signals (microprocessor)
+
+  wire              rd_ena;
+
+  // internal signals (axi-stream)
 
   wire              ad9361_axis_tvalid;
   wire              ad9361_axis_tready;
   wire    [ WS:0]   ad9361_axis_tdata;
 
-  // internal signals (data buffer)
-
   wire              fifo_axis_tvalid;
   wire              fifo_axis_tready;
   wire    [ WS:0]   fifo_axis_tdata;
-
-  // internal signals (distributor)
 
   wire    [ NT:0]   distrib_axis_tvalid;
   wire    [ NT:0]   distrib_axis_tready;
   wire    [ WI:0]   distrib_axis_tdata;
 
-  // internal signals (bit correlation)
-
   wire    [ NT:0]   corr_axis_tvalid;
   wire    [ NT:0]   corr_axis_tready;
   wire    [ WP:0]   corr_axis_tdata;
-
-  // internal signals (peak detect)
 
   wire    [ NT:0]   cabs_axis_tvalid;
   wire    [ NT:0]   cabs_axis_tready;
   wire    [ WP:0]   cabs_axis_tdata;
   wire    [ WP:0]   cabs_axis_tdata_abs;
 
-  // internal signals (clock domain crossing)
-
   wire    [ NT:0]   clkx_axis_tvalid;
   wire    [ NT:0]   clkx_axis_tready;
   wire    [ WP:0]   clkx_axis_tdata;
   wire    [ WP:0]   clkx_axis_tdata_abs;
-
-  // internal signals (peak detect)
 
   wire    [ NT:0]   peak_axis_tvalid;
   wire    [ NT:0]   peak_axis_tready;
   wire    [ WP:0]   peak_axis_tdata;
   wire    [ NT:0]   peak_axis_tlast;
 
-  // internal signals (fan-in)
-
   wire              fanin_axis_tvalid;
   wire              fanin_axis_tready;
   wire    [ WD:0]   fanin_axis_tdata;
   wire              fanin_axis_tlast;
   wire    [ NT:0]   fanin_axis_tuser;
-
-  // buffer read enable
-
-  wire              rd_ena;
 
   // clock generation
 
@@ -215,17 +206,31 @@ module anchor_top #(
     .dest_out (rd_ena)
   );
 
+  // led controller module
+
+  anchor_led_ctrl #()
+  anchor_led_ctrl (
+    .clk (m_clk),
+    .valid_0 (valid_0),
+    .valid_1 (valid_1),
+    .valid_2 (valid_2),
+    .valid_3 (valid_3),
+    .valid_sf (ad9361_axis_tvalid),
+    .ebi_ready (ebi_ready),
+    .led_out (led_out)
+  );
+
   // dual-9361 controller
 
   ad9361_dual #(
+    .SAMPS_WIDTH (SAMPS_WIDTH),
+    .PRECISION (PRECISION),
     .DEVICE_TYPE ("7SERIES"),
     .REALTIME_ENABLE (1),
     .USE_SAMPLE_FILTER (1),
     .NUM_PAD_SAMPS (31),
     .DATA_PASS_VALUE (64),
     .FILTER_LENGTH (16),
-    .SAMPS_WIDTH (SAMPS_WIDTH),
-    .PRECISION (PRECISION),
     .REVERSE_DATA (0),
     .INDEP_CLOCKS (0),
     .USE_AXIS_TLAST (0)
@@ -265,6 +270,10 @@ module anchor_top #(
     .spi_cs_b (spi_cs_b),
     .sync_in (sync_in),
     .m_axis_clk (d_clk),
+    .a_valid_0 (valid_0),
+    .a_valid_1 (valid_1),
+    .b_valid_0 (valid_2),
+    .b_valid_1 (valid_3),
     .m_axis_tvalid (ad9361_axis_tvalid),
     .m_axis_tready (ad9361_axis_tready),
     .m_axis_tdata (ad9361_axis_tdata),
@@ -406,8 +415,7 @@ module anchor_top #(
   axis_fan_in #(
     .NUM_FANIN (NUM_TAGS),
     .DATA_WIDTH (DATA_WIDTH),
-    .USE_FIFOS (0),
-    .USE_AXIS_TLAST (1)
+    .USE_FIFOS (0)
   ) axis_fan_in (
     .s_axis_clk (),
     .s_axis_rst (),
@@ -444,16 +452,5 @@ module anchor_top #(
     .rd_ready (ebi_ready),
     .rd_data (ebi_data)
   );
-
-  // output leds
-
-  assign led_out[0] = a_rx_frame_in;
-  assign led_out[1] = 1'b0;
-  assign led_out[2] = 1'b0;
-  assign led_out[3] = b_rx_frame_in;
-  assign led_out[4] = ad9361_axis_tvalid;
-  assign led_out[5] = |corr_axis_tvalid;
-  assign led_out[6] = |peak_axis_tvalid;
-  assign led_out[7] = ebi_ready;
 
 endmodule

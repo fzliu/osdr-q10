@@ -2,7 +2,8 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Anchor clock generation module.
+// Description
+// Anchor clock generation module.
 //
 ////////////////////////////////////////////////////////////////////////////////
 

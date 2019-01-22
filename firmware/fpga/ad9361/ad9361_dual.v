@@ -11,17 +11,24 @@
 
 module ad9361_dual #(
 
+  // parameters
+
+  parameter   SAMPS_WIDTH = 64,
+  parameter   PRECISION = 12,
+
   parameter   DEVICE_TYPE = "7SERIES",
   parameter   REALTIME_ENABLE = 1,
+
   parameter   USE_SAMPLE_FILTER = 1,
   parameter   NUM_PAD_SAMPS = 7,
   parameter   DATA_PASS_VALUE = 20,
   parameter   FILTER_LENGTH = 16,
-  parameter   SAMPS_WIDTH = 64,
-  parameter   PRECISION = 12,
+
   parameter   REVERSE_DATA = 0,
   parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
+
+  // bit width parameters
 
   localparam  WS = SAMPS_WIDTH - 1
 
@@ -81,6 +88,13 @@ module ad9361_dual #(
   input             spi_cs_a,
   input             spi_cs_b,
   input             sync_in,
+
+  // output valid flags
+
+  output            a_valid_0,
+  output            a_valid_1,
+  output            b_valid_0,
+  output            b_valid_1,
 
   // axi-stream interface
 
@@ -244,6 +258,13 @@ module ad9361_dual #(
 
   end
   endgenerate
+
+  // set valid signals
+
+  assign a_valid_0 = valid_0;
+  assign a_valid_1 = valid_1;
+  assign b_valid_0 = valid_2;
+  assign b_valid_1 = valid_3;
 
   // serialize data
 

@@ -22,7 +22,6 @@ module axis_fan_in #(
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_LATENCY = 2,
-  parameter   USE_AXIS_TLAST = 0,
 
   // derived parameters
 
@@ -64,7 +63,8 @@ module axis_fan_in #(
 
   // internal registers
 
-  reg     [ NF:0]   chan_sel = {{NF{1'b0}}, 1'b1};
+  reg     [ NF:0]   chan_num = 'b0;
+
   reg               hold_cond = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
@@ -79,10 +79,10 @@ module axis_fan_in #(
   wire    [ WP:0]   fanin_data;
   wire    [ NF:0]   fanin_last;
 
+
   wire    [ WD:0]   fanin_data_unpack [0:NF];
 
-  wire    [ NF:0]   chan_prio;
-  wire    [ NF:0]   chan_num;
+  wire    [ NF:0]   prio_num;
 
   wire              in_valid;
   wire    [ WD:0]   in_data;
@@ -132,110 +132,62 @@ module axis_fan_in #(
     localparam n0 = n * DATA_WIDTH;
     localparam n1 = n0 + WD;
     assign fanin_data_unpack[n] = fanin_data[n1:n0];
-  end
-  endgenerate
-
-  assign fanin_ready = m_axis_tready ? chan_sel : 1'b0;
-
-  // fan-in priority logic
-
-  assign chan_prio[0] = 1'b1;
-
-  generate
-  for (n = 1; n < NUM_FANIN; n = n + 1) begin
-    assign chan_prio[n] = ~|fanin_valid[n-1:0];
-  end
-  endgenerate
-
-  // select channel based on priority
-
-  generate
-  always @(posedge m_axis_clk) begin
-    if (USE_AXIS_TLAST) begin
-      if (m_axis_rst) begin
-        hold_cond <= 'b0;
-      end else if (in_valid) begin
-        hold_cond <= ~in_last;
-      end else begin
-        hold_cond <= hold_cond;
-      end
-    end
-  end
-  endgenerate
-
-  generate
-  for (n = 0; n < NUM_FANIN; n = n + 1) begin
-    always @(posedge m_axis_clk) begin
-      casez ({m_axis_rst, hold_cond, chan_prio[n]})
-        3'b1??: chan_sel[n] <= (n == 0);
-        3'b01?: chan_sel[n] <= chan_sel[n];
-        3'b001: chan_sel[n] <= fanin_valid[n];
-        default: chan_sel[n] <= chan_sel[n];
-      endcase
-    end
+    assign fanin_ready = m_axis_tready & (chan_num == n);
   end
   endgenerate
 
   // channel selection
+  // use oh_to_bin as a priority encoder
 
   oh_to_bin #(
     .WIDTH_IN (NUM_FANIN),
     .WIDTH_OUT (NUM_FANIN)
   ) oh_to_bin (
-    .oh (chan_sel),
-    .bin (chan_num)
+    .oh (fanin_valid),
+    .bin (prio_num)
   );
+
+  always @(posedge m_axis_clk) begin
+    if (m_axis_rst) begin
+      chan_num <= 'b0;
+    end else if (in_valid) begin
+      chan_num <= chan_num;
+    end else begin
+      chan_num <= prio_num;
+    end
+  end
 
   // master interface
 
   assign in_valid = fanin_valid[chan_num];
   assign in_data = fanin_data_unpack[chan_num];
+  assign in_last = fanin_last[chan_num];
 
   always @(posedge m_axis_clk) begin
-    if (m_axis_rst | ~in_valid) begin
+    if (m_axis_rst) begin
       m_axis_tvalid_reg <= 'b0;
       m_axis_tdata_reg <= 'b0;
+      m_axis_tlast_reg <= 'b0;
       m_axis_tuser_reg <= 'b0;
-    end else if (m_axis_tready) begin
+    end else if (in_valid) begin
       m_axis_tvalid_reg <= in_valid;
       m_axis_tdata_reg <= in_data;
+      m_axis_tlast_reg <= in_last;
       m_axis_tuser_reg <= chan_num;
     end else begin
-      m_axis_tvalid_reg <= m_axis_tvalid;
-      m_axis_tdata_reg <= m_axis_tdata;
-      m_axis_tuser_reg <= m_axis_tuser;
+      m_axis_tvalid_reg <= fanin_valid[prio_num];
+      m_axis_tdata_reg <= fanin_data_unpack[prio_num];
+      m_axis_tlast_reg <= fanin_last[prio_num];
+      m_axis_tuser_reg <= prio_num;
     end
   end
-
-  generate
-  if (USE_AXIS_TLAST) begin
-
-    assign in_last = fanin_last[chan_num];
-
-    always @(posedge m_axis_clk) begin
-      if (m_axis_rst | ~in_valid) begin
-        m_axis_tlast_reg <= 'b0;
-      end else if (m_axis_tready) begin
-        m_axis_tlast_reg <= in_last;
-      end else begin
-        m_axis_tlast_reg <= m_axis_tlast;
-      end
-    end
- 
-  end
-  endgenerate
 
   // assign outputs
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
   assign m_axis_tlast = m_axis_tlast_reg;
-
-  generate
-  if (USE_AXIS_TLAST) begin
-    assign m_axis_tuser = m_axis_tuser_reg;
-  end
-  endgenerate
+  assign m_axis_tuser = m_axis_tuser_reg;
 
 endmodule
 

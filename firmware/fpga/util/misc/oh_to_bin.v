@@ -27,7 +27,7 @@ module oh_to_bin #(
 
   `include "func_log2.vh"
 
-  reg     [ WO:0]   out;
+  reg     [ WO:0]   out = 'b0;
 
   integer i;
   always @* begin
