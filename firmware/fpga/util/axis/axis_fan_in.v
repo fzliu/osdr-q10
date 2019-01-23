@@ -132,7 +132,7 @@ module axis_fan_in #(
     localparam n0 = n * DATA_WIDTH;
     localparam n1 = n0 + WD;
     assign fanin_data_unpack[n] = fanin_data[n1:n0];
-    assign fanin_ready = m_axis_tready & (chan_num == n);
+    assign fanin_ready[n] = m_axis_tready & (chan_num == n);
   end
   endgenerate
 

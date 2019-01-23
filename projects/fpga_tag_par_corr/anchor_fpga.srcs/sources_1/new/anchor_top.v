@@ -23,7 +23,7 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 3,
+  parameter   NUM_TAGS = 8,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   CORR_OFFSET = 0,
