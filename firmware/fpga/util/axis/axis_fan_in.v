@@ -20,9 +20,7 @@ module axis_fan_in #(
 
   parameter   NUM_FANIN = 6,
   parameter   DATA_WIDTH = 256,
-  parameter   USE_FIFOS = 0,
-  parameter   FIFO_TYPE = "auto",
-  parameter   FIFO_LATENCY = 2,
+  parameter   USE_AXIS_TLAST = 1,
 
   // derived parameters
 
@@ -38,10 +36,8 @@ module axis_fan_in #(
 
   // core interface
 
-  input             s_axis_clk,
-  input             s_axis_rst,
-  input             m_axis_clk,
-  input             m_axis_rst,
+  input             clk,
+  input             rst,
 
   // slave interface
 
@@ -64,117 +60,87 @@ module axis_fan_in #(
 
   // internal registers
 
+  reg               is_active = 'b0;
   reg     [ NF:0]   chan_num = 'b0;
-
-  reg               m_axis_tvalid_reg = 'b0;
-  reg     [ WD:0]   m_axis_tdata_reg = 'b0;
-  reg               m_axis_tlast_reg = 'b0;
-  reg     [ NF:0]   m_axis_tuser_reg = 'b0;
 
   // internal signals
 
-  wire    [ NF:0]   fanin_valid;
-  wire    [ NF:0]   fanin_ready;
-  wire    [ WP:0]   fanin_data;
-  wire    [ NF:0]   fanin_last;
-
-  wire    [ WD:0]   fanin_data_unpack [0:NF];
+  wire    [ WD:0]   s_axis_tdata_unpack [0:NF];
 
   wire    [ NF:0]   prio_num;
   wire              chan_valid;
 
-
-  // buffer inputs
-
-  genvar n;
-  generate
-  if (USE_FIFOS) begin
-
-    for (n = 0; n < NUM_FANIN; n = n + 1) begin
-      localparam n0 = n * DATA_WIDTH;
-      localparam n1 = n0 + WD;
-      axis_fifo_async #(
-        .MEMORY_TYPE (FIFO_TYPE),
-        .DATA_WIDTH (DATA_WIDTH + 1),   // make room for tlast
-        .FIFO_DEPTH (16),
-        .READ_LATENCY (FIFO_LATENCY)
-      ) axis_fifo_async (
-        .s_axis_clk (s_axis_clk),
-        .s_axis_rst (s_axis_rst),
-        .m_axis_clk (m_axis_clk),
-        .s_axis_tvalid (s_axis_tvalid[n]),
-        .s_axis_tready (s_axis_tready[n]),
-        .s_axis_tdata ({s_axis_tdata[n1:n0], s_axis_tlast[n]}),
-        .m_axis_tvalid (fanin_valid[n]),
-        .m_axis_tready (fanin_ready[n]),
-        .m_axis_tdata ({fanin_data[n1:n0], fanin_last[n]})
-      );
-    end
-
-  end else begin
-
-    assign s_axis_tready = fanin_ready;
-    assign fanin_valid = s_axis_tvalid;
-    assign fanin_data = s_axis_tdata;
-    assign fanin_last = s_axis_tlast;
-
-  end
-  endgenerate
-
   // slave interface
 
+  genvar n;
   generate
   for (n = 0; n < NUM_FANIN; n = n + 1) begin
     localparam n0 = n * DATA_WIDTH;
     localparam n1 = n0 + WD;
-    assign fanin_data_unpack[n] = fanin_data[n1:n0];
-    assign fanin_ready[n] = m_axis_tready & (chan_num == n);
+    assign s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
+    assign s_axis_tready[n] = m_axis_tready & (chan_num == n);
   end
   endgenerate
 
   // channel selection
-  // use oh_to_bin as a priority encoder
+  // oh_to_bin acts as priority encoder
 
   oh_to_bin #(
     .WIDTH_IN (NUM_FANIN),
     .WIDTH_OUT (NUM_FANIN)
   ) oh_to_bin (
-    .oh (fanin_valid),
+    .oh (s_axis_tvalid),
     .bin (prio_num)
   );
 
-  always @(posedge m_axis_clk) begin
-    if (m_axis_rst) begin
-      chan_num <= 'b0;
-    end else if (fanin_valid[chan_num]) begin
-      chan_num <= chan_num;
-    end else begin
-      chan_num <= prio_num;
+  generate
+  if (USE_AXIS_TLAST) begin
+
+    // case 0: use tlast
+    // keep the current channel until tlast goes high
+
+    always @(posedge clk) begin
+      casez ({rst, m_axis_tlast, m_axis_tvalid})
+        3'b1??: is_active <= 1'b0;
+        3'b011: is_active <= m_axis_tready;
+        3'b001: is_active <= 1'b1;
+        default: is_active <= is_active;
+      endcase
     end
+
+    // the active channel retains priority
+
+    always @(posedge clk) begin
+      casez ({rst, is_active})
+        2'b1?: chan_num <= 'b0;
+        2'b01: chan_num <= chan_num;
+        default: chan_num <= prio_num;
+      endcase
+    end
+
+  end else begin
+
+    // case 1: do not use tlast
+    // channel number = one with highest priority
+
+    always @* begin
+      chan_num = prio_num;
+    end
+
   end
+  endgenerate
 
   // master interface
 
-  always @(posedge m_axis_clk) begin
-    if (m_axis_rst) begin
-      m_axis_tvalid_reg <= 'b0;
-      m_axis_tdata_reg <= 'b0;
-      m_axis_tlast_reg <= 'b0;
-      m_axis_tuser_reg <= 'b0;
-    end else begin
-      m_axis_tvalid_reg <= fanin_valid[chan_num];
-      m_axis_tdata_reg <= fanin_data_unpack[chan_num];
-      m_axis_tlast_reg <= fanin_last[chan_num];
-      m_axis_tuser_reg <= chan_num;
-    end
+  assign m_axis_tvalid = s_axis_tvalid[chan_num];
+  assign m_axis_tdata = s_axis_tdata_unpack[chan_num];
+  assign m_axis_tuser = chan_num;
+
+  generate
+  if (USE_AXIS_TLAST) begin
+    assign m_axis_tlast = s_axis_tlast[chan_num];
   end
-
-  // assign outputs
-
-  assign m_axis_tvalid = m_axis_tvalid_reg;
-  assign m_axis_tdata = m_axis_tdata_reg;
-  assign m_axis_tlast = m_axis_tlast_reg;
-  assign m_axis_tuser = m_axis_tuser_reg;
+  endgenerate
 
 endmodule
 

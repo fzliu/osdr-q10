@@ -62,9 +62,7 @@ module axis_peak_detn #(
   output            m_axis_tvalid,
   input             m_axis_tready,
   output  [ WD:0]   m_axis_tdata,
-  output            m_axis_tlast,
-  
-  output            debug
+  output            m_axis_tlast
 
 );
 

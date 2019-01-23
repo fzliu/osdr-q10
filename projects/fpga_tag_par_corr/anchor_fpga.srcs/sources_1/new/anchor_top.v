@@ -23,7 +23,7 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 1,
+  parameter   NUM_TAGS = 8,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   CORR_OFFSET = 0,
@@ -412,12 +412,10 @@ module anchor_top #(
   axis_fan_in #(
     .NUM_FANIN (NUM_TAGS),
     .DATA_WIDTH (DATA_WIDTH),
-    .USE_FIFOS (0)
+    .USE_AXIS_TLAST (1)
   ) axis_fan_in (
-    .s_axis_clk (),
-    .s_axis_rst (),
-    .m_axis_clk (m_clk),
-    .m_axis_rst (1'b0),
+    .clk (m_clk),
+    .rst (1'b0),
     .s_axis_tvalid (peak_axis_tvalid),
     .s_axis_tready (peak_axis_tready),
     .s_axis_tdata (peak_axis_tdata),
