@@ -23,7 +23,7 @@ module anchor_top #(
 
   // parameters
 
-  parameter   NUM_TAGS = 8,
+  parameter   NUM_TAGS = 1,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   CORR_OFFSET = 0,
@@ -206,19 +206,16 @@ module anchor_top #(
     .dest_out (rd_ena)
   );
 
-  // led controller module
+  // led control
 
-  anchor_led_ctrl #()
-  anchor_led_ctrl (
-    .clk (m_clk),
-    .valid_0 (valid_0),
-    .valid_1 (valid_1),
-    .valid_2 (valid_2),
-    .valid_3 (valid_3),
-    .valid_sf (ad9361_axis_tvalid),
-    .ebi_ready (ebi_ready),
-    .led_out (led_out)
-  );
+  assign led_out[0] = valid_1;
+  assign led_out[1] = valid_0;
+  assign led_out[2] = valid_2;
+  assign led_out[3] = valid_3;
+  assign led_out[4] = 1'b0;
+  assign led_out[5] = ad9361_axis_tvalid;
+  assign led_out[6] = 1'b0;
+  assign led_out[7] = ebi_ready;
 
   // dual-9361 controller
 

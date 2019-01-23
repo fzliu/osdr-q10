@@ -62,7 +62,9 @@ module axis_peak_detn #(
   output            m_axis_tvalid,
   input             m_axis_tready,
   output  [ WD:0]   m_axis_tdata,
-  output            m_axis_tlast
+  output            m_axis_tlast,
+  
+  output            debug
 
 );
 
@@ -158,7 +160,7 @@ module axis_peak_detn #(
 
   assign mem_ready = ~mem_count[WN];    // mem_count != BURST_LENGTH
   assign shift_ena = (m_axis_frame & mem_ready) |     // read enable
-                     (~s_axis_tvalid & ~mem_ready);   // write enable
+                     (s_axis_tvalid & ~mem_ready);    // write enable
 
   // master interface
 

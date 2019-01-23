@@ -2,14 +2,15 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AXI-stream fan-in implementation. The relevant input channel
-// is stored in the output tuser. Preference is given to earlier input channels.
-// If USE_AXIS_TLAST is set to true, this module will lock onto a channel until
-// s_axis_tlast is asserted.
+// Description
+// AXI-stream fan-in implementation. The relevant input channel is stored in
+// m_axis_tuser. Preference is given to earlier (MSB) input channels.
 //
+// Signals
 // enable  :  N/A
 // reset   :  active-high
-// latency :  2 cycles
+// latency :  1 cycle
+// output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -65,8 +66,6 @@ module axis_fan_in #(
 
   reg     [ NF:0]   chan_num = 'b0;
 
-  reg               hold_cond = 'b0;
-
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WD:0]   m_axis_tdata_reg = 'b0;
   reg               m_axis_tlast_reg = 'b0;
@@ -79,14 +78,11 @@ module axis_fan_in #(
   wire    [ WP:0]   fanin_data;
   wire    [ NF:0]   fanin_last;
 
-
   wire    [ WD:0]   fanin_data_unpack [0:NF];
 
   wire    [ NF:0]   prio_num;
+  wire              chan_valid;
 
-  wire              in_valid;
-  wire    [ WD:0]   in_data;
-  wire              in_last;
 
   // buffer inputs
 
@@ -150,7 +146,7 @@ module axis_fan_in #(
   always @(posedge m_axis_clk) begin
     if (m_axis_rst) begin
       chan_num <= 'b0;
-    end else if (in_valid) begin
+    end else if (fanin_valid[chan_num]) begin
       chan_num <= chan_num;
     end else begin
       chan_num <= prio_num;
@@ -159,26 +155,17 @@ module axis_fan_in #(
 
   // master interface
 
-  assign in_valid = fanin_valid[chan_num];
-  assign in_data = fanin_data_unpack[chan_num];
-  assign in_last = fanin_last[chan_num];
-
   always @(posedge m_axis_clk) begin
     if (m_axis_rst) begin
       m_axis_tvalid_reg <= 'b0;
       m_axis_tdata_reg <= 'b0;
       m_axis_tlast_reg <= 'b0;
       m_axis_tuser_reg <= 'b0;
-    end else if (in_valid) begin
-      m_axis_tvalid_reg <= in_valid;
-      m_axis_tdata_reg <= in_data;
-      m_axis_tlast_reg <= in_last;
-      m_axis_tuser_reg <= chan_num;
     end else begin
-      m_axis_tvalid_reg <= fanin_valid[prio_num];
-      m_axis_tdata_reg <= fanin_data_unpack[prio_num];
-      m_axis_tlast_reg <= fanin_last[prio_num];
-      m_axis_tuser_reg <= prio_num;
+      m_axis_tvalid_reg <= fanin_valid[chan_num];
+      m_axis_tdata_reg <= fanin_data_unpack[chan_num];
+      m_axis_tlast_reg <= fanin_last[chan_num];
+      m_axis_tuser_reg <= chan_num;
     end
   end
 
