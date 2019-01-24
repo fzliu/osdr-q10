@@ -269,7 +269,9 @@ set_property SLEW FAST [get_ports {led_out[6]}]
 set_property SLEW FAST [get_ports {led_out[7]}]
 
 create_clock -period 20.000 -name a_rx_clk_in -waveform {0.000 10.000} [get_ports a_rx_clk_in]
+create_clock -period 20.000 -name {VIRTUAL_pll_out[0]} -waveform {0.000 10.000}
 create_clock -period 10.000 -name {VIRTUAL_pll_out[1]} -waveform {0.000 5.000}
+create_clock -period 2.500 -name {VIRTUAL_pll_out[2]} -waveform {0.000 1.250}
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -min -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -max -add_delay 1.000 [get_ports {a_rx_data_p0[*]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -min -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]
@@ -296,8 +298,6 @@ set_input_delay -clock [get_clocks a_rx_clk_in] -min -add_delay 0.000 [get_ports
 set_input_delay -clock [get_clocks a_rx_clk_in] -max -add_delay 1.000 [get_ports b_rx_frame_in]
 set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -min -add_delay 0.000 [get_ports ebi_nrde]
 set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -max -add_delay 1.000 [get_ports ebi_nrde]
-create_clock -period 20.000 -name {VIRTUAL_pll_out[0]} -waveform {0.000 10.000}
-create_clock -period 2.500 -name {VIRTUAL_pll_out[2]} -waveform {0.000 1.250}
 
 set_output_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -min -add_delay 0.000 [get_ports {ebi_data[*]}]
 set_output_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -max -add_delay 1.000 [get_ports {ebi_data[*]}]

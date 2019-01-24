@@ -98,7 +98,7 @@ module axis_bit_corr #(
 
   reg     [ L0:0]   correlator = `CORRS(CORR_OFFSET);
 
-  reg               batch_done_out_d = 'b0;
+  reg               batch_done_d = 'b0;
   reg               valid_out = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
@@ -111,20 +111,17 @@ module axis_bit_corr #(
 
   wire              stall;
   wire              enable_int;
-  wire              batch_done;
 
   wire    [ WN:0]   count;
-  wire    [ WN:0]   count_prev;
-  wire    [ WN:0]   count_next;
   wire    [ WN:0]   wr_addr;
   wire    [ WN:0]   rd_addr;
+  wire              batch_done;
 
   wire              corr_idx;
   wire    [ PR:0]   data_in;
   wire    [ WA:0]   adder_in0 [0:L0];
   wire    [ WA:0]   adder_in1 [0:L0];
 
-  wire              batch_done_out;
   wire    [ WM:0]   output_pack;
   wire              m_axis_frame;
 
@@ -182,10 +179,6 @@ module axis_bit_corr #(
     .value (count)
   );
 
-  assign batch_done = (count % NUM_PARALLEL) == NP;
-  assign count_prev = count - 1'b1;
-  assign count_next = count + 1'b1;
-
   // set read and write addresses based on current count
 
   shift_reg #(
@@ -195,7 +188,7 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (count_prev),
+    .din (count - 1'b1),
     .dout (wr_addr)
   );
 
@@ -206,13 +199,24 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (count_next),  //enable_int ? count + 1'b1 : count
+    .din (count + 1'b1),  //enable_int ? count + 1'b1 : count
     .dout (rd_addr)
   );
 
   // set correlator for current batch
 
-  assign corr_idx = count_next / NUM_PARALLEL;
+  shift_reg #(
+    .WIDTH (1),
+    .DEPTH (SHIFT_DEPTH)
+  ) shift_reg_done (
+    .clk (clk),
+    .rst (1'b0),
+    .ena (enable_int),
+    .din ((count % NUM_PARALLEL) == NP),
+    .dout (batch_done)
+  );
+
+  assign corr_idx = (count + 1'b1) / NUM_PARALLEL;
 
   always @(posedge clk) begin
     if (enable_int & batch_done) begin
@@ -322,23 +326,12 @@ module axis_bit_corr #(
   // valid_out logic
   // this stage is required to prevent stalling
 
-  shift_reg #(
-    .WIDTH (1),
-    .DEPTH (SHIFT_DEPTH)
-  ) shift_reg_done (
-    .clk (clk),
-    .rst (1'b0),
-    .ena (enable_int),
-    .din (batch_done),
-    .dout (batch_done_out)
-  );
-
   always @(posedge clk) begin
-    batch_done_out_d <= batch_done_out;
+    batch_done_d <= batch_done;
   end
 
   always @(posedge clk) begin
-    if (batch_done_out & ~batch_done_out_d) begin
+    if (batch_done & ~batch_done_d) begin
       valid_out <= 1'b1;
     end else if (m_axis_frame | ~m_axis_tvalid) begin
       valid_out <= 1'b0;

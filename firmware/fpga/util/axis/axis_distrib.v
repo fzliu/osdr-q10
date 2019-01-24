@@ -18,7 +18,7 @@ module axis_distrib #(
   // parameters
 
   parameter   NUM_DISTRIB = 6,
-  parameter   DATA_WIDTH = 256,
+  parameter   DATA_WIDTH = 128,
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_LATENCY = 2,
@@ -63,21 +63,19 @@ module axis_distrib #(
 
   reg     [ ND:0]   ready_all = 'b0;
 
-  reg     [ ND:0]   distrib_valid = 'b0;
-  reg     [ WP:0]   distrib_data = 'b0;
-
   // internal signals
 
-  wire    [ ND:0]   ready_all_next;
   wire              s_axis_frame;
 
-  wire    [ ND:0]   distrib_ready;
   wire    [ ND:0]   distrib_frame;
+  wire    [ ND:0]   distrib_valid;
+  wire    [ ND:0]   distrib_ready;
+  wire    [ WP:0]   distrib_data;
 
   // slave interface
 
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = &(ready_all_next);
+  assign s_axis_tready = &(ready_all);
 
   // internal logic
 
@@ -85,38 +83,19 @@ module axis_distrib #(
     if (s_axis_rst | s_axis_frame) begin
       ready_all <= 'b0;
     end else begin
-      ready_all <= ready_all_next;
+      ready_all <= ready_all | distrib_frame;
     end
   end
-
-  assign ready_all_next = ready_all | distrib_frame;
 
   // master interface
 
   assign distrib_frame = distrib_valid & distrib_ready;
-
-  genvar n;
-  generate
-  for (n = 0; n < NUM_DISTRIB; n = n + 1) begin
-    localparam n0 = n * DATA_WIDTH;
-    localparam n1 = n0 + WD;
-    always @(posedge s_axis_clk) begin
-      if (s_axis_rst) begin
-        distrib_valid[n] <= 'b0;
-        distrib_data[n1:n0] <= 'b0;
-      end else if (~ready_all_next[n]) begin
-        distrib_valid[n] <= s_axis_tvalid;
-        distrib_data[n1:n0] <= s_axis_tdata;
-      end else begin
-        distrib_valid[n] <= 'b0;
-        distrib_data[n1:n0] <= 'b0;
-      end
-    end
-  end
-  endgenerate
+  assign distrib_valid = s_axis_tvalid ? ~ready_all : 'b0;
+  assign distrib_data = {NUM_DISTRIB{s_axis_tdata}};
 
   // assign outputs
 
+  genvar n;
   generate
   if (USE_FIFOS) begin
 

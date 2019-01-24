@@ -100,7 +100,7 @@ module anchor_top_tb;
   integer j;
   initial begin
     #15000;
-    for (j = 0; j < 272; j = j + 1) begin
+    for (j = 0; j < 264; j = j + 1) begin
       #20 ebi_nrde = 1'b0;
       #20 ebi_nrde = 1'b1;
     end

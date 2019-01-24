@@ -69,9 +69,11 @@ module tag_data_buff #(
 
   // internal signals
 
+  wire              s_axis_frame;
+
+  wire              tag_num_frame;
   wire    [ WD:0]   tag_num;
 
-  wire    [ WD:0]   fifo_din;
   wire              fifo_full;
   wire              fifo_empty;
   wire              fifo_rd_rst_busy;
@@ -79,16 +81,23 @@ module tag_data_buff #(
 
   // slave interface
 
+  assign s_axis_tready = ~s_axis_tlast_d & ~fifo_full;
+  assign s_axis_frame = s_axis_tvalid & s_axis_tready;
+
+  // tag number must be written into the FIFO
+  // this is done on the cycle after tlast is asserted
+  // the FIFO must also have space, i.e. fifo_full == 1'b0
+
   always @(posedge clk) begin
-    s_axis_tlast_d <= s_axis_tlast;
+    if (~fifo_full) begin
+      s_axis_tlast_d <= s_axis_tlast;
+    end else begin
+      s_axis_tlast_d <= s_axis_tlast_d;
+    end
   end
 
-  assign s_axis_tready = ~s_axis_tlast_d & ~fifo_full;
-
-  // assign FIFO inputs
-
   assign tag_num = {{PAD_WIDTH{1'b0}}, s_axis_tuser};
-  assign fifo_din = s_axis_tlast_d ? tag_num : s_axis_tdata;
+  assign tag_num_frame = (~s_axis_tlast & s_axis_tlast_d) & ~fifo_full;
 
   // delayed read enable
 
@@ -116,8 +125,8 @@ module tag_data_buff #(
     .sleep (1'b0),
     .rst (1'b0),
     .wr_clk (clk),
-    .wr_en (s_axis_tvalid | s_axis_tlast_d),
-    .din (fifo_din),
+    .wr_en (s_axis_frame | tag_num_frame),
+    .din (s_axis_frame ? s_axis_tdata : tag_num),
     .full (fifo_full),
     .overflow (),
     .prog_full (),

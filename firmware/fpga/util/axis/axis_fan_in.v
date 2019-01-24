@@ -21,10 +21,14 @@ module axis_fan_in #(
   parameter   NUM_FANIN = 6,
   parameter   DATA_WIDTH = 256,
   parameter   USE_AXIS_TLAST = 1,
+  parameter   USE_FIFOS = 0,
+  parameter   FIFO_TYPE = "auto",
+  parameter   FIFO_LATENCY = 2,
 
   // derived parameters
 
   localparam  PACKED_WIDTH = NUM_FANIN * DATA_WIDTH,
+  localparam  EXTRA_BIT = (USE_AXIS_TLAST != 0),
 
   // bit width parameters
 
@@ -36,8 +40,9 @@ module axis_fan_in #(
 
   // core interface
 
-  input             clk,
-  input             rst,
+  input             s_axis_clk,
+  input             s_axis_rst,
+  input             m_axis_clk,   // unused if USE_FIFOs == 0
 
   // slave interface
 
@@ -70,6 +75,12 @@ module axis_fan_in #(
   wire    [ NF:0]   prio_num;
   wire              chan_valid;
 
+  wire              fanin_valid;
+  wire              fanin_ready;
+  wire    [ WD:0]   fanin_data;
+  wire              fanin_last;
+  wire    [ NF:0]   fanin_user;
+
   // slave interface
 
   genvar n;
@@ -78,9 +89,10 @@ module axis_fan_in #(
     localparam n0 = n * DATA_WIDTH;
     localparam n1 = n0 + WD;
     assign s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
-    assign s_axis_tready[n] = m_axis_tready & (chan_num == n);
   end
   endgenerate
+
+  assign s_axis_tready = {{NF{1'b0}}, fanin_ready} << chan_num;
 
   // channel selection
   // oh_to_bin acts as priority encoder
@@ -99,10 +111,10 @@ module axis_fan_in #(
     // case 0: use tlast
     // keep the current channel until tlast goes high
 
-    always @(posedge clk) begin
-      casez ({rst, m_axis_tlast, m_axis_tvalid})
+    always @(posedge s_axis_clk) begin
+      casez ({s_axis_rst, fanin_last, fanin_valid})
         3'b1??: is_active <= 1'b0;
-        3'b011: is_active <= m_axis_tready;
+        3'b011: is_active <= ~fanin_ready;
         3'b001: is_active <= 1'b1;
         default: is_active <= is_active;
       endcase
@@ -110,8 +122,8 @@ module axis_fan_in #(
 
     // the active channel retains priority
 
-    always @(posedge clk) begin
-      casez ({rst, is_active})
+    always @(posedge s_axis_clk) begin
+      casez ({s_axis_rst, is_active})
         2'b1?: chan_num <= 'b0;
         2'b01: chan_num <= chan_num;
         default: chan_num <= prio_num;
@@ -121,7 +133,7 @@ module axis_fan_in #(
   end else begin
 
     // case 1: do not use tlast
-    // channel number = one with highest priority
+    // channel number = channel with highest priority
 
     always @* begin
       chan_num = prio_num;
@@ -132,13 +144,50 @@ module axis_fan_in #(
 
   // master interface
 
-  assign m_axis_tvalid = s_axis_tvalid[chan_num];
-  assign m_axis_tdata = s_axis_tdata_unpack[chan_num];
-  assign m_axis_tuser = chan_num;
+  assign fanin_valid = s_axis_tvalid[chan_num];
+  assign fanin_data = s_axis_tdata_unpack[chan_num];
+  assign fanin_user = chan_num;
 
   generate
   if (USE_AXIS_TLAST) begin
-    assign m_axis_tlast = s_axis_tlast[chan_num];
+    assign fanin_last = s_axis_tlast[chan_num];
+  end
+  endgenerate
+
+  // assign outputs
+
+  generate
+  if (USE_FIFOS) begin
+ 
+    axis_fifo_async #(
+      .MEMORY_TYPE (FIFO_TYPE),
+      .DATA_WIDTH (DATA_WIDTH + NUM_FANIN + EXTRA_BIT),
+      .FIFO_DEPTH (16),
+      .READ_LATENCY (FIFO_LATENCY)
+    ) axis_fifo_async (
+      .s_axis_clk (s_axis_clk),
+      .s_axis_rst (s_axis_rst),
+      .m_axis_clk (m_axis_clk),
+      .s_axis_tvalid (fanin_valid),
+      .s_axis_tready (fanin_ready),
+      .s_axis_tdata ({fanin_last,   // EXTRA_BIT == 0 ? truncated :
+                      fanin_data,
+                      fanin_user}),
+      .m_axis_tvalid (m_axis_tvalid),
+      .m_axis_tready (m_axis_tready),
+      .m_axis_tdata ({m_axis_tlast,
+                      m_axis_tdata,
+                      m_axis_tuser})
+    );
+
+  end else begin
+
+    assign fanin_ready = m_axis_tready;
+    assign m_axis_tvalid = fanin_valid;
+    assign m_axis_tdata = fanin_data;
+    assign m_axis_tlast = fanin_last;
+    assign m_axis_tuser = fanin_user;
+
   end
   endgenerate
 

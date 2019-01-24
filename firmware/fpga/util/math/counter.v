@@ -41,13 +41,13 @@ module counter #(
 
   `include "func_log2.vh"
 
-  // internal signals
-
-  wire              at_upper;
-
   // internal registers
 
   reg     [ W0:0]   count = INIT_VALUE;
+
+  // internal signals
+
+  wire              at_upper;
 
   // counter implementation
 
