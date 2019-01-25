@@ -212,7 +212,7 @@ module axis_cabs_serial #(
 
   always @(posedge clk) begin
     if (enable_int) begin
-      cabs_ram[count_out] <= cabs_dout; // overflow unlikely; discard MSB
+      cabs_ram[count_out] <= cabs_dout;
     end
   end
 

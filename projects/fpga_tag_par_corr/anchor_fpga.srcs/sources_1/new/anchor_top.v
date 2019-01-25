@@ -8,6 +8,7 @@
 // FIFO for consumption by the microprocessor through the EBI bus.
 //
 // Parameters
+// DEVICE_TYPE: programmable logic family
 // NUM_TAGS: number of tags to support
 // PRECISION: desired precision of the input data bus, must be <= 12
 // CORR_OFFSET: index of the first (zeroth) correlator to use
@@ -23,14 +24,13 @@ module anchor_top #(
 
   // parameters
 
+  parameter   DEVICE_TYPE = "7SERIES",
+
   parameter   NUM_TAGS = 2,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
-  parameter   CORR_OFFSET = 0,
-
-  parameter   CHANNEL_WIDTH = 32,
-  parameter   SAMPS_WIDTH = 64,
   parameter   ADDER_WIDTH = 12,
+  parameter   CORR_OFFSET = 0,
 
   parameter   CABS_DELAY = 10,
   parameter   BURST_LENGTH = 32,
@@ -42,6 +42,8 @@ module anchor_top #(
 
   // derived parameters
 
+  localparam  CHANNEL_WIDTH = 2 * ADDER_WIDTH,
+  localparam  SAMPS_WIDTH = 2 * PRECISION * NUM_CHANNELS,
   localparam  DATA_WIDTH = NUM_CHANNELS * CHANNEL_WIDTH,
   localparam  INPUT_WIDTH = NUM_TAGS * SAMPS_WIDTH,
   localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH,
@@ -136,9 +138,30 @@ module anchor_top #(
   wire              b_data_clk;
 
   wire              valid_0;
+  wire    [ 11:0]   data_i0;
+  wire    [ 11:0]   data_q0;
   wire              valid_1;
+  wire    [ 11:0]   data_i1;
+  wire    [ 11:0]   data_q1;
   wire              valid_2;
+  wire    [ 11:0]   data_i2;
+  wire    [ 11:0]   data_q2;
   wire              valid_3;
+  wire    [ 11:0]   data_i3;
+  wire    [ 11:0]   data_q3;
+
+  wire              valid_0_sf;
+  wire    [ 11:0]   data_i0_sf;
+  wire    [ 11:0]   data_q0_sf;
+  wire              valid_1_sf;
+  wire    [ 11:0]   data_i1_sf;
+  wire    [ 11:0]   data_q1_sf;
+  wire              valid_2_sf;
+  wire    [ 11:0]   data_i2_sf;
+  wire    [ 11:0]   data_q2_sf;
+  wire              valid_3_sf;
+  wire    [ 11:0]   data_i3_sf;
+  wire    [ 11:0]   data_q3_sf;
 
   // internal signals (microprocessor)
 
@@ -166,11 +189,6 @@ module anchor_top #(
   wire    [ NT:0]   cabs_axis_tready;
   wire    [ WP:0]   cabs_axis_tdata;
   wire    [ WP:0]   cabs_axis_tdata_abs;
-
-  wire    [ NT:0]   clkx_axis_tvalid;
-  wire    [ NT:0]   clkx_axis_tready;
-  wire    [ WP:0]   clkx_axis_tdata;
-  wire    [ WP:0]   clkx_axis_tdata_abs;
 
   wire    [ NT:0]   peak_axis_tvalid;
   wire    [ NT:0]   peak_axis_tready;
@@ -217,47 +235,67 @@ module anchor_top #(
   assign led_out[6] = 1'b0;
   assign led_out[7] = ebi_ready;
 
-  // dual-9361 controller
+  // receive_a
 
-  ad9361_dual #(
-    .SAMPS_WIDTH (SAMPS_WIDTH),
-    .PRECISION (PRECISION),
-    .DEVICE_TYPE ("7SERIES"),
-    .REALTIME_ENABLE (1),
-    .USE_SAMPLE_FILTER (1),
-    .NUM_PAD_SAMPS (31),
-    .DATA_PASS_VALUE (64),
-    .FILTER_LENGTH (16),
-    .REVERSE_DATA (0),
-    .INDEP_CLOCKS (0),
-    .USE_AXIS_TLAST (0)
-  ) ad9361_dual (
+  ad9361_cmos_if #(
+    .DEVICE_TYPE (DEVICE_TYPE),
+    .USE_EXT_CLOCK (1),
+    .REALTIME_ENABLE (1)
+  ) ad9361_cmos_if_a (
     .clk (d_clk),
-    .a_rx_clk_in (a_rx_clk_in),
-    .a_rx_frame_in (a_rx_frame_in),
-    .a_rx_data_p0 (a_rx_data_p0),
-    .a_rx_data_p1 (a_rx_data_p1),
-    .b_rx_clk_in (b_rx_clk_in),
-    .b_rx_frame_in (b_rx_frame_in),
-    .b_rx_data_p0 (b_rx_data_p0),
-    .b_rx_data_p1 (b_rx_data_p1),
-    .a_data_clk (a_data_clk),
+    .rx_clk_in (a_rx_clk_in),
+    .rx_frame_in (a_rx_frame_in),
+    .rx_data_p0 (a_rx_data_p0),
+    .rx_data_p1 (a_rx_data_p1),
+    .enable (a_enable),
+    .txnrx (a_txnrx),
+    .data_clk (a_data_clk),
+    .valid_0 (valid_0),
+    .data_i0 (data_i0),
+    .data_q0 (data_q0),
+    .valid_1 (valid_1),
+    .data_i1 (data_i1),
+    .data_q1 (data_q1)
+  );
+
+  // receive_b
+
+  ad9361_cmos_if #(
+    .DEVICE_TYPE (DEVICE_TYPE),
+    .USE_EXT_CLOCK (1),
+    .REALTIME_ENABLE (1)
+  ) ad9361_cmos_if_b (
+    .clk (d_clk),
+    .rx_clk_in (b_rx_clk_in),
+    .rx_frame_in (b_rx_frame_in),
+    .rx_data_p0 (b_rx_data_p0),
+    .rx_data_p1 (b_rx_data_p1),
+    .enable (b_enable),
+    .txnrx (b_txnrx),
+    .data_clk (b_data_clk),
+    .valid_0 (valid_2),
+    .data_i0 (data_i2),
+    .data_q0 (data_q2),
+    .valid_1 (valid_3),
+    .data_i1 (data_i3),
+    .data_q1 (data_q3)
+  );
+
+  // dual spi
+
+  ad9361_dual_spi #()
+  ad9361_dual_spi (
     .a_resetb (a_resetb),
-    .a_enable (a_enable),
-    .a_txnrx (a_txnrx),
-    .b_data_clk (b_data_clk),
-    .b_resetb (b_resetb),
-    .b_enable (b_enable),
-    .b_txnrx (b_txnrx),
-    .sync_out (sync_out),
     .a_spi_sck (a_spi_sck),
     .a_spi_di (a_spi_di),
     .a_spi_do (a_spi_do),
     .a_spi_cs (a_spi_cs),
+    .b_resetb (b_resetb),
     .b_spi_sck (b_spi_sck),
     .b_spi_di (b_spi_di),
     .b_spi_do (b_spi_do),
     .b_spi_cs (b_spi_cs),
+    .sync_out (sync_out),
     .reset_a (reset_a),
     .reset_b (reset_b),
     .spi_sck (spi_sck),
@@ -265,12 +303,67 @@ module anchor_top #(
     .spi_miso (spi_miso),
     .spi_cs_a (spi_cs_a),
     .spi_cs_b (spi_cs_b),
-    .sync_in (sync_in),
+    .sync_in (sync_in)
+  );
+
+  // sample filter
+
+  ad9361_dual_filt #(
+    .ABS_WIDTH (16),
+    .NUM_DELAY (22),
+    .NUM_PAD_SAMPS (15),
+    .DATA_PASS_VALUE (16),
+    .FILTER_LENGTH (16)
+  ) ad9361_dual_filt (
+    .clk (d_clk),
+    .valid_0_in (valid_0),
+    .data_i0_in (data_i0),
+    .data_q0_in (data_q0),
+    .valid_1_in (valid_1),
+    .data_i1_in (data_i1),
+    .data_q1_in (data_q1),
+    .valid_2_in (valid_2),
+    .data_i2_in (data_i2),
+    .data_q2_in (data_q2),
+    .valid_3_in (valid_3),
+    .data_i3_in (data_i3),
+    .data_q3_in (data_q3),
+    .valid_0_out (valid_0_sf),
+    .data_i0_out (data_i0_sf),
+    .data_q0_out (data_q0_sf),
+    .valid_1_out (valid_1_sf),
+    .data_i1_out (data_i1_sf),
+    .data_q1_out (data_q1_sf),
+    .valid_2_out (valid_2_sf),
+    .data_i2_out (data_i2_sf),
+    .data_q2_out (data_q2_sf),
+    .valid_3_out (valid_3_sf),
+    .data_i3_out (data_i3_sf),
+    .data_q3_out (data_q3_sf)
+  );
+
+  // serialize data
+
+  ad9361_dual_axis #(
+    .PRECISION (PRECISION),
+    .REVERSE_DATA (0),
+    .INDEP_CLOCKS (0),
+    .USE_AXIS_TLAST (0)
+  ) ad9361_dual_axis (
+    .clk (d_clk),
+    .valid_0 (valid_0_sf),
+    .data_i0 (data_i0_sf),
+    .data_q0 (data_q0_sf),
+    .valid_1 (valid_1_sf),
+    .data_i1 (data_i1_sf),
+    .data_q1 (data_q1_sf),
+    .valid_2 (valid_2_sf),
+    .data_i2 (data_i2_sf),
+    .data_q2 (data_q2_sf),
+    .valid_3 (valid_3_sf),
+    .data_i3 (data_i3_sf),
+    .data_q3 (data_q3_sf),
     .m_axis_clk (d_clk),
-    .a_valid_0 (valid_0),
-    .a_valid_1 (valid_1),
-    .b_valid_0 (valid_2),
-    .b_valid_1 (valid_3),
     .m_axis_tvalid (ad9361_axis_tvalid),
     .m_axis_tready (ad9361_axis_tready),
     .m_axis_tdata (ad9361_axis_tdata),
@@ -328,9 +421,7 @@ module anchor_top #(
 
     axis_bit_corr #(
       .NUM_PARALLEL (NUM_CHANNELS * 2),
-      .PRECISION (PRECISION),
-      .SLAVE_WIDTH (SAMPS_WIDTH),
-      .MASTER_WIDTH (DATA_WIDTH),
+      .WAVE_WIDTH (PRECISION),
       .ADDER_WIDTH (ADDER_WIDTH),
       .USE_STALL_SIGNAL (0),
       .SHIFT_DEPTH (2),
@@ -366,25 +457,6 @@ module anchor_top #(
       .m_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0])
     );
 
-    // clock conversion (compute -> master)
-
-    axis_fifo_async #(
-      .MEMORY_TYPE ("block"),
-      .DATA_WIDTH (2 * DATA_WIDTH),
-      .FIFO_DEPTH (16),
-      .READ_LATENCY (2)
-    ) axis_fifo_async (
-      .s_axis_clk (c_clk),
-      .s_axis_rst (1'b0),
-      .m_axis_clk (m_clk),
-      .s_axis_tvalid (cabs_axis_tvalid[n]),
-      .s_axis_tready (cabs_axis_tready[n]),
-      .s_axis_tdata ({cabs_axis_tdata[j1:j0], cabs_axis_tdata_abs[j1:j0]}),
-      .m_axis_tvalid (clkx_axis_tvalid[n]),
-      .m_axis_tready (clkx_axis_tready[n]),
-      .m_axis_tdata ({clkx_axis_tdata[j1:j0], clkx_axis_tdata_abs[j1:j0]})
-    );
-
     // peak detection
 
     axis_peak_detn #(
@@ -393,11 +465,11 @@ module anchor_top #(
       .PEAK_THRESH_MULT (PEAK_THRESH_MULT),
       .BURST_LENGTH (BURST_LENGTH)
     ) axis_peak_detn (
-      .clk (m_clk),
-      .s_axis_tvalid (clkx_axis_tvalid[n]),
-      .s_axis_tready (clkx_axis_tready[n]),
-      .s_axis_tdata (clkx_axis_tdata[j1:j0]),
-      .s_axis_tdata_abs (clkx_axis_tdata_abs[j1:j0]),
+      .clk (c_clk),
+      .s_axis_tvalid (cabs_axis_tvalid[n]),
+      .s_axis_tready (cabs_axis_tready[n]),
+      .s_axis_tdata (cabs_axis_tdata[j1:j0]),
+      .s_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0]),
       .m_axis_tvalid (peak_axis_tvalid[n]),
       .m_axis_tready (peak_axis_tready[n]),
       .m_axis_tdata (peak_axis_tdata[j1:j0]),
@@ -413,11 +485,13 @@ module anchor_top #(
     .NUM_FANIN (NUM_TAGS),
     .DATA_WIDTH (DATA_WIDTH),
     .USE_AXIS_TLAST (1),
-    .USE_FIFOS (0)
+    .USE_FIFOS (1),
+    .FIFO_TYPE ("block"),
+    .FIFO_LATENCY (2)
   ) axis_fan_in (
-    .s_axis_clk (m_clk),
+    .s_axis_clk (c_clk),
     .s_axis_rst (1'b0),
-    .m_axis_clk (),
+    .m_axis_clk (m_clk),
     .s_axis_tvalid (peak_axis_tvalid),
     .s_axis_tready (peak_axis_tready),
     .s_axis_tdata (peak_axis_tdata),
@@ -431,14 +505,14 @@ module anchor_top #(
 
   // microprocessor interface
 
-  tag_data_buff #(
+  buf_peak_data #(
     .NUM_TAGS (NUM_TAGS),
     .NUM_CHANNELS (NUM_CHANNELS),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
     .FIFO_DEPTH (256),
-    .READ_WIDTH (16),
+    .READ_WIDTH (ADDER_WIDTH),
     .MEMORY_TYPE ("block")
-  ) tag_data_buff (
+  ) buf_peak_data (
     .clk (m_clk),
     .s_axis_tvalid (fanin_axis_tvalid),
     .s_axis_tready (fanin_axis_tready),

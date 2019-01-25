@@ -15,7 +15,6 @@ module ad9361_dual_axis #(
 
   // parameters
 
-  parameter   SAMPS_WIDTH = 128,
   parameter   PRECISION = 12,
   parameter   REVERSE_DATA = 0,
   parameter   INDEP_CLOCKS = 0,
@@ -24,22 +23,21 @@ module ad9361_dual_axis #(
 
   // derived parameters
 
-  localparam  COUNT_WIDTH = log2(AXIS_BURST_LENGTH),
-  localparam  WORD_WIDTH = SAMPS_WIDTH / 8,
+  localparam  SAMPS_WIDTH = 8 * PRECISION,
+  localparam  COUNT_WIDTH = log2(AXIS_BURST_LENGTH - 1),
   localparam  REDUCE_PRECISION = 12 - PRECISION,
 
   // bit width parameters
 
+  localparam  PR = PRECISION - 1,
   localparam  WS = SAMPS_WIDTH - 1,
-  localparam  WC = COUNT_WIDTH - 1,
-  localparam  WW = WORD_WIDTH - 1,
-  localparam  PR = PRECISION - 1
+  localparam  WC = COUNT_WIDTH - 1
 
 ) (
 
   // data interface
 
-  input             data_clk,
+  input             clk,
   input             valid_0,
   input   [ 11:0]   data_i0,
   input   [ 11:0]   data_q0,
@@ -58,13 +56,12 @@ module ad9361_dual_axis #(
   input             m_axis_clk,
   output            m_axis_tvalid,
   input             m_axis_tready,
-  output            m_axis_tlast,
-  output  [ WS:0]   m_axis_tdata
+  output  [ WS:0]   m_axis_tdata,
+  output            m_axis_tlast
 
 );
 
   `include "func_log2.vh"
-  `include "sign_ext.vh"
 
   // internal registers
 
@@ -93,7 +90,7 @@ module ad9361_dual_axis #(
 
   assign valid_int = valid_0 | valid_1 | valid_2 | valid_3;
 
-  always @(posedge data_clk) begin
+  always @(posedge clk) begin
     if (valid_int) begin
       data_frame <= ~data_frame;
     end else begin
@@ -117,13 +114,13 @@ module ad9361_dual_axis #(
   genvar n;
   generate
   for (n = 0; n < 8; n = n + 1) begin
-    localparam n0 = n * WORD_WIDTH;
-    localparam n1 = n0 + WW;
-    always @(posedge data_clk) begin
+    localparam n0 = n * PRECISION;
+    localparam n1 = n0 + PR;
+    always @(posedge clk) begin
       if (REVERSE_DATA) begin
-        data_packed[n1:n0] <= `SIGN_EXT(data_format[7-n],PRECISION,WORD_WIDTH);
+        data_packed[n1:n0] <= data_format[7-n];
       end else begin
-        data_packed[n1:n0] <= `SIGN_EXT(data_format[n],PRECISION,WORD_WIDTH);
+        data_packed[n1:n0] <= data_format[n];
       end
     end
   end
@@ -190,7 +187,7 @@ module ad9361_dual_axis #(
 
     always @(posedge m_axis_clk) begin
       casez ({m_axis_frame, m_axis_end_burst})
-        2'b11: m_axis_count <= {COUNT_WIDTH{1'b0}};
+        2'b11: m_axis_count <= 'b0;
         2'b10: m_axis_count <= m_axis_count + 1'b1;
         default: m_axis_count <= m_axis_count;
       endcase

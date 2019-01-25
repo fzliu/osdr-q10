@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-module ad9361_samp_filt #(
+module ad9361_dual_filt #(
 
   // parameters
 
@@ -14,7 +14,11 @@ module ad9361_samp_filt #(
   parameter   NUM_DELAY = 24,
   parameter   NUM_PAD_SAMPS = 7,
   parameter   DATA_PASS_VALUE = 16,
-  parameter   LOG2_FILTER_LENGTH = 4,
+  parameter   FILTER_LENGTH = 16,
+
+  // derived parameters
+
+  parameter   FILTER_POWER = log2(FILTER_LENGTH - 1),
 
   // bit width parameters
 
@@ -181,7 +185,7 @@ module ad9361_samp_filt #(
 
     filt_boxcar #(
       .DATA_WIDTH (ABS_WIDTH),
-      .FILTER_POWER (LOG2_FILTER_LENGTH)
+      .FILTER_POWER (FILTER_POWER)
     ) filt_boxcar (
       .clk (clk),
       .rst (1'b0),

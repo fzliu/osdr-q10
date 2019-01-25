@@ -207,13 +207,13 @@ module ad9361_dual #(
   generate
   if (USE_SAMPLE_FILTER) begin
 
-    ad9361_samp_filt #(
+    ad9361_dual_filt #(
       .ABS_WIDTH (16),
       .NUM_DELAY (26),
       .NUM_PAD_SAMPS (NUM_PAD_SAMPS),
       .DATA_PASS_VALUE (DATA_PASS_VALUE),
       .LOG2_FILTER_LENGTH (log2(FILTER_LENGTH-1))
-    ) ad9361_samp_filt (
+    ) ad9361_dual_filt (
       .clk (clk),
       .valid_0_in (valid_0),
       .data_i0_in (data_i0),
@@ -275,7 +275,7 @@ module ad9361_dual #(
     .INDEP_CLOCKS (INDEP_CLOCKS),
     .USE_AXIS_TLAST (USE_AXIS_TLAST)
   ) ad9361_dual_axis (
-    .data_clk (clk),
+    .clk (clk),
     .valid_0 (valid_0_sf),
     .data_i0 (data_i0_sf),
     .data_q0 (data_q0_sf),

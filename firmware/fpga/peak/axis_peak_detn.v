@@ -171,7 +171,7 @@ module axis_peak_detn #(
     .clk (clk),
     .rst (1'b0),
     .ena (shift_ena),
-    .din (s_axis_tdata),
+    .din (mem_ready ? 'b0 : s_axis_tdata),
     .dout (m_axis_tdata)
   );
 

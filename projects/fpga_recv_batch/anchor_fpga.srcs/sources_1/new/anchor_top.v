@@ -171,11 +171,11 @@ module anchor_top (
 
   // sample buffer
 
-  samp_buff #(
+  buf_samp_data #(
     .FIFO_DEPTH (65536),
     .WRITE_WIDTH (128),
     .READ_WIDTH (16)
-  ) samp_buff (
+  ) buf_samp_data (
     .wr_clk (wr_clk),
     .rd_clk (rd_clk),
     .s_axis_tvalid (samp_valid),

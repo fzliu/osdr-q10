@@ -13,10 +13,9 @@ module anchor_top_tb;
 
   parameter   NUM_TAGS = 1;   //5
   parameter   CORR_OFFSET = 19;   //15
-  parameter   PEAK_THRESH_MULT = 8;
   
-  parameter   SAMPS_WIDTH = 64;
-  parameter   DATA_WIDTH = 128;
+  parameter   SAMPS_WIDTH = 48;
+  parameter   DATA_WIDTH = 96;
 
   localparam  INPUT_WIDTH = NUM_TAGS * SAMPS_WIDTH;
   localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH;
@@ -99,7 +98,7 @@ module anchor_top_tb;
 
   integer j;
   initial begin
-    #15000;
+    #28000; //#15000;
     for (j = 0; j < 264; j = j + 1) begin
       #20 ebi_nrde = 1'b0;
       #20 ebi_nrde = 1'b1;
@@ -110,8 +109,7 @@ module anchor_top_tb;
 
   anchor_top #(
     .NUM_TAGS (NUM_TAGS),
-    .CORR_OFFSET (CORR_OFFSET),
-    .PEAK_THRESH_MULT (PEAK_THRESH_MULT)
+    .CORR_OFFSET (CORR_OFFSET)
   ) anchor_top (
     .clk (clk),
     .a_rx_clk_in (rx_clk_in),
@@ -173,10 +171,6 @@ module anchor_top_tb;
   wire    [ NT:0]   cabs_axis_tready = anchor_top.cabs_axis_tready;
   wire    [ WP:0]   cabs_axis_tdata = anchor_top.cabs_axis_tdata;
   wire    [ WP:0]   cabs_axis_tdata_abs = anchor_top.cabs_axis_tdata_abs;
-  wire    [ NT:0]   clkx_axis_tvalid = anchor_top.clkx_axis_tvalid;
-  wire    [ NT:0]   clkx_axis_tready = anchor_top.clkx_axis_tready;
-  wire    [ WP:0]   clkx_axis_tdata = anchor_top.clkx_axis_tdata;
-  wire    [ WP:0]   clkx_axis_tdata_abs = anchor_top.clkx_axis_tdata_abs;
   wire    [ NT:0]   peak_axis_tvalid = anchor_top.peak_axis_tvalid;
   wire    [ NT:0]   peak_axis_tready = anchor_top.peak_axis_tready;
   wire    [ WP:0]   peak_axis_tdata = anchor_top.peak_axis_tdata;

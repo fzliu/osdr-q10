@@ -12,13 +12,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-module tag_data_buff #(
+module buf_peak_data #(
 
   // parameters
 
   parameter   NUM_TAGS = 10,
   parameter   NUM_CHANNELS = 4,
-  parameter   CHANNEL_WIDTH = 64,
+  parameter   CHANNEL_WIDTH = 32,
   parameter   FIFO_DEPTH = 128,
   parameter   READ_WIDTH = 16,
   parameter   MEMORY_TYPE = "block",
@@ -56,7 +56,7 @@ module tag_data_buff #(
 
   input             rd_ena,
   output            rd_ready,
-  output  [ WR:0]   rd_data
+  output  [ 15:0]   rd_data
 
 );
 
@@ -65,14 +65,14 @@ module tag_data_buff #(
   // internal registers
 
   reg               rd_ena_d = 'b0;
-  reg               s_axis_tlast_d = 'b0;
+  reg               aux_valid = 'b0;
 
   // internal signals
 
   wire              s_axis_frame;
 
-  wire              tag_num_frame;
-  wire    [ WD:0]   tag_num;
+  wire              aux_frame;
+  wire    [ WD:0]   aux_data;
 
   wire              fifo_full;
   wire              fifo_empty;
@@ -81,29 +81,24 @@ module tag_data_buff #(
 
   // slave interface
 
-  assign s_axis_tready = ~s_axis_tlast_d & ~fifo_full;
+  assign s_axis_tready = ~aux_valid & ~fifo_full;
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
-  // tag number must be written into the FIFO
+  // auxilary data (tag number) must be written into the FIFO
   // this is done on the cycle after tlast is asserted
   // the FIFO must also have space, i.e. fifo_full == 1'b0
 
   always @(posedge clk) begin
-    if (~fifo_full) begin
-      s_axis_tlast_d <= s_axis_tlast;
-    end else begin
-      s_axis_tlast_d <= s_axis_tlast_d;
-    end
+    casez ({fifo_full, s_axis_tlast, aux_frame})
+      3'b1??: aux_valid <= aux_valid;
+      3'b01?: aux_valid <= 1'b1;
+      3'b001: aux_valid <= 1'b0;
+      default: aux_valid <= aux_valid;
+    endcase
   end
 
-  assign tag_num = {{PAD_WIDTH{1'b0}}, s_axis_tuser};
-  assign tag_num_frame = (~s_axis_tlast & s_axis_tlast_d) & ~fifo_full;
-
-  // delayed read enable
-
-  always @(posedge clk) begin
-    rd_ena_d <= rd_ena;
-  end
+  assign aux_data = {{PAD_WIDTH{1'b0}}, s_axis_tuser};
+  assign aux_frame = aux_valid & ~fifo_full;
 
   // fifo instantiation
 
@@ -125,8 +120,8 @@ module tag_data_buff #(
     .sleep (1'b0),
     .rst (1'b0),
     .wr_clk (clk),
-    .wr_en (s_axis_frame | tag_num_frame),
-    .din (s_axis_frame ? s_axis_tdata : tag_num),
+    .wr_en (aux_frame | s_axis_frame),
+    .din (aux_valid ? aux_data : s_axis_tdata),
     .full (fifo_full),
     .overflow (),
     .prog_full (),
@@ -135,7 +130,7 @@ module tag_data_buff #(
     .wr_ack (),
     .wr_rst_busy (fifo_wr_rst_busy),
     .rd_en (rd_ena & ~rd_ena_d),
-    .dout (rd_data),
+    .dout (rd_data[WR:0]),
     .empty (fifo_empty),
     .rd_rst_busy (fifo_rd_rst_busy),
     .prog_empty (),
@@ -149,12 +144,24 @@ module tag_data_buff #(
     .dbiterr ()
   );
 
-  // output control signals
+  // read enable
+
+  always @(posedge clk) begin
+    rd_ena_d <= rd_ena;
+  end
+
+  // output signals
+
+  generate
+  if (READ_WIDTH < 16) begin
+    assign rd_data[15:(WR+1)] = 'b0;
+  end
+  endgenerate
 
   assign rd_ready = ~fifo_empty;
 
   // SIMULATION
-  
+
   wire      [ WW:0]   _s_axis_tdata_unpack [0:NP];
 
   genvar n;

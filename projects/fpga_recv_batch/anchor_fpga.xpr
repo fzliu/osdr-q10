@@ -82,7 +82,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../firmware/fpga/ad9361/ad9361_samp_filt.v">
+      <File Path="$PPRDIR/../../firmware/fpga/ad9361/ad9361_dual_filt.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -124,7 +124,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../firmware/fpga/mpu_if/samp_buff.v">
+      <File Path="$PPRDIR/../../firmware/fpga/mpu_if/buf_samp_data.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>

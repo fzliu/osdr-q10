@@ -29,9 +29,7 @@ module axis_bit_corr #(
   // parameters
 
   parameter   NUM_PARALLEL = 8,     // TODO(fzliu): ensure this is 2^N
-  parameter   PRECISION = 6,
-  parameter   SLAVE_WIDTH = 64,     // TODO(fzliu): compute using PRECISION
-  parameter   MASTER_WIDTH = 128,   // TODO(fzliu): compute using PRECISION
+  parameter   WAVE_WIDTH = 6,
   parameter   ADDER_WIDTH = 12,     // TODO(fzliu): ensure this is 2*N
   parameter   USE_STALL_SIGNAL = 1,
   parameter   SHIFT_DEPTH = 1,
@@ -48,19 +46,17 @@ module axis_bit_corr #(
 
   // derived parameters
 
-  localparam  WAVE_WIDTH = SLAVE_WIDTH / NUM_PARALLEL,
-  localparam  FILT_WIDTH = MASTER_WIDTH / NUM_PARALLEL,
+  parameter   SLAVE_WIDTH = WAVE_WIDTH * NUM_PARALLEL,
+  parameter   MASTER_WIDTH = ADDER_WIDTH * NUM_PARALLEL,
   localparam  COUNT_WIDTH = log2(NUM_PARALLEL * NUM_CORRS - 1),
 
   // bit width parameters
 
   localparam  NP = NUM_PARALLEL - 1,
-  localparam  PR = PRECISION - 1,
+  localparam  WW = WAVE_WIDTH - 1,
+  localparam  WA = ADDER_WIDTH - 1,
   localparam  WS = SLAVE_WIDTH - 1,
   localparam  WM = MASTER_WIDTH - 1,
-  localparam  WA = ADDER_WIDTH - 1,
-  localparam  WW = WAVE_WIDTH - 1,
-  localparam  WF = FILT_WIDTH - 1,
   localparam  WN = COUNT_WIDTH - 1
 
 ) (
@@ -118,7 +114,7 @@ module axis_bit_corr #(
   wire              batch_done;
 
   wire              corr_idx;
-  wire    [ PR:0]   data_in;
+  wire    [ WW:0]   data_in;
   wire    [ WA:0]   adder_in0 [0:L0];
   wire    [ WA:0]   adder_in1 [0:L0];
 
@@ -229,21 +225,21 @@ module axis_bit_corr #(
   // first adder input - s_axis_tdata module input
 
   shift_reg #(
-    .WIDTH (PRECISION),
+    .WIDTH (WAVE_WIDTH),
     .DEPTH (SHIFT_DEPTH)
   ) shift_reg_din (
     .clk (clk),
     .rst (1'b0),
-    .ena (enable_int),  //1'b1
-    .din (s_axis_tdata_unpack[count][PR:0]),
+    .ena (enable_int),
+    .din (s_axis_tdata_unpack[count]),
     .dout (data_in)
   );
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
     assign adder_in0[n] = correlator[CORR_LENGTH-n-1] ?
-                          `SIGN_EXT(data_in,PRECISION,ADDER_WIDTH) :
-                          -`SIGN_EXT(data_in,PRECISION,ADDER_WIDTH);
+                          `SIGN_EXT(data_in,WAVE_WIDTH,ADDER_WIDTH) :
+                          -`SIGN_EXT(data_in,WAVE_WIDTH,ADDER_WIDTH);
   end
   endgenerate
 
@@ -317,9 +313,9 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
-    localparam n0 = n * FILT_WIDTH;
-    localparam n1 = n0 + WF;
-    assign output_pack[n1:n0] = `SIGN_EXT(output_ram[n],ADDER_WIDTH,FILT_WIDTH);
+    localparam n0 = n * ADDER_WIDTH;
+    localparam n1 = n0 + WA;
+    assign output_pack[n1:n0] = output_ram[n];
   end
   endgenerate
 
@@ -356,17 +352,5 @@ module axis_bit_corr #(
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
-
-  // SIMULATION
-
-  wire      [ WF:0]   _m_axis_tdata_unpack [0:NP];
-
-  generate
-  for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
-    localparam n0 = n * FILT_WIDTH;
-    localparam n1 = n0 + WF;
-    assign _m_axis_tdata_unpack[n] = m_axis_tdata[n1:n0];
-  end
-  endgenerate
 
 endmodule
