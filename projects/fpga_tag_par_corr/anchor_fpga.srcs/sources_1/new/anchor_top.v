@@ -26,7 +26,7 @@ module anchor_top #(
 
   parameter   DEVICE_TYPE = "7SERIES",
 
-  parameter   NUM_TAGS = 2,
+  parameter   NUM_TAGS = 8,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   ADDER_WIDTH = 12,

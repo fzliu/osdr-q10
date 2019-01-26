@@ -296,7 +296,11 @@ module axis_bit_corr #(
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
     always @(posedge clk) begin
-      adder_out[n] <= adder_in1[n] + adder_in0[n];
+      if (enable_int) begin
+        adder_out[n] <= adder_in1[n] + adder_in0[n];
+      end else begin
+        adder_out[n] <= adder_out[n];
+      end
     end
   end
   endgenerate
