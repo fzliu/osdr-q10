@@ -162,8 +162,8 @@ module axis_bit_corr #(
   endgenerate
 
   /* Slave interface.
-   * If USE_STALL_SIGNAL is set, then the "next" module may not process the
-   * incoming data as quickly as axis_bit_corr does. In this case, we check to
+   * If USE_STALL_SIGNAL is set, then the downstream module may not process the
+   * outgoing data as quickly as axis_bit_corr does. In this case, we check to
    * make sure that a) the output m_axis does not contain data that has not
    * yet been read by the downstream AXI block, or b) second-to-last set ot
    * output registers also does not contain data. If USE_STALL_SIGNAL is not set
@@ -229,8 +229,8 @@ module axis_bit_corr #(
 
   /* Set correlator for current batch.
    * Once we have finished processing NUM_PARALLEL input channels, we must move
-   * on to the next correlator. However, to this must also go through
-   * SHIFT_DEPTH cycles of delay so that we does not prematurely begin using the
+   * on to the next correlator. However, these bits must also go through
+   * SHIFT_DEPTH cycles of delay so that we do not prematurely begin using the
    * next correlator. Another option would be to have the correlator itself pass
    * through SHIFT_DEPTH cycles of delay; however, this would be a waste of
    * resources as it does not seem to improve timing.
@@ -336,7 +336,7 @@ module axis_bit_corr #(
 
   /* Adder instantiations.
    * The synthesis tool should be able to utilize the fast fabric carry logic.
-   * As such, there is no need to pipeline this adder. AS previously mentioned,
+   * As such, there is no need to pipeline this adder. As previously mentioned,
    * the output of each adder is flopped to improve timing.
    */
 
@@ -355,7 +355,8 @@ module axis_bit_corr #(
   /* Output memory.
    * We do not have to use dual-port distributed RAM for the output memory
    * column. The synthesis tool should infer flops, which should improve
-   * timing and routability.
+   * timing and routability. Since Verilog does not allow unpacked input and
+   * output signals, we must also repack the final memory column.
    */
 
   always @(posedge clk) begin
@@ -363,11 +364,6 @@ module axis_bit_corr #(
       output_ram[wr_addr] <= adder_out[L0];
     end
   end
-
-  /* Repack output data.
-   * Since Verilog does not allow unpacked input and output signals, we must
-   * repack the final memory column.
-   */
 
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
@@ -380,10 +376,10 @@ module axis_bit_corr #(
   /* Second-to-last output stage.
    * This is required to prevent stalling. Since the batch_done signal may be
    * high for multiple clock cycles, we slice out its rising edge for a single
-   * clock cycle using its delayed version. When the rising edge of batch_done
-   * is detected, our output becomes valid. This output data is transfered to
-   * m_axis_tdata if no valid data is currently present on m_axis, or if data
-   * on m_axis was transferred on the current clock cycle.
+   * clock cycle using its delayed version, batch_done_d. When the rising edge
+   * of batch_done is detected, our output becomes valid. This output data is
+   * transfered to m_axis_tdata if no valid data is currently present on m_axis,
+   * or if data on m_axis was transferred on the current clock cycle.
    */
 
   always @(posedge clk) begin
