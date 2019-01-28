@@ -75,7 +75,6 @@ module axis_cabs_serial #(
 
   // internal registers
 
-  reg               batch_done_out_d = 'b0;
   reg               valid_out = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
@@ -88,12 +87,11 @@ module axis_cabs_serial #(
   wire              s_axis_frame;
 
   wire              stall;
-  wire              batch_done;
   wire              enable_int;
-  wire              batch_done_out;
 
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
+  wire              batch_done;
 
   wire    [ WW:0]   data_in_a;
   wire    [ WW:0]   data_in_b;
@@ -106,7 +104,9 @@ module axis_cabs_serial #(
 
   wire              m_axis_frame;
 
-  // initialize final memory column
+  /* Initialize final memory column.
+   * This memory stores the computed absolute values.
+   */
 
   genvar n;
   generate
@@ -117,7 +117,10 @@ module axis_cabs_serial #(
   end
   endgenerate
 
-  // unpack/pack data
+  /* Unpack input data.
+   * As with axis_bit_corr, this is done for ease of use later on in this
+   * module.
+   */
 
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
@@ -127,18 +130,23 @@ module axis_cabs_serial #(
   end
   endgenerate
 
-  // slave interface
+  /* Slave interface.
+   * The slave interface for axis_cabs_serial mimics that of axis_bit_corr. For
+   * more details, refer to that module.
+   */
 
   generate
     assign stall = USE_STALL_SIGNAL ? valid_out & m_axis_tvalid : 1'b0;
   endgenerate
 
-  assign batch_done = (count == NC);
   assign enable_int = ~stall & s_axis_tvalid;
-  assign s_axis_tready = ~stall & batch_done;
+  assign s_axis_tready = ~stall & (count == NC);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
-  // channel counter
+  /* Counter logic.
+   * The counter logic for axis_cabs_serial mimics that of axis_bit_corr. For
+   * more details, refer to that module.
+   */
 
   counter #(
     .LOWER (0),
@@ -146,12 +154,17 @@ module axis_cabs_serial #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .rst (s_axis_frame),  // bus data is "transferred" upon completion
+    .rst (s_axis_frame),
     .ena (enable_int),
     .value (count)
   );
 
-  // absolute value module
+  /* Absolute value instantiation.
+   * The width of the absolute value module is set based on the input data
+   * width. While the absolute value of the inputs are being computed, the
+   * control logic must go through a shift register to match the latency of the
+   * absolute value module.
+   */
 
   assign data_in_a = s_axis_tdata_unpack[count][WW:0];
   assign data_in_b = s_axis_tdata_unpack[count][WC:(WW+1)];
@@ -204,11 +217,14 @@ module axis_cabs_serial #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (batch_done),
-    .dout (batch_done_out)
+    .din (count == NC),
+    .dout (batch_done)
   );
 
-  // cabs "memory"
+  /* Output memory.
+   * The output memory for axis_cabs_serial mimics that of axis_bit_corr. For
+   * more details, refer to that module.
+   */
 
   always @(posedge clk) begin
     if (enable_int) begin
@@ -224,15 +240,13 @@ module axis_cabs_serial #(
   end
   endgenerate
 
-  // valid_out logic
-  // when valid_out == 1'b1, both m_axis and output contain valid data
+  /* Second-to-last output stage.
+   * The penultimate stage for axis_cabs_serial mimics that of axis_bit_corr.
+   * For more details, refer to that module.
+   */
 
   always @(posedge clk) begin
-    batch_done_out_d <= batch_done_out;
-  end
-
-  always @(posedge clk) begin
-    if (batch_done_out & ~batch_done_out_d) begin
+    if (enable_int & batch_done) begin
       valid_out <= 1'b1;
     end else if (m_axis_frame | ~m_axis_tvalid) begin
       valid_out <= 1'b0;
@@ -241,11 +255,14 @@ module axis_cabs_serial #(
     end
   end
 
-  // align input data with abs data
+  /* Align input data with absolute value data.
+   * We need to add an extra clock cycle to this shift register to compensate
+   * for the penultimate stage (see previous section).
+   */
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
-    .DEPTH (CABS_DELAY+1)
+    .DEPTH (CABS_DELAY + 1)
   ) shift_reg_data (
     .clk (clk),
     .rst (1'b0),
@@ -254,7 +271,11 @@ module axis_cabs_serial #(
     .dout (data_out)
   );
 
-  // master interface
+  /* Master interface.
+   * In addition to the input data, this module must also expose a second data
+   * port to transfer absolute value information. This port is aptly named
+   * m_axis_tdata_abs.
+   */
 
   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
 

@@ -46,8 +46,8 @@ module axis_bit_corr #(
 
   // derived parameters
 
-  parameter   SLAVE_WIDTH = WAVE_WIDTH * NUM_PARALLEL,
-  parameter   MASTER_WIDTH = ADDER_WIDTH * NUM_PARALLEL,
+  localparam  SLAVE_WIDTH = WAVE_WIDTH * NUM_PARALLEL,
+  localparam  MASTER_WIDTH = ADDER_WIDTH * NUM_PARALLEL,
   localparam  COUNT_WIDTH = log2(NUM_PARALLEL * NUM_CORRS - 1),
 
   // bit width parameters
@@ -75,7 +75,8 @@ module axis_bit_corr #(
 
   output            m_axis_tvalid,
   input             m_axis_tready,
-  output  [ WM:0]   m_axis_tdata
+  output  [ WM:0]   m_axis_tdata,
+  output  [ N0:0]   m_axis_tdest
 
 );
 
@@ -83,7 +84,7 @@ module axis_bit_corr #(
   `include "func_sqrt.vh"
   `include "sign_ext.vh"
 
-  `define CORRS(n) CORRELATORS[(n)*CORR_LENGTH+:CORR_LENGTH]
+  `define CORRS(n) CORRELATORS[(n+CORR_OFFSET)*CORR_LENGTH+:CORR_LENGTH]
 
   // internal memories
 
@@ -94,11 +95,12 @@ module axis_bit_corr #(
 
   reg     [ L0:0]   correlator = `CORRS(CORR_OFFSET);
 
-  reg               batch_done_d = 'b0;
   reg               valid_out = 'b0;
+  reg     [ N0:0]   dest_out = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WM:0]   m_axis_tdata_reg = 'b0;
+  reg     [ N0:0]   m_axis_tdest_reg = 'b0;
 
   // internal signals
 
@@ -111,9 +113,10 @@ module axis_bit_corr #(
   wire    [ WN:0]   count;
   wire    [ WN:0]   wr_addr;
   wire    [ WN:0]   rd_addr;
-  wire              batch_done;
 
-  wire              corr_idx;
+  wire              batch_done;
+  wire    [ N0:0]   corr_num;
+
   wire    [ WW:0]   data_in;
   wire    [ WA:0]   adder_in0 [0:L0];
   wire    [ WA:0]   adder_in1 [0:L0];
@@ -223,7 +226,7 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (count + 1'b1),  //enable_int ? count + 1'b1 : count
+    .din (count + 1'b1),
     .dout (rd_addr)
   );
 
@@ -237,28 +240,27 @@ module axis_bit_corr #(
    */
 
   shift_reg #(
-    .WIDTH (1),
+    .WIDTH (NUM_CORRS),
     .DEPTH (SHIFT_DEPTH)
-  ) shift_reg_done (
+  ) shift_reg_corr_num (
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din ((count % NUM_PARALLEL) == NP),
-    .dout (batch_done)
+    .din (count >> log2(NUM_PARALLEL - 1)),
+    .dout (corr_num)
   );
 
-  assign corr_idx = (count + 1'b1) / NUM_PARALLEL;
-
   always @(posedge clk) begin
-    if (enable_int & batch_done) begin
-      correlator <= `CORRS(corr_idx+CORR_OFFSET);
+    if (enable_int) begin
+      correlator <= `CORRS(rd_addr/NUM_PARALLEL);
     end else begin
       correlator <= correlator;
     end
   end
 
   /* First adder input.
-   * The first input to each adder is simply the current input data.
+   * The first input to each adder is simply the current input data. Note that
+   * the correlator bits need to be reversed for proper functionality.
    */
 
   shift_reg #(
@@ -374,25 +376,38 @@ module axis_bit_corr #(
   endgenerate
 
   /* Second-to-last output stage.
-   * This is required to prevent stalling. Since the batch_done signal may be
-   * high for multiple clock cycles, we slice out its rising edge for a single
-   * clock cycle using its delayed version, batch_done_d. When the rising edge
-   * of batch_done is detected, our output becomes valid. This output data is
-   * transfered to m_axis_tdata if no valid data is currently present on m_axis,
-   * or if data on m_axis was transferred on the current clock cycle.
+   * This is required to prevent stalling. When batch_done is asserted, our
+   * output becomes valid. This output data is transfered to m_axis_tdata if no
+   * valid data is currently present on m_axis, or if data on m_axis was
+   * transferred on the current clock cycle.
    */
 
-  always @(posedge clk) begin
-    batch_done_d <= batch_done;
-  end
+  shift_reg #(
+    .WIDTH (1),
+    .DEPTH (SHIFT_DEPTH + 1)
+  ) shift_reg_batch_done (
+    .clk (clk),
+    .rst (1'b0),
+    .ena (enable_int),
+    .din ((count % NUM_PARALLEL) == NP),
+    .dout (batch_done)
+  );
 
   always @(posedge clk) begin
-    if (batch_done & ~batch_done_d) begin
+    if (enable_int & batch_done) begin
       valid_out <= 1'b1;
     end else if (m_axis_frame | ~m_axis_tvalid) begin
       valid_out <= 1'b0;
     end else begin
       valid_out <= valid_out;
+    end
+  end
+
+  always @(posedge clk) begin
+    if (enable_int & batch_done) begin
+      dest_out <= corr_num;
+    end else begin
+      dest_out <= dest_out;
     end
   end
 
@@ -407,13 +422,16 @@ module axis_bit_corr #(
     if (m_axis_frame | ~m_axis_tvalid) begin
       m_axis_tvalid_reg <= valid_out;
       m_axis_tdata_reg <= output_pack;
+      m_axis_tdest_reg <= dest_out;
     end else begin
       m_axis_tvalid_reg <= m_axis_tvalid;
       m_axis_tdata_reg <= m_axis_tdata;
+      m_axis_tdest_reg <= m_axis_tdest;
     end
   end
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
   assign m_axis_tdata = m_axis_tdata_reg;
+  assign m_axis_tdest = m_axis_tdest_reg;
 
 endmodule

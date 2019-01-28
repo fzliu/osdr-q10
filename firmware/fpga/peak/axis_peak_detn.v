@@ -89,11 +89,21 @@ module axis_peak_detn #(
 
   wire              m_axis_frame;
 
-  // slave interface
+  /* Slave interface.
+   * The slave ready signal is set to a constant high value, indicating that
+   * this module is always ready to process data. If a new peak is detected
+   * before the existing one has been read by the downstream module, the new
+   * peak is simply thrown away. This prevents the upstream modules from
+   * stalling and should improve timing.
+   */
 
   assign s_axis_tready = 1'b1;
 
-  // peak detection logic
+  /* Peak detection logic.
+   * The absolute value of each sample goes through a boxcar averager. If one of
+   * the samples has a significantly higher value than the average of it and its
+   * neighboring samples, then we have detected a peak.--
+   */
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
@@ -136,13 +146,27 @@ module axis_peak_detn #(
   end
   endgenerate
 
+  /* Burst start indicator.
+   * When a peak is detected, burst_start will go high for a single clock cycle.
+   * If a peak already exists in the output shift register, burst_start is not
+   * asserted to prevent existing data from being overwritten.
+   */
+
   always @(posedge clk) begin
     has_peak_any_d <= |has_peak;
   end
 
   assign burst_start = |has_peak & ~has_peak_any_d & ~mem_ready;
 
-  // control logic
+  /* Shift register control logic.
+   * When a burst begins, we reset the counter (from a default value of 32) to
+   * 0. This begins the upward counting process. This occurs each time a new
+   * batch of data is framed by the master AXI-stream., and ends once the
+   * counter's output value reaches BURST_LENGTH. Because a shift register is
+   * not a circular buffer, we must also keep pusing data through even if a peak
+   * has not yet been detected. This is done by adding a "write enable" to the
+   * shift register control logic, as indicated.
+   */
 
   counter #(
     .LOWER (0),
@@ -160,8 +184,12 @@ module axis_peak_detn #(
   assign shift_ena = (m_axis_frame & mem_ready) |     // read enable
                      (s_axis_tvalid & ~mem_ready);    // write enable
 
-  // master interface
-
+  /* Master interface.
+   * Because axis_peak_detn is not meant to run at exeedingly high clock speeds,
+   * the master AXI-stream is left unregistered. When the counter reaches
+   * BURST_LENGTH - 1 (e.g. 31), tlast is asserted, indicating that there is no
+   * more data left in the shift register.
+   */
   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
 
   shift_reg #(

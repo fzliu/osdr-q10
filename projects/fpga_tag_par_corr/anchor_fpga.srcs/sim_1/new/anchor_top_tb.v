@@ -11,8 +11,8 @@ module anchor_top_tb;
 
   // parameters
 
-  parameter   NUM_TAGS = 1;   //5
-  parameter   CORR_OFFSET = 19;   //15
+  parameter   NUM_TAGS = 1;   //1
+  parameter   CORR_OFFSET = 19;   //19
   
   parameter   SAMPS_WIDTH = 48;
   parameter   DATA_WIDTH = 96;

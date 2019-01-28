@@ -26,13 +26,13 @@ module anchor_top #(
 
   parameter   DEVICE_TYPE = "7SERIES",
 
-  parameter   NUM_TAGS = 5,
+  parameter   NUM_TAGS = 1,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   ADDER_WIDTH = 12,
   parameter   CORR_OFFSET = 0,
 
-  parameter   CABS_DELAY = 10,
+  parameter   CABS_DELAY = 9,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
 
@@ -436,7 +436,8 @@ module anchor_top #(
       .s_axis_tdata (distrib_axis_tdata[i1:i0]),
       .m_axis_tvalid (corr_axis_tvalid[n]),
       .m_axis_tready (corr_axis_tready[n]),
-      .m_axis_tdata (corr_axis_tdata[j1:j0])
+      .m_axis_tdata (corr_axis_tdata[j1:j0]),
+      .m_axis_tdest ()
     );
 
     // absolute value computation

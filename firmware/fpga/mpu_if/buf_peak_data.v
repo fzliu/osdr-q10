@@ -2,9 +2,11 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Serializes tag data into a single output buffer for consumption
-// by external microprocessor.
+// Description
+// Serializes tag data into a single output buffer for consumption by external
+// microprocessor.
 //
+// Signals
 // enable  :  N/A
 // reset   :  active-high
 // latency :  N/A
@@ -79,20 +81,28 @@ module buf_peak_data #(
   wire              fifo_rd_rst_busy;
   wire              fifo_wr_rst_busy;
 
-  // slave interface
+  /* Slave interface.
+   * Because auxiliary data needs to be fed into the FIFO immediately after the
+   * last data batch, the ready signal incorporates aux_valid to ensure that
+   * the slave AXI-stream does not conflict with this process.
+   */
 
   assign s_axis_tready = ~aux_valid & ~fifo_full;
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
-  // auxilary data (tag number) must be written into the FIFO
-  // this is done on the cycle after tlast is asserted
-  // the FIFO must also have space, i.e. fifo_full == 1'b0
+  /* Auxiliary data control.
+   * Auxiliary data (primiarly the detected tag number) must be written into the
+   * FIFO. This is done on the cycle after tlast is asserted. Since tlast may be
+   * high while valid is low, we check to make sure s_axis_frame is high on the
+   * same cycle s_axis_tlast is asserted. The fifo_full signal is used as an
+   * enable for this control logic.
+   */
 
   always @(posedge clk) begin
-    casez ({fifo_full, s_axis_tlast, aux_frame})
-      3'b1??: aux_valid <= aux_valid;
-      3'b01?: aux_valid <= 1'b1;
-      3'b001: aux_valid <= 1'b0;
+    casez ({fifo_full, aux_frame, s_axis_frame, s_axis_tlast})
+      4'b1???: aux_valid <= aux_valid;
+      4'b01??: aux_valid <= 1'b0;
+      4'b0011: aux_valid <= 1'b1;
       default: aux_valid <= aux_valid;
     endcase
   end
@@ -100,7 +110,11 @@ module buf_peak_data #(
   assign aux_data = {{PAD_WIDTH{1'b0}}, s_axis_tuser};
   assign aux_frame = aux_valid & ~fifo_full;
 
-  // fifo instantiation
+  /* FIFO instantiation.
+   * Whenever slave AXI-stream or auxiliary data is available, we write it into
+   * the FIFO. Since the output data will be read by the MCU through the EBI
+   * bus, use of a memory latch is okay.
+   */
 
   xpm_fifo_sync #(
     .FIFO_MEMORY_TYPE (MEMORY_TYPE),
@@ -111,7 +125,7 @@ module buf_peak_data #(
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("0000"),
     .READ_MODE ("std"),
-    .FIFO_READ_LATENCY (1),   // memory latch is OK for EBI bus
+    .FIFO_READ_LATENCY (1),
     .READ_DATA_WIDTH (READ_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
@@ -144,19 +158,31 @@ module buf_peak_data #(
     .dbiterr ()
   );
 
-  // read enable
+  /* Delayed read enable.
+   * This delayed read enable signal is used to slice out the rising edge of
+   * rd_ena.
+   */
 
   always @(posedge clk) begin
     rd_ena_d <= rd_ena;
   end
 
-  // output signals
+  /* Output data.
+   * The EBI bus is a fixed 16 bits, but the FIFO supports only DATA_WIDTH * 2^N
+   * values for its output width, where |N| <= 3. Therefore, the read width may
+   * not be exactly 16. For such cases, we pad the upper bits of the output data
+   * bus with 0s.
+   */
 
   generate
   if (READ_WIDTH < 16) begin
     assign rd_data[15:(WR+1)] = 'b0;
   end
   endgenerate
+
+  /* Read ready.
+   * If the FIFO is not empty, data exists and can be read by the MCU.
+   */
 
   assign rd_ready = ~fifo_empty;
 
