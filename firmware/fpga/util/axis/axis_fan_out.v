@@ -9,7 +9,7 @@
 // Signals
 // enable  :  N/A
 // reset   :  active-high
-// latency :  0 cycles
+// latency :  0 cycles (default), FIFO_LATENCY (USE_FIFOs == 1)
 // output  :  unregistered
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +20,10 @@ module axis_fan_out #(
 
   parameter   NUM_FANOUT = 6,
   parameter   DATA_WIDTH = 256,
+  parameter   USE_FIFOS = 0,
+  parameter   FIFO_TYPE = "auto",
+  parameter   FIFO_DEPTH = 16,
+  parameter   FIFO_LATENCY = 2,
 
   // derived parameters
 
@@ -44,7 +48,7 @@ module axis_fan_out #(
   input             s_axis_tvalid,
   output            s_axis_tready,
   input   [ WD:0]   s_axis_tdata,
-  input   [ NF:0]   s_axis_tuser,
+  input   [ NF:0]   s_axis_tdest,
 
   // master interace
 
@@ -56,14 +60,51 @@ module axis_fan_out #(
 
   `include "func_log2.vh"
 
+  // internal signals
+
+  wire              fanout_valid;
+  wire              fanout_ready;
+  wire    [ WD:0]   fanout_data;
+
   // slave interface
 
-  assign s_axis_tready = m_axis_tready[s_axis_tuser];
+  assign s_axis_tready = fanout_ready[s_axis_tdest];
 
   // master interface
 
-  assign m_axis_tvalid = {{NF{1'b0}}, s_axis_tvalid} << s_axis_tuser;
-  assign m_axis_tdata = {FANIN_WIDTH{s_axis_tdata}};
+  assign fanout_valid = {{NF{1'b0}}, s_axis_tvalid} << s_axis_tdest;
+  assign fanout_data = {FANIN_WIDTH{s_axis_tdata}};
+
+  // assign outputs
+
+  generate
+  if (USE_FIFOS) begin
+
+    axis_fifo_async #(
+      .MEMORY_TYPE (FIFO_TYPE),
+      .DATA_WIDTH (DATA_WIDTH),
+      .FIFO_DEPTH (FIFO_DEPTH),
+      .READ_LATENCY (FIFO_LATENCY)
+    ) axis_fifo_async (
+      .s_axis_clk (s_axis_clk),
+      .s_axis_rst (s_axis_rst),
+      .m_axis_clk (m_axis_clk),
+      .s_axis_tvalid (fanout_valid),
+      .s_axis_tready (fanout_ready),
+      .s_axis_tdata (fanout_data),
+      .m_axis_tvalid (m_axis_tvalid),
+      .m_axis_tready (m_axis_tready),
+      .m_axis_tdata (m_axis_tdata)
+    );
+
+  end else begin
+
+    assign fanout_ready = m_axis_tready;
+    assign m_axis_tvalid = fanout_valid;
+    assign m_axis_tdata = fanout_data;
+
+  end
+  endgenerate
 
 endmodule
 

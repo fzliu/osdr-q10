@@ -23,6 +23,7 @@ module axis_fan_in #(
   parameter   USE_AXIS_TLAST = 1,
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
+  parameter   FIFO_DEPTH = 16,
   parameter   FIFO_LATENCY = 2,
 
   // derived parameters
@@ -158,11 +159,11 @@ module axis_fan_in #(
 
   generate
   if (USE_FIFOS) begin
- 
+
     axis_fifo_async #(
       .MEMORY_TYPE (FIFO_TYPE),
       .DATA_WIDTH (DATA_WIDTH + NUM_FANIN + EXTRA_BIT),
-      .FIFO_DEPTH (16),
+      .FIFO_DEPTH (FIFO_DEPTH),
       .READ_LATENCY (FIFO_LATENCY)
     ) axis_fifo_async (
       .s_axis_clk (s_axis_clk),

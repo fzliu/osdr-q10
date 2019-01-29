@@ -9,8 +9,10 @@
 //
 // Parameters
 // DEVICE_TYPE: programmable logic family
+// NUM_COMPUTE: number of compute modules to use
 // NUM_TAGS: number of tags to support
 // PRECISION: desired precision of the input data bus, must be <= 12
+// ADDER_WIDTH: width of adders used by axis_bit_corr
 // CORR_OFFSET: index of the first (zeroth) correlator to use
 //
 // enable  :  N/A
@@ -25,14 +27,15 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE_TYPE = "7SERIES",
+  parameter   NUM_COMPUTE = 4,
 
-  parameter   NUM_TAGS = 1,
+  parameter   NUM_TAGS = 16,
   parameter   NUM_CHANNELS = 4,
   parameter   PRECISION = 6,
   parameter   ADDER_WIDTH = 12,
   parameter   CORR_OFFSET = 0,
 
-  parameter   CABS_DELAY = 9,
+  parameter   CABS_DELAY = 10,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
 
@@ -42,19 +45,33 @@ module anchor_top #(
 
   // derived parameters
 
+  localparam  NUM_FANOUT = NUM_TAGS / NUM_COMPUTE,
+
   localparam  CHANNEL_WIDTH = 2 * ADDER_WIDTH,
   localparam  SAMPS_WIDTH = 2 * PRECISION * NUM_CHANNELS,
-  localparam  DATA_WIDTH = NUM_CHANNELS * CHANNEL_WIDTH,
-  localparam  INPUT_WIDTH = NUM_TAGS * SAMPS_WIDTH,
+  localparam  FANOUT_WIDTH = NUM_FANOUT * CHANNEL_WIDTH,
+  localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
+
+  localparam  DISTRIB_WIDTH = NUM_COMPUTE * SAMPS_WIDTH,
+  localparam  COMPUTE_WIDTH = NUM_COMPUTE * CHANNEL_WIDTH,
+  localparam  SWITCH_WIDTH = NUM_COMPUTE * NUM_FANOUT,
   localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH,
 
   // bit width parameters
 
+  localparam  NM = NUM_COMPUTE - 1,
   localparam  NT = NUM_TAGS - 1,
+  localparam  NF = NUM_FANOUT - 1,
+
+  localparam  WC = CHANNEL_WIDTH - 1,
   localparam  WS = SAMPS_WIDTH - 1,
   localparam  WD = DATA_WIDTH - 1,
-  localparam  WI = INPUT_WIDTH - 1,
-  localparam  WP = PACKED_WIDTH - 1
+  localparam  WF = FANOUT_WIDTH - 1,
+
+  localparam  W0 = DISTRIB_WIDTH - 1,
+  localparam  W1 = COMPUTE_WIDTH - 1,
+  localparam  W2 = SWITCH_WIDTH - 1,
+  localparam  W3 = PACKED_WIDTH - 1
 
 ) (
 
@@ -177,22 +194,27 @@ module anchor_top #(
   wire              fifo_axis_tready;
   wire    [ WS:0]   fifo_axis_tdata;
 
-  wire    [ NT:0]   distrib_axis_tvalid;
-  wire    [ NT:0]   distrib_axis_tready;
-  wire    [ WI:0]   distrib_axis_tdata;
+  wire    [ NM:0]   distrib_axis_tvalid;
+  wire    [ NM:0]   distrib_axis_tready;
+  wire    [ W0:0]   distrib_axis_tdata;
 
-  wire    [ NT:0]   corr_axis_tvalid;
-  wire    [ NT:0]   corr_axis_tready;
-  wire    [ WP:0]   corr_axis_tdata;
+  wire    [ NM:0]   corr_axis_tvalid;
+  wire    [ NM:0]   corr_axis_tready;
+  wire    [ W1:0]   corr_axis_tdata;
+  wire    [ W2:0]   corr_axis_tdest;
+
+  wire    [ NT:0]   switch_axis_tvalid;
+  wire    [ NT:0]   switch_axis_tready;
+  wire    [ W3:0]   switch_axis_tdata;
 
   wire    [ NT:0]   cabs_axis_tvalid;
   wire    [ NT:0]   cabs_axis_tready;
-  wire    [ WP:0]   cabs_axis_tdata;
-  wire    [ WP:0]   cabs_axis_tdata_abs;
+  wire    [ W3:0]   cabs_axis_tdata;
+  wire    [ W3:0]   cabs_axis_tdata_abs;
 
   wire    [ NT:0]   peak_axis_tvalid;
   wire    [ NT:0]   peak_axis_tready;
-  wire    [ WP:0]   peak_axis_tdata;
+  wire    [ W3:0]   peak_axis_tdata;
   wire    [ NT:0]   peak_axis_tlast;
 
   wire              fanin_axis_tvalid;
@@ -201,7 +223,8 @@ module anchor_top #(
   wire              fanin_axis_tlast;
   wire    [ NT:0]   fanin_axis_tuser;
 
-  // clock generation
+  /* Clock generation.
+   */
 
   anchor_clk_gen #()
   anchor_clk_gen (
@@ -212,7 +235,10 @@ module anchor_top #(
     .d_clk (d_clk)
   );
 
-  // synchronize external signals
+  /* Synchronize external signals.
+   * EBI bus's read enable signal is active-low, so we invert it before
+   * synchronizing.
+   */
 
   xpm_cdc_single #(
     .DEST_SYNC_FF (2),
@@ -224,7 +250,9 @@ module anchor_top #(
     .dest_out (rd_ena)
   );
 
-  // led control
+  /* LED control.
+   * The fifth output is currently set low due to a bug in the hardware.
+   */
 
   assign led_out[0] = valid_1;
   assign led_out[1] = valid_0;
@@ -235,7 +263,8 @@ module anchor_top #(
   assign led_out[6] = 1'b0;
   assign led_out[7] = ebi_ready;
 
-  // receive_a
+  /* Receive interface (chip A).
+   */
 
   ad9361_cmos_if #(
     .DEVICE_TYPE (DEVICE_TYPE),
@@ -258,7 +287,8 @@ module anchor_top #(
     .data_q1 (data_q1)
   );
 
-  // receive_b
+  /* Receive interface (chip B).
+   */
 
   ad9361_cmos_if #(
     .DEVICE_TYPE (DEVICE_TYPE),
@@ -281,7 +311,8 @@ module anchor_top #(
     .data_q1 (data_q3)
   );
 
-  // dual spi
+  /* Dual SPI bus controller.
+   */
 
   ad9361_dual_spi #()
   ad9361_dual_spi (
@@ -306,7 +337,8 @@ module anchor_top #(
     .sync_in (sync_in)
   );
 
-  // sample filter
+  /* Sample filter.
+   */
 
   ad9361_dual_filt #(
     .ABS_WIDTH (16),
@@ -342,7 +374,10 @@ module anchor_top #(
     .data_q3_out (data_q3_sf)
   );
 
-  // serialize data
+  /* Serialize data.
+   * The input and master AXI-stream clocks are the same, so we set
+   * INDEP_CLOCKS to zero.
+   */
 
   ad9361_dual_axis #(
     .PRECISION (PRECISION),
@@ -370,7 +405,9 @@ module anchor_top #(
     .m_axis_tlast ()
   );
 
-  // clock conversion (data -> master) and buffering
+  /* Clock conversion.
+   * Converts data clock to master clock and provides data buffering.
+   */
 
   axis_fifo_async #(
     .MEMORY_TYPE ("block"),
@@ -389,7 +426,10 @@ module anchor_top #(
     .m_axis_tdata (fifo_axis_tdata)
   );
 
-  // distribute to correlators (master -> compute)
+  /* Distribute to correlators.
+   * Converts master clock to data clock and distributes the data to the
+   * compute modules.
+   */
 
   axis_distrib #(
     .NUM_DISTRIB (NUM_TAGS),
@@ -409,23 +449,26 @@ module anchor_top #(
     .m_axis_tdata (distrib_axis_tdata)
   );
 
+  /* Cross-correlation (primariy compute).
+   * There are fewer compute modules than tags, so outputs are fed into a fanout
+   * module which arbitrates the downstream module based on tdest.
+   */
+
   genvar n;
   generate
-  for (n = 0; n < NUM_TAGS; n = n + 1) begin
-    localparam i0 = n * SAMPS_WIDTH;
-    localparam i1 = i0 + WS;
-    localparam j0 = n * DATA_WIDTH;
-    localparam j1 = j0 + WD;
-
-    // perform cross-correlation
+  for (n = 0; n < NUM_COMPUTE; n = n + 1) begin
+    localparam n0 = n * NUM_FANOUT, n1 = n0 + NF;
+    localparam i0 = n * SAMPS_WIDTH, i1 = i0 + WS;
+    localparam j0 = n * CHANNEL_WIDTH, j1 = j0 + WC;
+    localparam k0 = n * FANOUT_WIDTH, k1 = k0 + WF;
 
     axis_bit_corr #(
-      .NUM_PARALLEL (NUM_CHANNELS * 2),
+      .NUM_PARALLEL (2 * NUM_CHANNELS),
       .WAVE_WIDTH (PRECISION),
       .ADDER_WIDTH (ADDER_WIDTH),
       .USE_STALL_SIGNAL (0),
       .SHIFT_DEPTH (2),
-      .NUM_CORRS (1),
+      .NUM_CORRS (NUM_FANOUT),
       .CORR_OFFSET (CORR_OFFSET + n),
       .CORR_LENGTH (CORR_LENGTH),
       .CORRELATORS (CORRELATORS)
@@ -440,7 +483,37 @@ module anchor_top #(
       .m_axis_tdest ()
     );
 
-    // absolute value computation
+    axis_fan_out #(
+      .NUM_FANOUT (NUM_FANOUT),
+      .DATA_WIDTH (DATA_WIDTH),
+      .USE_FIFOS (1),
+      .FIFO_TYPE ("block"),
+      .FIFO_DEPTH (16),
+      .FIFO_LATENCY (2)
+    ) axis_fan_out (
+      .s_axis_clk (c_clk),
+      .m_axis_clk (m_clk),
+      .m_axis_rst (1'b0),
+      .s_axis_tvalid (corr_axis_tvalid[n]),
+      .s_axis_tready (corr_axis_tready[n]),
+      .s_axis_tdata (corr_axis_tdata[j1:j0]),
+      .s_axis_tdest (),
+      .m_axis_tvalid (switch_axis_tvalid[n1:n0]),
+      .m_axis_tready (switch_axis_tready[n1:n0]),
+      .m_axis_tdata (switch_axis_tdata[k1:k0])
+    );
+
+  end
+  endgenerate
+
+  /* Absolute value computation and peak detection.
+   * To save power and improve both routability and timing, these modules use
+   * the slower m_clk (100MHz) instead of the fast c_clk (400MHz).
+   */
+
+  generate
+  for (n = 0; n < NUM_TAGS; n = n + 1) begin
+    localparam i0 = n * DATA_WIDTH, i1 = i0 + WD;
 
     axis_cabs_serial #(
       .NUM_CHANNELS (NUM_CHANNELS),
@@ -448,17 +521,15 @@ module anchor_top #(
       .CABS_DELAY (CABS_DELAY),
       .USE_STALL_SIGNAL (0)
     ) axis_cabs_serial (
-      .clk (c_clk),
-      .s_axis_tvalid (corr_axis_tvalid[n]),
-      .s_axis_tready (corr_axis_tready[n]),
-      .s_axis_tdata (corr_axis_tdata[j1:j0]),
+      .clk (m_clk),
+      .s_axis_tvalid (switch_axis_tvalid[n]),
+      .s_axis_tready (switch_axis_tready[n]),
+      .s_axis_tdata (switch_axis_tdata[i1:i0]),
       .m_axis_tvalid (cabs_axis_tvalid[n]),
       .m_axis_tready (cabs_axis_tready[n]),
-      .m_axis_tdata (cabs_axis_tdata[j1:j0]),
-      .m_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0])
+      .m_axis_tdata (cabs_axis_tdata[i1:i0]),
+      .m_axis_tdata_abs (cabs_axis_tdata_abs[i1:i0])
     );
-
-    // peak detection
 
     axis_peak_detn #(
       .NUM_CHANNELS (NUM_CHANNELS),
@@ -466,33 +537,34 @@ module anchor_top #(
       .PEAK_THRESH_MULT (PEAK_THRESH_MULT),
       .BURST_LENGTH (BURST_LENGTH)
     ) axis_peak_detn (
-      .clk (c_clk),
+      .clk (m_clk),
       .s_axis_tvalid (cabs_axis_tvalid[n]),
       .s_axis_tready (cabs_axis_tready[n]),
-      .s_axis_tdata (cabs_axis_tdata[j1:j0]),
-      .s_axis_tdata_abs (cabs_axis_tdata_abs[j1:j0]),
+      .s_axis_tdata (cabs_axis_tdata[i1:i0]),
+      .s_axis_tdata_abs (cabs_axis_tdata_abs[i1:i0]),
       .m_axis_tvalid (peak_axis_tvalid[n]),
       .m_axis_tready (peak_axis_tready[n]),
-      .m_axis_tdata (peak_axis_tdata[j1:j0]),
+      .m_axis_tdata (peak_axis_tdata[i1:i0]),
       .m_axis_tlast (peak_axis_tlast[n])
     );
 
   end
   endgenerate
 
-  // axi-stream fan-in
+  /* AXI-stream fan in.
+   * There is no need for clock conversion, so a FIFO at the output is
+   * unnecessary.
+   */
 
   axis_fan_in #(
     .NUM_FANIN (NUM_TAGS),
     .DATA_WIDTH (DATA_WIDTH),
     .USE_AXIS_TLAST (1),
-    .USE_FIFOS (1),
-    .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (2)
+    .USE_FIFOS (0)
   ) axis_fan_in (
-    .s_axis_clk (c_clk),
+    .s_axis_clk (m_clk),
     .s_axis_rst (1'b0),
-    .m_axis_clk (m_clk),
+    .m_axis_clk (),
     .s_axis_tvalid (peak_axis_tvalid),
     .s_axis_tready (peak_axis_tready),
     .s_axis_tdata (peak_axis_tdata),
@@ -504,7 +576,9 @@ module anchor_top #(
     .m_axis_tuser (fanin_axis_tuser)
   );
 
-  // microprocessor interface
+  /* Microprocessor interface.
+   * To save compute resources, use block RAM instead of distributed RAM.
+   */
 
   buf_peak_data #(
     .NUM_TAGS (NUM_TAGS),
