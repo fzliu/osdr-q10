@@ -383,7 +383,7 @@
         <Step Id="power_opt_design"/>
         <Step Id="place_design">
           <Option Id="MoreOptsStr"><![CDATA[-fanout_opt]]></Option>
-          <Option Id="Directive">3</Option>
+          <Option Id="Directive">4</Option>
         </Step>
         <Step Id="post_place_power_opt_design"/>
         <Step Id="phys_opt_design" EnableStepBool="1">
