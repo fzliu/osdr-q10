@@ -46,15 +46,17 @@ module axis_bit_corr #(
 
   // derived parameters
 
+  localparam  MEMORY_DEPTH = NUM_PARALLEL * NUM_CORRS,
   localparam  SLAVE_WIDTH = WAVE_WIDTH * NUM_PARALLEL,
   localparam  MASTER_WIDTH = ADDER_WIDTH * NUM_PARALLEL,
-  localparam  COUNT_WIDTH = log2(NUM_PARALLEL * NUM_CORRS - 1),
+  localparam  COUNT_WIDTH = log2(MEMORY_DEPTH - 1),
 
   // bit width parameters
 
   localparam  NP = NUM_PARALLEL - 1,
   localparam  WW = WAVE_WIDTH - 1,
   localparam  WA = ADDER_WIDTH - 1,
+  localparam  DM = MEMORY_DEPTH - 1,
   localparam  WS = SLAVE_WIDTH - 1,
   localparam  WM = MASTER_WIDTH - 1,
   localparam  WN = COUNT_WIDTH - 1
@@ -89,11 +91,11 @@ module axis_bit_corr #(
   // internal memories
 
   reg     [ WA:0]   adder_out [0:L0];
-  reg     [ WA:0]   output_ram [0:NP];
+  reg     [ WA:0]   output_ram [0:DM];
 
   // internal registers
 
-  reg     [ L0:0]   correlator = `CORRS(CORR_OFFSET);
+  reg     [ L0:0]   correlator = 'b0;
 
   reg               valid_out = 'b0;
   reg     [ N0:0]   dest_out = 'b0;
@@ -111,6 +113,7 @@ module axis_bit_corr #(
   wire              enable_int;
 
   wire    [ WN:0]   count;
+  wire    [ WN:0]   p_count;
   wire    [ WN:0]   wr_addr;
   wire    [ WN:0]   rd_addr;
 
@@ -145,7 +148,7 @@ module axis_bit_corr #(
    */
 
   generate
-  for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
+  for (n = 0; n < MEMORY_DEPTH; n = n + 1) begin
     initial begin
       output_ram[n] = 'b0;
     end
@@ -178,7 +181,7 @@ module axis_bit_corr #(
   endgenerate
 
   assign enable_int = ~stall & s_axis_tvalid;
-  assign s_axis_tready = ~stall & (count == NP);
+  assign s_axis_tready = ~stall & (count == DM);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
   /* Counter logic.
@@ -191,7 +194,7 @@ module axis_bit_corr #(
 
   counter #(
     .LOWER (0),
-    .UPPER (NP),
+    .UPPER (DM),
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
@@ -199,6 +202,25 @@ module axis_bit_corr #(
     .ena (enable_int),
     .value (count)
   );
+
+  assign p_count = count % NUM_PARALLEL;
+
+  /* Set correlator for current batch.
+   * Once we have finished processing NUM_PARALLEL input channels, we must move
+   * on to the next correlator. However, these bits must also go through
+   * SHIFT_DEPTH cycles of delay so that we do not prematurely begin using the
+   * next correlator. Another option would be to have the correlator itself pass
+   * through SHIFT_DEPTH cycles of delay; however, this would be a waste of
+   * resources as it does not seem to improve timing.
+   */
+
+  always @(posedge clk) begin
+    if (enable_int) begin
+      correlator <= `CORRS(rd_addr/NUM_PARALLEL);
+    end else begin
+      correlator <= correlator;
+    end
+  end
 
   /* Write and read addresses.
    * These are set based on the counter. Since the output of each adder goes
@@ -230,34 +252,6 @@ module axis_bit_corr #(
     .dout (rd_addr)
   );
 
-  /* Set correlator for current batch.
-   * Once we have finished processing NUM_PARALLEL input channels, we must move
-   * on to the next correlator. However, these bits must also go through
-   * SHIFT_DEPTH cycles of delay so that we do not prematurely begin using the
-   * next correlator. Another option would be to have the correlator itself pass
-   * through SHIFT_DEPTH cycles of delay; however, this would be a waste of
-   * resources as it does not seem to improve timing.
-   */
-
-  shift_reg #(
-    .WIDTH (NUM_CORRS),
-    .DEPTH (SHIFT_DEPTH)
-  ) shift_reg_corr_num (
-    .clk (clk),
-    .rst (1'b0),
-    .ena (enable_int),
-    .din (count >> log2(NUM_PARALLEL - 1)),
-    .dout (corr_num)
-  );
-
-  always @(posedge clk) begin
-    if (enable_int) begin
-      correlator <= `CORRS(rd_addr/NUM_PARALLEL);
-    end else begin
-      correlator <= correlator;
-    end
-  end
-
   /* First adder input.
    * The first input to each adder is simply the current input data. Note that
    * the correlator bits need to be reversed for proper functionality.
@@ -270,7 +264,7 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (s_axis_tdata_unpack[count]),
+    .din (s_axis_tdata_unpack[p_count]),
     .dout (data_in)
   );
 
@@ -295,7 +289,7 @@ module axis_bit_corr #(
   generate
   for (n = 1; n < CORR_LENGTH; n = n + 1) begin
     xpm_memory_sdpram # (
-      .MEMORY_SIZE (NUM_PARALLEL * ADDER_WIDTH),
+      .MEMORY_SIZE (MEMORY_DEPTH * ADDER_WIDTH),
       .MEMORY_PRIMITIVE ("distributed"),
       .CLOCKING_MODE ("common_clock"),
       .MEMORY_INIT_FILE ("none"),
@@ -367,14 +361,6 @@ module axis_bit_corr #(
     end
   end
 
-  generate
-  for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
-    localparam n0 = n * ADDER_WIDTH;
-    localparam n1 = n0 + WA;
-    assign output_pack[n1:n0] = output_ram[n];
-  end
-  endgenerate
-
   /* Second-to-last output stage.
    * This is required to prevent stalling. When batch_done is asserted, our
    * output becomes valid. This output data is transfered to m_axis_tdata if no
@@ -389,8 +375,19 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din ((count % NUM_PARALLEL) == NP),
+    .din (p_count == NP),
     .dout (batch_done)
+  );
+
+  shift_reg #(
+    .WIDTH (NUM_CORRS),
+    .DEPTH (SHIFT_DEPTH + 1)
+  ) shift_reg_corr_num (
+    .clk (clk),
+    .rst (1'b0),
+    .ena (enable_int),
+    .din (count / NUM_PARALLEL),
+    .dout (corr_num)
   );
 
   always @(posedge clk) begin
@@ -402,6 +399,14 @@ module axis_bit_corr #(
       valid_out <= valid_out;
     end
   end
+
+  generate
+  for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
+    localparam n0 = n * ADDER_WIDTH;
+    localparam n1 = n0 + WA;
+    assign output_pack[n1:n0] = output_ram[dest_out*NUM_PARALLEL+n];
+  end
+  endgenerate
 
   always @(posedge clk) begin
     if (enable_int & batch_done) begin

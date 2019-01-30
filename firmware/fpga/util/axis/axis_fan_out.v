@@ -62,9 +62,9 @@ module axis_fan_out #(
 
   // internal signals
 
-  wire              fanout_valid;
-  wire              fanout_ready;
-  wire    [ WD:0]   fanout_data;
+  wire    [ NF:0]   fanout_valid;
+  wire    [ NF:0]   fanout_ready;
+  wire    [ WP:0]   fanout_data;
 
   // slave interface
 
@@ -73,29 +73,33 @@ module axis_fan_out #(
   // master interface
 
   assign fanout_valid = {{NF{1'b0}}, s_axis_tvalid} << s_axis_tdest;
-  assign fanout_data = {FANIN_WIDTH{s_axis_tdata}};
+  assign fanout_data = {NUM_FANOUT{s_axis_tdata}};
 
   // assign outputs
 
+  genvar n;
   generate
   if (USE_FIFOS) begin
 
-    axis_fifo_async #(
-      .MEMORY_TYPE (FIFO_TYPE),
-      .DATA_WIDTH (DATA_WIDTH),
-      .FIFO_DEPTH (FIFO_DEPTH),
-      .READ_LATENCY (FIFO_LATENCY)
-    ) axis_fifo_async (
-      .s_axis_clk (s_axis_clk),
-      .s_axis_rst (s_axis_rst),
-      .m_axis_clk (m_axis_clk),
-      .s_axis_tvalid (fanout_valid),
-      .s_axis_tready (fanout_ready),
-      .s_axis_tdata (fanout_data),
-      .m_axis_tvalid (m_axis_tvalid),
-      .m_axis_tready (m_axis_tready),
-      .m_axis_tdata (m_axis_tdata)
-    );
+    for (n = 0; n < NUM_FANOUT; n = n + 1) begin
+      localparam i0 = n * DATA_WIDTH, i1 = i0 + WD;
+      axis_fifo_async #(
+        .MEMORY_TYPE (FIFO_TYPE),
+        .DATA_WIDTH (DATA_WIDTH),
+        .FIFO_DEPTH (FIFO_DEPTH),
+        .READ_LATENCY (FIFO_LATENCY)
+      ) axis_fifo_async (
+        .s_axis_clk (s_axis_clk),
+        .s_axis_rst (s_axis_rst),
+        .m_axis_clk (m_axis_clk),
+        .s_axis_tvalid (fanout_valid[n]),
+        .s_axis_tready (fanout_ready[n]),
+        .s_axis_tdata (fanout_data[i1:i0]),
+        .m_axis_tvalid (m_axis_tvalid[n]),
+        .m_axis_tready (m_axis_tready[n]),
+        .m_axis_tdata (m_axis_tdata[i1:i0])
+      );
+    end
 
   end else begin
 

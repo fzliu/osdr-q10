@@ -89,6 +89,19 @@ module axis_peak_detn #(
 
   wire              m_axis_frame;
 
+  /* Initialize thresholds.
+   * This prevents x's from propagating through the logic during startup.
+   */
+
+  genvar n;
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    initial begin
+      thresh[n] = 'b0;
+    end
+  end
+  endgenerate
+
   /* Slave interface.
    * The slave ready signal is set to a constant high value, indicating that
    * this module is always ready to process data. If a new peak is detected
@@ -102,7 +115,7 @@ module axis_peak_detn #(
   /* Peak detection logic.
    * The absolute value of each sample goes through a boxcar averager. If one of
    * the samples has a significantly higher value than the average of it and its
-   * neighboring samples, then we have detected a peak.--
+   * neighboring samples, then we have detected a peak.
    */
 
   shift_reg #(
@@ -116,7 +129,6 @@ module axis_peak_detn #(
     .dout (s_axis_tdata_abs_d)
   );
 
-  genvar n;
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
     localparam n0 = n * CHANNEL_WIDTH;

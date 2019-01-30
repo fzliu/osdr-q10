@@ -11,20 +11,9 @@ module anchor_top_tb;
 
   // parameters
 
-  parameter   NUM_TAGS = 1;   //1
-  parameter   CORR_OFFSET = 19;   //19
-  
-  parameter   SAMPS_WIDTH = 48;
-  parameter   DATA_WIDTH = 96;
-
-  localparam  INPUT_WIDTH = NUM_TAGS * SAMPS_WIDTH;
-  localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH;
-
-  localparam  NT = NUM_TAGS - 1;
-  localparam  WS = SAMPS_WIDTH - 1;
-  localparam  WD = DATA_WIDTH - 1;
-  localparam  WI = INPUT_WIDTH - 1;
-  localparam  WP = PACKED_WIDTH - 1;
+  parameter   NUM_COMPUTE = 1;    //1
+  parameter   NUM_TAGS = 2;       //2
+  parameter   CORR_OFFSET = 18;   //18
 
   // signals
 
@@ -108,6 +97,7 @@ module anchor_top_tb;
   // anchor_top
 
   anchor_top #(
+    .NUM_COMPUTE (NUM_COMPUTE),
     .NUM_TAGS (NUM_TAGS),
     .CORR_OFFSET (CORR_OFFSET)
   ) anchor_top (
@@ -149,36 +139,10 @@ module anchor_top_tb;
     .led_out ()
   ); 
 
-  // add signals to wave
+  // add clocks by default
 
   wire              d_clk = anchor_top.d_clk;
   wire              m_clk = anchor_top.m_clk;
   wire              c_clk = anchor_top.c_clk;
-
-  wire              ad9361_axis_tvalid = anchor_top.ad9361_axis_tvalid;
-  wire              ad9361_axis_tready = anchor_top.ad9361_axis_tready;
-  wire    [ WS:0]   ad9361_axis_tdata = anchor_top.ad9361_axis_tdata;
-  wire              fifo_axis_tvalid = anchor_top.fifo_axis_tvalid;
-  wire              fifo_axis_tready = anchor_top.fifo_axis_tready;
-  wire    [ WS:0]   fifo_axis_tdata = anchor_top.fifo_axis_tdata;
-  wire    [ NT:0]   distrib_axis_tvalid = anchor_top.distrib_axis_tvalid;
-  wire    [ NT:0]   distrib_axis_tready = anchor_top.distrib_axis_tready;
-  wire    [ WI:0]   distrib_axis_tdata = anchor_top.distrib_axis_tdata;
-  wire    [ NT:0]   corr_axis_tvalid = anchor_top.corr_axis_tvalid;
-  wire    [ NT:0]   corr_axis_tready = anchor_top.corr_axis_tready;
-  wire    [ WP:0]   corr_axis_tdata = anchor_top.corr_axis_tdata;
-  wire    [ NT:0]   cabs_axis_tvalid = anchor_top.cabs_axis_tvalid;
-  wire    [ NT:0]   cabs_axis_tready = anchor_top.cabs_axis_tready;
-  wire    [ WP:0]   cabs_axis_tdata = anchor_top.cabs_axis_tdata;
-  wire    [ WP:0]   cabs_axis_tdata_abs = anchor_top.cabs_axis_tdata_abs;
-  wire    [ NT:0]   peak_axis_tvalid = anchor_top.peak_axis_tvalid;
-  wire    [ NT:0]   peak_axis_tready = anchor_top.peak_axis_tready;
-  wire    [ WP:0]   peak_axis_tdata = anchor_top.peak_axis_tdata;
-  wire    [ NT:0]   peak_axis_tlast = anchor_top.peak_axis_tlast;
-  wire              fanin_axis_tvalid = anchor_top.fanin_axis_tvalid;
-  wire              fanin_axis_tready = anchor_top.fanin_axis_tready;
-  wire    [ WD:0]   fanin_axis_tdata = anchor_top.fanin_axis_tdata;
-  wire    [ NT:0]   fanin_axis_tlast = anchor_top.fanin_axis_tlast;
-  wire    [ NT:0]   fanin_axis_tuser = anchor_top.fanin_axis_tuser;
 
 endmodule

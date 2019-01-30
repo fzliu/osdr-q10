@@ -49,11 +49,11 @@ module anchor_top #(
 
   localparam  CHANNEL_WIDTH = 2 * ADDER_WIDTH,
   localparam  SAMPS_WIDTH = 2 * PRECISION * NUM_CHANNELS,
-  localparam  FANOUT_WIDTH = NUM_FANOUT * CHANNEL_WIDTH,
   localparam  DATA_WIDTH = CHANNEL_WIDTH * NUM_CHANNELS,
+  localparam  FANOUT_WIDTH = NUM_FANOUT * DATA_WIDTH,
 
   localparam  DISTRIB_WIDTH = NUM_COMPUTE * SAMPS_WIDTH,
-  localparam  COMPUTE_WIDTH = NUM_COMPUTE * CHANNEL_WIDTH,
+  localparam  COMPUTE_WIDTH = NUM_COMPUTE * DATA_WIDTH,
   localparam  SWITCH_WIDTH = NUM_COMPUTE * NUM_FANOUT,
   localparam  PACKED_WIDTH = NUM_TAGS * DATA_WIDTH,
 
@@ -432,7 +432,7 @@ module anchor_top #(
    */
 
   axis_distrib #(
-    .NUM_DISTRIB (NUM_TAGS),
+    .NUM_DISTRIB (NUM_COMPUTE),
     .DATA_WIDTH (SAMPS_WIDTH),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
@@ -459,8 +459,9 @@ module anchor_top #(
   for (n = 0; n < NUM_COMPUTE; n = n + 1) begin
     localparam n0 = n * NUM_FANOUT, n1 = n0 + NF;
     localparam i0 = n * SAMPS_WIDTH, i1 = i0 + WS;
-    localparam j0 = n * CHANNEL_WIDTH, j1 = j0 + WC;
-    localparam k0 = n * FANOUT_WIDTH, k1 = k0 + WF;
+    localparam j0 = n * DATA_WIDTH, j1 = j0 + WD;
+    localparam k0 = n * NUM_FANOUT, k1 = k0 + NF;
+    localparam l0 = n * FANOUT_WIDTH, l1 = l0 + WF;
 
     axis_bit_corr #(
       .NUM_PARALLEL (2 * NUM_CHANNELS),
@@ -469,7 +470,7 @@ module anchor_top #(
       .USE_STALL_SIGNAL (0),
       .SHIFT_DEPTH (2),
       .NUM_CORRS (NUM_FANOUT),
-      .CORR_OFFSET (CORR_OFFSET + n),
+      .CORR_OFFSET (CORR_OFFSET + NUM_FANOUT * n),
       .CORR_LENGTH (CORR_LENGTH),
       .CORRELATORS (CORRELATORS)
     ) axis_bit_corr (
@@ -480,7 +481,7 @@ module anchor_top #(
       .m_axis_tvalid (corr_axis_tvalid[n]),
       .m_axis_tready (corr_axis_tready[n]),
       .m_axis_tdata (corr_axis_tdata[j1:j0]),
-      .m_axis_tdest ()
+      .m_axis_tdest (corr_axis_tdest[k1:k0])
     );
 
     axis_fan_out #(
@@ -492,15 +493,15 @@ module anchor_top #(
       .FIFO_LATENCY (2)
     ) axis_fan_out (
       .s_axis_clk (c_clk),
+      .s_axis_rst (1'b0),
       .m_axis_clk (m_clk),
-      .m_axis_rst (1'b0),
       .s_axis_tvalid (corr_axis_tvalid[n]),
       .s_axis_tready (corr_axis_tready[n]),
       .s_axis_tdata (corr_axis_tdata[j1:j0]),
-      .s_axis_tdest (),
+      .s_axis_tdest (corr_axis_tdest[k1:k0]),
       .m_axis_tvalid (switch_axis_tvalid[n1:n0]),
       .m_axis_tready (switch_axis_tready[n1:n0]),
-      .m_axis_tdata (switch_axis_tdata[k1:k0])
+      .m_axis_tdata (switch_axis_tdata[l1:l0])
     );
 
   end
