@@ -8,9 +8,10 @@
 // FIFO for consumption by the microprocessor through the EBI bus.
 //
 // Parameters
-// DEVICE_TYPE: programmable logic family
+// DEVICE: programmable logic family
 // NUM_COMPUTE: number of compute modules to use
 // NUM_TAGS: number of tags to support
+// NUM_CHANNELS: number of RF inputs to the anchor board
 // PRECISION: desired precision of the input data bus, must be <= 12
 // ADDER_WIDTH: width of adders used by axis_bit_corr
 // CORR_OFFSET: index of the first (zeroth) correlator to use
@@ -26,7 +27,7 @@ module anchor_top #(
 
   // parameters
 
-  parameter   DEVICE_TYPE = "7SERIES",
+  parameter   DEVICE = "7SERIES",
   parameter   NUM_COMPUTE = 4,
   parameter   NUM_TAGS = 16,
   parameter   NUM_CHANNELS = 4,
@@ -267,7 +268,7 @@ module anchor_top #(
    */
 
   ad9361_cmos_if #(
-    .DEVICE_TYPE (DEVICE_TYPE),
+    .DEVICE (DEVICE),
     .USE_EXT_CLOCK (1),
     .REALTIME_ENABLE (1)
   ) ad9361_cmos_if_a (
@@ -291,7 +292,7 @@ module anchor_top #(
    */
 
   ad9361_cmos_if #(
-    .DEVICE_TYPE (DEVICE_TYPE),
+    .DEVICE (DEVICE),
     .USE_EXT_CLOCK (1),
     .REALTIME_ENABLE (1)
   ) ad9361_cmos_if_b (
@@ -488,9 +489,7 @@ module anchor_top #(
       .NUM_FANOUT (NUM_FANOUT),
       .DATA_WIDTH (DATA_WIDTH),
       .USE_FIFOS (1),
-      .FIFO_TYPE ("block"),
-      .FIFO_DEPTH (16),
-      .FIFO_LATENCY (2)
+      .FIFO_TYPE ("block")
     ) axis_fan_out (
       .s_axis_clk (c_clk),
       .s_axis_rst (1'b0),
@@ -533,6 +532,7 @@ module anchor_top #(
     );
 
     axis_peak_detn #(
+      .DEVICE (DEVICE),
       .NUM_CHANNELS (NUM_CHANNELS),
       .CHANNEL_WIDTH (CHANNEL_WIDTH),
       .PEAK_THRESH_MULT (PEAK_THRESH_MULT),

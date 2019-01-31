@@ -23,7 +23,7 @@ module axis_fan_in #(
   parameter   USE_AXIS_TLAST = 1,
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
-  parameter   FIFO_DEPTH = 16,
+  parameter   FIFO_DEPTH = 32,
   parameter   FIFO_LATENCY = 2,
 
   // derived parameters

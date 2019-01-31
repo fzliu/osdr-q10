@@ -28,15 +28,15 @@ module axis_bit_corr #(
 
   // parameters
 
-  parameter   NUM_PARALLEL = 8,     // TODO(fzliu): ensure this is 2^N
+  parameter   NUM_PARALLEL = 8,       // TODO(fzliu): ensure this is 2^N
   parameter   WAVE_WIDTH = 6,
-  parameter   ADDER_WIDTH = 12,     // TODO(fzliu): ensure this is 2*N
+  parameter   ADDER_WIDTH = 12,       // TODO(fzliu): ensure this is 2*N
   parameter   USE_STALL_SIGNAL = 1,
-  parameter   SHIFT_DEPTH = 1,
+  parameter   SHIFT_DEPTH = 1,        // TODO(fzliu): ensure >= 2
 
   // correlator parameters
 
-  parameter   NUM_CORRS = 1,        // TODO(fzliu): ensure this is 2^N
+  parameter   NUM_CORRS = 1,          // TODO(fzliu): ensure this is 2^N
   parameter   CORR_OFFSET = 0,
   parameter   CORR_LENGTH = 1,
   parameter   CORRELATORS = {1'b0},
@@ -95,10 +95,11 @@ module axis_bit_corr #(
 
   // internal registers
 
-  reg     [ L0:0]   correlator = 'b0;
-
   reg               valid_out = 'b0;
   reg     [ N0:0]   dest_out = 'b0;
+
+  reg     [ WN:0]   p_count = 'b0;    // parallel count == count % NUM_PARALLEL
+  reg     [ WN:0]   b_count = 'b0;    // batch count    == count / NUM_PARALLEL
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WM:0]   m_axis_tdata_reg = 'b0;
@@ -113,12 +114,12 @@ module axis_bit_corr #(
   wire              enable_int;
 
   wire    [ WN:0]   count;
-  wire    [ WN:0]   p_count;
   wire    [ WN:0]   wr_addr;
   wire    [ WN:0]   rd_addr;
+  wire    [ L0:0]   correlator;
 
-  wire              batch_done;
   wire    [ N0:0]   corr_num;
+  wire              batch_done;
 
   wire    [ WW:0]   data_in;
   wire    [ WA:0]   adder_in0 [0:L0];
@@ -203,24 +204,33 @@ module axis_bit_corr #(
     .value (count)
   );
 
-  assign p_count = count % NUM_PARALLEL;
+  always @(posedge clk) begin
+    if (enable_int) begin
+      p_count <= count % NUM_PARALLEL;
+      b_count <= count / NUM_PARALLEL;
+    end else begin
+      p_count <= p_count;
+      b_count <= b_count;
+    end
+  end
 
   /* Set correlator for current batch.
    * Once we have finished processing NUM_PARALLEL input channels, we must move
    * on to the next correlator. However, these bits must also go through
    * SHIFT_DEPTH cycles of delay so that we do not prematurely begin using the
-   * next correlator. Another option would be to have the correlator itself pass
-   * through SHIFT_DEPTH cycles of delay; however, this would be a waste of
-   * resources as it does not seem to improve timing.
+   * next correlator.
    */
 
-  always @(posedge clk) begin
-    if (enable_int) begin
-      correlator <= `CORRS(rd_addr/NUM_PARALLEL);
-    end else begin
-      correlator <= correlator;
-    end
-  end
+  shift_reg #(
+    .WIDTH (CORR_LENGTH),
+    .DEPTH (SHIFT_DEPTH - 1)
+  ) shift_reg_correlator (
+    .clk (clk),
+    .rst (1'b0),
+    .ena (enable_int),
+    .din (`CORRS(b_count)),
+    .dout (correlator)
+  );
 
   /* Write and read addresses.
    * These are set based on the counter. Since the output of each adder goes
@@ -259,7 +269,7 @@ module axis_bit_corr #(
 
   shift_reg #(
     .WIDTH (WAVE_WIDTH),
-    .DEPTH (SHIFT_DEPTH)
+    .DEPTH (SHIFT_DEPTH - 1)
   ) shift_reg_din (
     .clk (clk),
     .rst (1'b0),
@@ -370,7 +380,7 @@ module axis_bit_corr #(
 
   shift_reg #(
     .WIDTH (1),
-    .DEPTH (SHIFT_DEPTH + 1)
+    .DEPTH (SHIFT_DEPTH)
   ) shift_reg_batch_done (
     .clk (clk),
     .rst (1'b0),
@@ -386,7 +396,7 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (count / NUM_PARALLEL),
+    .din (b_count),
     .dout (corr_num)
   );
 

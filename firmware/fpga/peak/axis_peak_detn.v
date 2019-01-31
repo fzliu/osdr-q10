@@ -24,6 +24,7 @@ module axis_peak_detn #(
 
   // parameters
 
+  parameter   DEVICE = "7SERIES",
   parameter   NUM_CHANNELS = 4,
   parameter   CHANNEL_WIDTH = 32,
   parameter   BURST_LENGTH = 32,    // TODO(fzliu): ensure this = 2^N
@@ -206,7 +207,9 @@ module axis_peak_detn #(
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
-    .DEPTH (BURST_LENGTH)
+    .DEPTH (BURST_LENGTH),
+    .USE_BRAM (1),
+    .DEVICE (DEVICE)
   ) shift_reg_data (
     .clk (clk),
     .rst (1'b0),

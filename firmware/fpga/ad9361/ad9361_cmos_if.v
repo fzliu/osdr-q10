@@ -14,7 +14,7 @@ module ad9361_cmos_if #(
 
   // parameters
 
-  parameter   DEVICE_TYPE = "7SERIES",
+  parameter   DEVICE = "7SERIES",
   parameter   USE_EXT_CLOCK = 1,
   parameter   REALTIME_ENABLE = 1,
   parameter   RESET_DELAY = 16,
@@ -96,7 +96,7 @@ module ad9361_cmos_if #(
   // register data
 
   generate
-  if (DEVICE_TYPE == "7SERIES") begin
+  if (DEVICE == "7SERIES") begin
 
     // data port 0
 
@@ -172,7 +172,7 @@ module ad9361_cmos_if #(
       valid_1_reg <= valid_frame & ~rx_frame_in_p;
     end
 
-  /**
+  /* Infer DDR register.
    * For unknown devices, try to coerce the synthesis tool to create a DDR
    * register.
    */

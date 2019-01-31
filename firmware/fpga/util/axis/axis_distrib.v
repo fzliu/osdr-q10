@@ -21,6 +21,7 @@ module axis_distrib #(
   parameter   DATA_WIDTH = 128,
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
+  parameter   FIFO_DEPTH = 32,
   parameter   FIFO_LATENCY = 2,
 
   // derived parameters
@@ -72,12 +73,24 @@ module axis_distrib #(
   wire    [ ND:0]   distrib_ready;
   wire    [ WP:0]   distrib_data;
 
-  // slave interface
+  /* Slave interface.
+   * The output ready signal goes high only when ALL channels are reqdy to
+   * accept new data. Although this causes one extra cycle of throughput delay,
+   * there is no other way to accomplish AXI-stream distribution since at least
+   * one set of flops is required to store state.
+   */
 
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
   assign s_axis_tready = &(ready_all);
 
-  // internal logic
+  /* Ready logic.
+   * Whenever new data is framed from the slave AXI-stream interface, the
+   * internal ready logic for all output channels goes low. These signals go
+   * high again only after the master AXI-stream has accepted the data. Since
+   * the downstream modules can be running at different speeds, state is stored
+   * between clock cycles to denote when each downstream module has framed the
+   * "current" data.
+   */
 
   always @(posedge s_axis_clk) begin
     if (s_axis_rst | s_axis_frame) begin
@@ -87,7 +100,10 @@ module axis_distrib #(
     end
   end
 
-  // master interface
+  /* Master interface.
+   * Mostly straightfoward. Data is provided to the downstream modules only if
+   * the current data has not already been input.
+   */
 
   assign distrib_frame = distrib_valid & distrib_ready;
   assign distrib_valid = s_axis_tvalid ? ~ready_all : 'b0;
@@ -105,7 +121,7 @@ module axis_distrib #(
       axis_fifo_async #(
         .MEMORY_TYPE (FIFO_TYPE),
         .DATA_WIDTH (DATA_WIDTH),
-        .FIFO_DEPTH (16),
+        .FIFO_DEPTH (FIFO_DEPTH),
         .READ_LATENCY (FIFO_LATENCY)
       ) axis_fifo_async (
         .s_axis_clk (s_axis_clk),
