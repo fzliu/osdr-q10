@@ -87,7 +87,7 @@ module axis_cabs_serial #(
   wire              s_axis_frame;
 
   wire              stall;
-  wire              enable_int;
+  wire              ena_int;
 
   wire    [ WN:0]   count;
   wire    [ WN:0]   count_out;
@@ -139,7 +139,7 @@ module axis_cabs_serial #(
     assign stall = USE_STALL_SIGNAL ? valid_out & m_axis_tvalid : 1'b0;
   endgenerate
 
-  assign enable_int = ~stall & s_axis_tvalid;
+  assign ena_int = ~stall & s_axis_tvalid;
   assign s_axis_tready = ~stall & (count == NC);
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
 
@@ -155,7 +155,7 @@ module axis_cabs_serial #(
   ) counter (
     .clk (clk),
     .rst (s_axis_frame),
-    .ena (enable_int),
+    .ena (ena_int),
     .value (count)
   );
 
@@ -178,7 +178,7 @@ module axis_cabs_serial #(
     math_cabs_16 (
       .clk (clk),
       .rst (1'b0),
-      .ena (enable_int),
+      .ena (ena_int),
       .dina (cabs_dina),
       .dinb (cabs_dinb),
       .dout (cabs_dout)
@@ -190,7 +190,7 @@ module axis_cabs_serial #(
     math_cabs_32 (
       .clk (clk),
       .rst (1'b0),
-      .ena (enable_int),
+      .ena (ena_int),
       .dina (cabs_dina),
       .dinb (cabs_dinb),
       .dout (cabs_dout)
@@ -205,7 +205,7 @@ module axis_cabs_serial #(
   ) shift_reg_count (
     .clk (clk),
     .rst (1'b0),
-    .ena (enable_int),
+    .ena (ena_int),
     .din (count),
     .dout (count_out)
   );
@@ -216,7 +216,7 @@ module axis_cabs_serial #(
   ) shift_reg_done (
     .clk (clk),
     .rst (1'b0),
-    .ena (enable_int),
+    .ena (ena_int),
     .din (count == NC),
     .dout (batch_done)
   );
@@ -227,7 +227,7 @@ module axis_cabs_serial #(
    */
 
   always @(posedge clk) begin
-    if (enable_int) begin
+    if (ena_int) begin
       cabs_ram[count_out] <= cabs_dout;
     end
   end
@@ -246,7 +246,7 @@ module axis_cabs_serial #(
    */
 
   always @(posedge clk) begin
-    if (enable_int & batch_done) begin
+    if (ena_int & batch_done) begin
       valid_out <= 1'b1;
     end else if (m_axis_frame | ~m_axis_tvalid) begin
       valid_out <= 1'b0;
@@ -266,7 +266,7 @@ module axis_cabs_serial #(
   ) shift_reg_data (
     .clk (clk),
     .rst (1'b0),
-    .ena (enable_int),
+    .ena (ena_int),
     .din (s_axis_tdata),
     .dout (data_out)
   );

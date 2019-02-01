@@ -10,11 +10,13 @@
 //
 // Parameters
 // NUM_PARALLEL: number of parallel input data streams (must be power of 2)
-// SLAVE_WIDTH: width of the axi-stream slave (input) data bus
-// MASTER_WIDTH: width of the axi-stream master (output) data bus
+// ADDER_WIDTH:
 // USE_STALL_SIGNAL: set to 0 if the downstream module accepts data faster
 // SHIFT_DEPTH: internal pipeline depth for timing closure
-// CORR_NUM: index into correlators.vh which determines h[n]
+// NUM_CORRS:
+// CORR_OFFSET: index into correlators.vh which determines h[n]
+// CORR_LENGTH:
+// CORRELATORS:
 //
 // Signals
 // enable  :  N/A
@@ -47,8 +49,9 @@ module axis_bit_corr #(
   // derived parameters
 
   localparam  MEMORY_DEPTH = NUM_PARALLEL * NUM_CORRS,
-  localparam  SLAVE_WIDTH = WAVE_WIDTH * NUM_PARALLEL,
-  localparam  MASTER_WIDTH = ADDER_WIDTH * NUM_PARALLEL,
+  localparam  MEMORY_WIDTH = ADDER_WIDTH * (CORR_LENGTH - 1),
+  localparam  INPUT_WIDTH = WAVE_WIDTH * NUM_PARALLEL,
+  localparam  OUTPUT_WIDTH = ADDER_WIDTH * NUM_PARALLEL,
   localparam  COUNT_WIDTH = log2(MEMORY_DEPTH - 1),
 
   // bit width parameters
@@ -57,8 +60,9 @@ module axis_bit_corr #(
   localparam  WW = WAVE_WIDTH - 1,
   localparam  WA = ADDER_WIDTH - 1,
   localparam  DM = MEMORY_DEPTH - 1,
-  localparam  WS = SLAVE_WIDTH - 1,
-  localparam  WM = MASTER_WIDTH - 1,
+  localparam  WM = MEMORY_WIDTH - 1,
+  localparam  WI = INPUT_WIDTH - 1,
+  localparam  WO = OUTPUT_WIDTH - 1,
   localparam  WN = COUNT_WIDTH - 1
 
 ) (
@@ -71,13 +75,13 @@ module axis_bit_corr #(
 
   input             s_axis_tvalid,
   output            s_axis_tready,
-  input   [ WS:0]   s_axis_tdata,
+  input   [ WI:0]   s_axis_tdata,
 
   // master interface
 
   output            m_axis_tvalid,
   input             m_axis_tready,
-  output  [ WM:0]   m_axis_tdata,
+  output  [ WO:0]   m_axis_tdata,
   output  [ N0:0]   m_axis_tdest
 
 );
@@ -90,7 +94,6 @@ module axis_bit_corr #(
 
   // internal memories
 
-  reg     [ WA:0]   adder_out [0:L0];
   reg     [ WA:0]   output_ram [0:DM];
 
   // internal registers
@@ -102,7 +105,7 @@ module axis_bit_corr #(
   reg     [ WN:0]   b_count = 'b0;    // batch count    == count / NUM_PARALLEL
 
   reg               m_axis_tvalid_reg = 'b0;
-  reg     [ WM:0]   m_axis_tdata_reg = 'b0;
+  reg     [ WO:0]   m_axis_tdata_reg = 'b0;
   reg     [ N0:0]   m_axis_tdest_reg = 'b0;
 
   // internal signals
@@ -114,40 +117,26 @@ module axis_bit_corr #(
   wire              enable_int;
 
   wire    [ WN:0]   count;
-  wire    [ WN:0]   wr_addr;
-  wire    [ WN:0]   rd_addr;
+  wire    [ WN:0]   ram_addr;
   wire    [ L0:0]   correlator;
-
-  wire    [ N0:0]   corr_num;
-  wire              batch_done;
 
   wire    [ WW:0]   data_in;
   wire    [ WA:0]   adder_in0 [0:L0];
   wire    [ WA:0]   adder_in1 [0:L0];
+  wire    [ WA:0]   adder_out [0:L0];
 
-  wire    [ WM:0]   output_pack;
+  wire    [ N0:0]   corr_num;
+  wire              batch_done;
+  wire    [ WO:0]   output_pack;
   wire              m_axis_frame;
 
-  /* Initialize adder output registers.
-   * To improve timing, each adder output must go through a set of flops before
-   * entering the distributed RAM.
+  /* Initialize memory columns.
+   * The final memory column is implemented in HDL to allow the synthesis tool
+   * to infer flip-flops instead of a distributed RAM block if it improves
+   * timing.
    */
 
   genvar n;
-  generate
-  for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    initial begin
-      adder_out[n] = 'b0;
-    end
-  end
-  endgenerate
-
-  /* Initialize final memory column.
-   * The final memory column is implemented in HDL to allow the synthesis tool
-   * to infer flip-flops instead of a distributed RAM block. This is done to
-   * improve timing.
-   */
-
   generate
   for (n = 0; n < MEMORY_DEPTH; n = n + 1) begin
     initial begin
@@ -162,8 +151,7 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
-    localparam n0 = n * WAVE_WIDTH;
-    localparam n1 = n0 + WW;
+    localparam n0 = n * WAVE_WIDTH, n1 = n0 + WW;
     assign s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
   end
   endgenerate
@@ -247,19 +235,8 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (enable_int),
-    .din (count - 1'b1),
-    .dout (wr_addr)
-  );
-
-  shift_reg #(
-    .WIDTH (COUNT_WIDTH),
-    .DEPTH (SHIFT_DEPTH)
-  ) shift_reg_rd_addr (
-    .clk (clk),
-    .rst (1'b0),
-    .ena (enable_int),
-    .din (count + 1'b1),
-    .dout (rd_addr)
+    .din (count),
+    .dout (ram_addr)
   );
 
   /* First adder input.
@@ -288,73 +265,47 @@ module axis_bit_corr #(
 
   /* Second adder input.
    * The second input is the previous value in the long adder-memory chain. The
-   * 0th element of the chain has no previous value, so its value is 0. For
-   * performance reasons, we directly instantiate a simple dual-port RAM, since
-   * this specialized configuration requires only ADDER_WIDTH / 3 LUTRAMs
-   * instead of ADDER_WIDTH / 2.
+   * 0th element of the chain has no previous value, so its value set to 0. Data
+   * is ready asynchronously to allow for distributed RAM inference (see next
+   * section).
    */
 
   assign adder_in1[0] = 'b0;
 
+  /* Memory chain.
+   * Because this module implements the entire correlation as one large chain,
+   * intermediate results must be stored in memory. Previously, we directly
+   * instantiated a series of simple dual-port distributed RAMs to do this. Now,
+   * we write the entire memory chain as one large memory block. Vivado (or
+   * Quartus) should still be able to infer the most efficient RAM type for this
+   * particular application,
+   */
+
+  genvar a;
   generate
-  for (n = 1; n < CORR_LENGTH; n = n + 1) begin
-    xpm_memory_sdpram # (
-      .MEMORY_SIZE (MEMORY_DEPTH * ADDER_WIDTH),
-      .MEMORY_PRIMITIVE ("distributed"),
-      .CLOCKING_MODE ("common_clock"),
-      .MEMORY_INIT_FILE ("none"),
-      .MEMORY_INIT_PARAM ("0"),
-      .USE_MEM_INIT (0),
-      .WAKEUP_TIME ("disable_sleep"),
-      .MESSAGE_CONTROL (0),
-      .ECC_MODE ("no_ecc"),
-      .AUTO_SLEEP_TIME (0),
-      .USE_EMBEDDED_CONSTRAINT (0),
-      .MEMORY_OPTIMIZATION ("false"),
-      .WRITE_DATA_WIDTH_A (ADDER_WIDTH),
-      .BYTE_WRITE_WIDTH_A (ADDER_WIDTH),
-      .ADDR_WIDTH_A (COUNT_WIDTH),
-      .READ_DATA_WIDTH_B (ADDER_WIDTH),
-      .ADDR_WIDTH_B (COUNT_WIDTH),
-      .READ_RESET_VALUE_B ("0"),
-      .READ_LATENCY_B (1),
-      .WRITE_MODE_B ("read_first")
-    ) xpm_memory_sdpram_inst (
-      .sleep (1'b0),
-      .clka (clk),
+  for (n = 0; n < CORR_LENGTH - 1; n = n + 1) begin
+    corr_ram_blk #(
+      .NUM_PARALLEL (NUM_PARALLEL),
+      .DATA_WIDTH (ADDER_WIDTH),
+      .NUM_CORRS (NUM_CORRS)
+    ) corr_ram_blk (
+      .clk (clk),
       .ena (enable_int),
-      .wea (1'b1),
-      .addra (wr_addr),
-      .dina (adder_out[n-1]),
-      .injectsbiterra (1'b0),
-      .injectdbiterra (1'b0),
-      .clkb (1'b0),
-      .rstb (1'b0),
-      .enb (enable_int),
-      .regceb (1'b1),
-      .addrb (rd_addr),
-      .doutb (adder_in1[n]),
-      .sbiterrb (),
-      .dbiterrb ()
+      .addr (ram_addr),
+      .din (adder_out[n]),
+      .dout (adder_in1[n+1])
     );
   end
   endgenerate
 
   /* Adder instantiations.
    * The synthesis tool should be able to utilize the fast fabric carry logic.
-   * As such, there is no need to pipeline this adder. As previously mentioned,
-   * the output of each adder is flopped to improve timing.
+   * As such, there is no need to pipeline this adder.
    */
 
   generate
   for (n = 0; n < CORR_LENGTH; n = n + 1) begin
-    always @(posedge clk) begin
-      if (enable_int) begin
-        adder_out[n] <= adder_in1[n] + adder_in0[n];
-      end else begin
-        adder_out[n] <= adder_out[n];
-      end
-    end
+    assign adder_out[n] = adder_in1[n] + adder_in0[n];
   end
   endgenerate
 
@@ -362,12 +313,12 @@ module axis_bit_corr #(
    * We do not have to use dual-port distributed RAM for the output memory
    * column. The synthesis tool should infer flops, which should improve
    * timing and routability. Since Verilog does not allow unpacked input and
-   * output signals, we must also repack the final memory column.
+   * output signals, we must also repack the final memory column later on.
    */
 
   always @(posedge clk) begin
     if (enable_int) begin
-      output_ram[wr_addr] <= adder_out[L0];
+      output_ram[ram_addr] <= adder_out[L0];
     end
   end
 
@@ -412,8 +363,7 @@ module axis_bit_corr #(
 
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
-    localparam n0 = n * ADDER_WIDTH;
-    localparam n1 = n0 + WA;
+    localparam n0 = n * ADDER_WIDTH, n1 = n0 + WA;
     assign output_pack[n1:n0] = output_ram[dest_out*NUM_PARALLEL+n];
   end
   endgenerate

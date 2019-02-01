@@ -19,7 +19,7 @@ module axis_fan_in #(
   // parameters
 
   parameter   NUM_FANIN = 6,
-  parameter   DATA_WIDTH = 256,
+  parameter   DATA_WIDTH = 128,
   parameter   USE_AXIS_TLAST = 1,
   parameter   USE_FIFOS = 0,
   parameter   FIFO_TYPE = "auto",
@@ -82,7 +82,10 @@ module axis_fan_in #(
   wire              fanin_last;
   wire    [ NF:0]   fanin_user;
 
-  // slave interface
+  /* Slave interface.
+   * We unpack input data for ease of use later on. The ready signal is asserted
+   * only for the current active channel.
+   */
 
   genvar n;
   generate
@@ -95,8 +98,12 @@ module axis_fan_in #(
 
   assign s_axis_tready = {{NF{1'b0}}, fanin_ready} << chan_num;
 
-  // channel selection
-  // oh_to_bin acts as priority encoder
+  /* Channel prioritizer.
+   * When one of the input valid signals goes high, it instantly acquires
+   * priority. If it and other valid signals are asserted on the same clock
+   * cycle, priority is given to the channel corresponding to the most
+   * significant asserted valid.
+   */
 
   oh_to_bin #(
     .WIDTH_IN (NUM_FANIN),
@@ -106,11 +113,19 @@ module axis_fan_in #(
     .bin (prio_num)
   );
 
+  /* AXI-stream tlast logic.
+   * This module supports two modes of operation:
+   * 1) wait for tlast to be asserted on current channel, and
+   * 2) arbitrate on tvalid at all times.
+   * These two cases are described below.
+   */
+
   generate
   if (USE_AXIS_TLAST) begin
 
-    // case 0: use tlast
-    // keep the current channel until tlast goes high
+    /* Case 1: use tlast.
+     * In this case, keep the current channel until tlast goes high.
+     */
 
     always @(posedge s_axis_clk) begin
       casez ({s_axis_rst, fanin_last, fanin_valid})
@@ -121,7 +136,10 @@ module axis_fan_in #(
       endcase
     end
 
-    // the active channel retains priority
+    /* Channel selector.
+     * Active channels retain priority. If no channel is currently active, this
+     * module will default to the one with the highest priority.
+     */
 
     always @(posedge s_axis_clk) begin
       casez ({s_axis_rst, is_active})
@@ -133,6 +151,10 @@ module axis_fan_in #(
 
   end else begin
 
+    /* Case 2: do not use tlast.
+     * The channel number defaults to the one with the highest priority. This
+     * module may bounce back-and-forth between channels if tlast is not used.
+     */
     // case 1: do not use tlast
     // channel number = channel with highest priority
 

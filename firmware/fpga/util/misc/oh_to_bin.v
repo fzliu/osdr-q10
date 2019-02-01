@@ -30,7 +30,7 @@ module oh_to_bin #(
   reg     [ WO:0]   out;
 
   integer i;
-  always @* begin
+  always @(*) begin
     out = 'b0;
     for (i = 0; i < WIDTH_IN; i = i + 1) begin
       if (oh[i]) begin
