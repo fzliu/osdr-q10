@@ -221,20 +221,6 @@ module axis_peak_detn #(
   assign m_axis_tvalid = mem_ready;
   assign m_axis_tlast = &(mem_count[WN-1:0]);
 
-  // SIMULATION
-
-  wire      [ WC:0]   _s_axis_tdata_abs_unpack [0:NC];
-  wire      [ WC:0]   _data_abs_avg_unpack [0:NC];
-
-  generate
-  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
-    localparam n0 = n * CHANNEL_WIDTH;
-    localparam n1 = n0 + WC;
-    assign _s_axis_tdata_abs_unpack[n] = s_axis_tdata_abs[n1:n0];
-    assign _data_abs_avg_unpack[n] = data_abs_avg[n1:n0];
-  end
-  endgenerate
-
 endmodule
 
 ////////////////////////////////////////////////////////////////////////////////

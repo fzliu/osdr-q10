@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 1,
-  parameter   NUM_TAGS = 4,
+  parameter   NUM_COMPUTE = 4,
+  parameter   NUM_TAGS = 16,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -469,7 +469,7 @@ module anchor_top #(
       .WAVE_WIDTH (PRECISION),
       .ADDER_WIDTH (ADDER_WIDTH),
       .USE_STALL_SIGNAL (0),
-      .SHIFT_DEPTH (2),
+      .SHIFT_DEPTH (3),
       .NUM_CORRS (NUM_FANOUT),
       .CORR_OFFSET (CORR_OFFSET + NUM_FANOUT * n),
       .CORR_LENGTH (CORR_LENGTH),

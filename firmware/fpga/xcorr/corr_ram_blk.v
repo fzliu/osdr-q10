@@ -44,9 +44,13 @@ module corr_ram_blk #(
   input             clk,
   input             ena,
 
-  // memory interface
+  // address busses
 
-  input   [ WA:0]   addr,
+  input   [ WA:0]   rd_addr,
+  input   [ WA:0]   wr_addr,
+
+  // data interface
+
   input   [ WD:0]   din,
   output  [ WD:0]   dout
 
@@ -75,13 +79,13 @@ module corr_ram_blk #(
 
   always @(posedge clk) begin
     if (ena) begin
-      corr_ram[addr] <= din;
+      corr_ram[wr_addr] <= din;
     end
   end
 
   /* Read port.
    */
 
-  assign dout = corr_ram[addr];
+  assign dout = corr_ram[rd_addr];
 
 endmodule
