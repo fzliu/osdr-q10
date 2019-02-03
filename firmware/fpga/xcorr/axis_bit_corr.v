@@ -39,7 +39,6 @@ module axis_bit_corr #(
   // correlator parameters
 
   parameter   NUM_CORRS = 1,          // TODO(fzliu): ensure this is 2^N
-  parameter   CORR_OFFSET = 0,
   parameter   CORR_LENGTH = 1,
   parameter   CORRELATORS = {1'b0},
 
@@ -88,7 +87,7 @@ module axis_bit_corr #(
   `include "func_sqrt.vh"
   `include "sign_ext.vh"
 
-  `define CORRS(n) CORRELATORS[(n+CORR_OFFSET)*CORR_LENGTH+:CORR_LENGTH]
+  `define CORR(n) CORRELATORS[n*CORR_LENGTH+:CORR_LENGTH]
 
   // internal memories
 
@@ -248,7 +247,7 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (ena_int),
-    .din (`CORRS(b_count)),
+    .din (`CORR(b_count)),
     .dout (correlator)
   );
 

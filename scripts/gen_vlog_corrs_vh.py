@@ -30,10 +30,10 @@ localparam            TOTAL_CORRS = $num_corrs,
 localparam            CORR_LENGTH = $corr_length,
 localparam            CORRS_WIDTH = TOTAL_CORRS * CORR_LENGTH,
 
-localparam            L0 = CORR_LENGTH - 1,
-localparam            W0 = CORRS_WIDTH - 1,
+localparam            L = CORR_LENGTH - 1,
+localparam            W = CORRS_WIDTH - 1,
 
-localparam  [ 0:W0]   CORRELATORS =
+localparam  [  W:0]   CORRELATORS =
 $correlators,
 """)
 

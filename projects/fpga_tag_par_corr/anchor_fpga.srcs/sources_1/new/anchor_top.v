@@ -28,14 +28,16 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 4,
-  parameter   NUM_TAGS = 16,
+  parameter   NUM_COMPUTE = 1,
+  parameter   NUM_TAGS = 4,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
   parameter   ADDER_WIDTH = 12,
   parameter   CORR_OFFSET = 0,
 
+  parameter   PIPELINE_DEPTH = 3,
+  parameter   USE_STALL_SIGNAL = 0,
   parameter   CABS_DELAY = 10,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
@@ -143,6 +145,8 @@ module anchor_top #(
   output  [  7:0]   led_out
 
 );
+
+  `define CORRS(n) CORRELATORS[n*CORR_LENGTH+:NUM_FANOUT*CORR_LENGTH]
 
   // internal signals (clock)
 
@@ -468,12 +472,11 @@ module anchor_top #(
       .NUM_PARALLEL (2 * NUM_CHANNELS),
       .WAVE_WIDTH (PRECISION),
       .ADDER_WIDTH (ADDER_WIDTH),
-      .USE_STALL_SIGNAL (0),
-      .SHIFT_DEPTH (3),
+      .USE_STALL_SIGNAL (USE_STALL_SIGNAL),
+      .SHIFT_DEPTH (PIPELINE_DEPTH),
       .NUM_CORRS (NUM_FANOUT),
-      .CORR_OFFSET (CORR_OFFSET + NUM_FANOUT * n),
       .CORR_LENGTH (CORR_LENGTH),
-      .CORRELATORS (CORRELATORS)
+      .CORRELATORS (`CORRS(NUM_FANOUT*n+CORR_OFFSET))
     ) axis_bit_corr (
       .clk (c_clk),
       .s_axis_tvalid (distrib_axis_tvalid[n]),
@@ -519,7 +522,7 @@ module anchor_top #(
       .NUM_CHANNELS (NUM_CHANNELS),
       .CHANNEL_WIDTH (CHANNEL_WIDTH),
       .CABS_DELAY (CABS_DELAY),
-      .USE_STALL_SIGNAL (0)
+      .USE_STALL_SIGNAL (USE_STALL_SIGNAL)
     ) axis_cabs_serial (
       .clk (m_clk),
       .s_axis_tvalid (switch_axis_tvalid[n]),
