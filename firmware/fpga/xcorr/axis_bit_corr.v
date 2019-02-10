@@ -438,7 +438,9 @@ module axis_bit_corr #(
   assign m_axis_tdata = m_axis_tdata_reg;
   assign m_axis_tdest = m_axis_tdest_reg;
 
-  // SIMULATION
+  ////////////////
+  // SIMULATION //
+  ////////////////
 
   reg     [ WA:0]   _corr_out [0:NP];
 
@@ -447,7 +449,7 @@ module axis_bit_corr #(
     localparam n0 = n * ADDER_WIDTH, n1 = n0 + WA;
     always @(posedge clk) begin
       if (m_axis_tvalid & (m_axis_tdest == 0)) begin
-        _corr_out[n] = m_axis_tdata[n1:n0];
+        _corr_out[n] <= m_axis_tdata[n1:n0];
       end
     end
   end

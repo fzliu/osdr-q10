@@ -12,13 +12,9 @@ module ad9361_dual_filt #(
 
   parameter   ABS_WIDTH = 16,
   parameter   NUM_DELAY = 24,
-  parameter   NUM_PAD_SAMPS = 7,
+  parameter   NUM_PAD_SAMPS = 8,
   parameter   DATA_PASS_VALUE = 16,
   parameter   FILTER_LENGTH = 16,
-
-  // derived parameters
-
-  parameter   FILTER_POWER = log2(FILTER_LENGTH - 1),
 
   // bit width parameters
 
@@ -185,13 +181,13 @@ module ad9361_dual_filt #(
 
     filt_boxcar #(
       .DATA_WIDTH (ABS_WIDTH),
-      .FILTER_POWER (FILTER_POWER)
+      .FILTER_LENGTH (FILTER_LENGTH)
     ) filt_boxcar (
       .clk (clk),
       .rst (1'b0),
       .ena (1'b1),
-      .data_in (abs_dout[n]),
-      .avg_out (avg_dout[n])
+      .din (abs_dout[n]),
+      .dout (avg_dout[n])
     );
 
   end

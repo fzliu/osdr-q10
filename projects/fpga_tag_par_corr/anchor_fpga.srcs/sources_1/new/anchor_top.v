@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 1,
-  parameter   NUM_TAGS = 4,
+  parameter   NUM_COMPUTE = 12,
+  parameter   NUM_TAGS = 48,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -39,6 +39,7 @@ module anchor_top #(
   parameter   PIPELINE_DEPTH = 3,
   parameter   USE_STALL_SIGNAL = 0,
   parameter   CABS_DELAY = 10,
+  parameter   BOXCAR_DELAY = 2,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 8,
 
@@ -195,9 +196,9 @@ module anchor_top #(
   wire              ad9361_axis_tready;
   wire    [ WS:0]   ad9361_axis_tdata;
 
-  wire              fifo_axis_tvalid;
-  wire              fifo_axis_tready;
-  wire    [ WS:0]   fifo_axis_tdata;
+  wire              data_axis_tvalid;
+  wire              data_axis_tready;
+  wire    [ WS:0]   data_axis_tdata;
 
   wire    [ NM:0]   distrib_axis_tvalid;
   wire    [ NM:0]   distrib_axis_tready;
@@ -208,14 +209,14 @@ module anchor_top #(
   wire    [ W1:0]   corr_axis_tdata;
   wire    [ W2:0]   corr_axis_tdest;
 
+  wire    [ NM:0]   clkx_axis_tvalid;
+  wire    [ NM:0]   clkx_axis_tready;
+  wire    [ W1:0]   clkx_axis_tdata;
+  wire    [ W2:0]   clkx_axis_tdest;
+
   wire    [ NT:0]   switch_axis_tvalid;
   wire    [ NT:0]   switch_axis_tready;
   wire    [ W3:0]   switch_axis_tdata;
-
-  wire    [ NT:0]   cabs_axis_tvalid;
-  wire    [ NT:0]   cabs_axis_tready;
-  wire    [ W3:0]   cabs_axis_tdata;
-  wire    [ W3:0]   cabs_axis_tdata_abs;
 
   wire    [ NT:0]   peak_axis_tvalid;
   wire    [ NT:0]   peak_axis_tready;
@@ -265,7 +266,7 @@ module anchor_top #(
   assign led_out[3] = valid_3;
   assign led_out[4] = 1'b0;
   assign led_out[5] = ad9361_axis_tvalid;
-  assign led_out[6] = fifo_axis_tready;
+  assign led_out[6] = data_axis_tready;
   assign led_out[7] = ebi_ready;
 
   /* Receive interface (chip A).
@@ -348,7 +349,7 @@ module anchor_top #(
   ad9361_dual_filt #(
     .ABS_WIDTH (16),
     .NUM_DELAY (22),
-    .NUM_PAD_SAMPS (15),
+    .NUM_PAD_SAMPS (16),
     .DATA_PASS_VALUE (16),
     .FILTER_LENGTH (16)
   ) ad9361_dual_filt (
@@ -414,21 +415,20 @@ module anchor_top #(
    * Converts data clock to master clock and provides data buffering.
    */
 
-  axis_fifo_async #(
+  axis_fifo_sync #(
     .MEMORY_TYPE ("block"),
     .DATA_WIDTH (SAMPS_WIDTH),
-    .FIFO_DEPTH (131072),
+    .FIFO_DEPTH (65536),
     .READ_LATENCY (2)
-  ) axis_fifo_async (
-    .s_axis_clk (d_clk),
-    .s_axis_rst (1'b0),
-    .m_axis_clk (m_clk),
+  ) axis_fifo_sync (
+    .clk (d_clk),
+    .rst (1'b0),
     .s_axis_tvalid (ad9361_axis_tvalid),
     .s_axis_tready (ad9361_axis_tready),
     .s_axis_tdata (ad9361_axis_tdata),
-    .m_axis_tvalid (fifo_axis_tvalid),
-    .m_axis_tready (fifo_axis_tready),
-    .m_axis_tdata (fifo_axis_tdata)
+    .m_axis_tvalid (data_axis_tvalid),
+    .m_axis_tready (data_axis_tready),
+    .m_axis_tdata (data_axis_tdata)
   );
 
   /* Distribute to correlators.
@@ -441,14 +441,14 @@ module anchor_top #(
     .DATA_WIDTH (SAMPS_WIDTH),
     .USE_FIFOS (1),
     .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (3)
+    .FIFO_LATENCY (2)
   ) axis_distrib (
-    .s_axis_clk (m_clk),
+    .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
     .m_axis_clk (c_clk),
-    .s_axis_tvalid (fifo_axis_tvalid),
-    .s_axis_tready (fifo_axis_tready),
-    .s_axis_tdata (fifo_axis_tdata),
+    .s_axis_tvalid (data_axis_tvalid),
+    .s_axis_tready (data_axis_tready),
+    .s_axis_tdata (data_axis_tdata),
     .m_axis_tvalid (distrib_axis_tvalid),
     .m_axis_tready (distrib_axis_tready),
     .m_axis_tdata (distrib_axis_tdata)
@@ -488,19 +488,37 @@ module anchor_top #(
       .m_axis_tdest (corr_axis_tdest[k1:k0])
     );
 
-    axis_fan_out #(
-      .NUM_FANOUT (NUM_FANOUT),
-      .DATA_WIDTH (DATA_WIDTH),
-      .USE_FIFOS (1),
-      .FIFO_TYPE ("block")
-    ) axis_fan_out (
+    axis_fifo_async #(
+      .MEMORY_TYPE ("block"),
+      .DATA_WIDTH (DATA_WIDTH + NUM_FANOUT),
+      .FIFO_DEPTH (16),
+      .READ_LATENCY (2)
+    ) axis_fifo_async (
       .s_axis_clk (c_clk),
       .s_axis_rst (1'b0),
       .m_axis_clk (m_clk),
       .s_axis_tvalid (corr_axis_tvalid[n]),
       .s_axis_tready (corr_axis_tready[n]),
-      .s_axis_tdata (corr_axis_tdata[j1:j0]),
-      .s_axis_tdest (corr_axis_tdest[k1:k0]),
+      .s_axis_tdata ({corr_axis_tdata[j1:j0],
+                      corr_axis_tdest[k1:k0]}),
+      .m_axis_tvalid (clkx_axis_tvalid[n]),
+      .m_axis_tready (clkx_axis_tready[n]),
+      .m_axis_tdata ({clkx_axis_tdata[j1:j0],
+                      clkx_axis_tdest[k1:k0]})
+    );
+
+    axis_fan_out #(
+      .NUM_FANOUT (NUM_FANOUT),
+      .DATA_WIDTH (DATA_WIDTH),
+      .USE_FIFOS (0)
+    ) axis_fan_out (
+      .s_axis_clk (m_clk),
+      .s_axis_rst (1'b0),
+      .m_axis_clk (),
+      .s_axis_tvalid (clkx_axis_tvalid[n]),
+      .s_axis_tready (clkx_axis_tready[n]),
+      .s_axis_tdata (clkx_axis_tdata[j1:j0]),
+      .s_axis_tdest (clkx_axis_tdest[k1:k0]),
       .m_axis_tvalid (switch_axis_tvalid[n1:n0]),
       .m_axis_tready (switch_axis_tready[n1:n0]),
       .m_axis_tdata (switch_axis_tdata[l1:l0])
@@ -518,34 +536,18 @@ module anchor_top #(
   for (n = 0; n < NUM_TAGS; n = n + 1) begin
     localparam i0 = n * DATA_WIDTH, i1 = i0 + WD;
 
-    axis_cabs_serial #(
+    axis_peak_detn #(
       .NUM_CHANNELS (NUM_CHANNELS),
       .CHANNEL_WIDTH (CHANNEL_WIDTH),
       .CABS_DELAY (CABS_DELAY),
-      .USE_STALL_SIGNAL (USE_STALL_SIGNAL)
-    ) axis_cabs_serial (
+      .BOXCAR_DELAY (BOXCAR_DELAY),
+      .BURST_LENGTH (BURST_LENGTH),
+      .PEAK_THRESH_MULT (PEAK_THRESH_MULT)
+    ) axis_peak_detn (
       .clk (m_clk),
       .s_axis_tvalid (switch_axis_tvalid[n]),
       .s_axis_tready (switch_axis_tready[n]),
       .s_axis_tdata (switch_axis_tdata[i1:i0]),
-      .m_axis_tvalid (cabs_axis_tvalid[n]),
-      .m_axis_tready (cabs_axis_tready[n]),
-      .m_axis_tdata (cabs_axis_tdata[i1:i0]),
-      .m_axis_tdata_abs (cabs_axis_tdata_abs[i1:i0])
-    );
-
-    axis_peak_detn #(
-      .DEVICE (DEVICE),
-      .NUM_CHANNELS (NUM_CHANNELS),
-      .CHANNEL_WIDTH (CHANNEL_WIDTH),
-      .PEAK_THRESH_MULT (PEAK_THRESH_MULT),
-      .BURST_LENGTH (BURST_LENGTH)
-    ) axis_peak_detn (
-      .clk (m_clk),
-      .s_axis_tvalid (cabs_axis_tvalid[n]),
-      .s_axis_tready (cabs_axis_tready[n]),
-      .s_axis_tdata (cabs_axis_tdata[i1:i0]),
-      .s_axis_tdata_abs (cabs_axis_tdata_abs[i1:i0]),
       .m_axis_tvalid (peak_axis_tvalid[n]),
       .m_axis_tready (peak_axis_tready[n]),
       .m_axis_tdata (peak_axis_tdata[i1:i0]),

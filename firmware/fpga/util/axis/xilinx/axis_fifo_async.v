@@ -87,7 +87,7 @@ module axis_fifo_async #(
     .READ_DATA_WIDTH (DATA_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
-    .CDC_SYNC_STAGES (3),
+    .CDC_SYNC_STAGES (2),
     .WAKEUP_TIME (0)
   ) xpm_fifo_async (
     .rst (s_axis_rst),

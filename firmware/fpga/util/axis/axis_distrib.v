@@ -74,7 +74,7 @@ module axis_distrib #(
   wire    [ WP:0]   distrib_data;
 
   /* Slave interface.
-   * The output ready signal goes high only when ALL channels are reqdy to
+   * The output ready signal goes high only when ALL channels are ready to
    * accept new data. Although this causes one extra cycle of throughput delay,
    * there is no other way to accomplish AXI-stream distribution since at least
    * one set of flops is required to store state.

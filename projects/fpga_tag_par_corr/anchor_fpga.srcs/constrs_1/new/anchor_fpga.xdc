@@ -1,4 +1,6 @@
 
+set_property USE_DSP48 YES [get_cells -hier -regexp .*axis_peak_detn/filt_boxcar]
+
 set_property CONFIG_VOLTAGE 3.3 [current_design]
 set_property CFGBVS VCCO [current_design]
 

@@ -2,9 +2,9 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Parameterizable upward counter. Single-cycle latency. If
-// WRAPAROUND is set to false, the counter will hold its value once it reaches
-// the maximum.
+// Description
+// Parameterizable upward counter. Single-cycle latency. If WRAPAROUND is set to
+// false, the counter will hold its value once it reaches  the maximum.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +23,7 @@ module counter #(
 
   // bit width parameters
 
-  localparam  W0 = WIDTH - 1
+  localparam  W0 = (WIDTH == 0) ? 0 : WIDTH - 1
 
 ) (
 
@@ -49,22 +49,40 @@ module counter #(
 
   reg     [ W0:0]   count = INIT_VALUE;
 
-  // counter implementation
+  /* Overflow logic.
+   * When the counter has reached its highest value, this bit is asserted.
+   */
 
   assign at_upper = (count == UPPER);
 
+  /* Counter implementation.
+   * If UPPER == 0, we assign the output to a constant zero value instead to
+   * avoid creating unnecessary logic.
+   */
+
   generate
-  always @(posedge clk) begin
-    casez ({rst, ena, at_upper})
-      3'b1??: count <= LOWER;
-      3'b011: count <= WRAPAROUND ? LOWER : UPPER;
-      3'b010: count <= count + 1'b1;
-      default: count <= count;
-    endcase
+  if (WIDTH == 0) begin
+
+    always @* begin
+      count <= 'b0;
+    end
+
+  end else begin
+
+    always @(posedge clk) begin
+      casez ({rst, ena, at_upper})
+        3'b1??: count <= INIT_VALUE;
+        3'b011: count <= WRAPAROUND ? LOWER : UPPER;
+        3'b010: count <= count + 1'b1;
+        default: count <= count;
+      endcase
+    end
+
   end
   endgenerate
 
-  // assign output
+  /* Assign output value.
+   */
 
   assign value = count;
 

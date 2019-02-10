@@ -6,14 +6,19 @@
 //
 // enable  :  active-high
 // reset   :  active-high
-// latency :  2 cycles (DSP), 1 cycle (fabric)
+// latency :  1 or 2 cycles
 // output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 module math_add_48 #(
 
-  parameter   USE_FABRIC = 0
+  parameter   USE_FABRIC = 0,
+  parameter   FLOP_INPUTS = 1,  // TODO(fzliu): must be 0 if USE_FABRIC == 1
+  
+  localparam  AREG = FLOP_INPUTS ? 1 : 0,
+  localparam  BREG = FLOP_INPUTS ? 1 : 0,
+  localparam  CREG = FLOP_INPUTS ? 1 : 0
 
 )(
 
@@ -45,17 +50,27 @@ module math_add_48 #(
   generate
   if (USE_FABRIC) begin
 
-    // fabric adder
+    /* Fabric adder.
+     * This option is useful if too many DSP slices have been used.
+     */
 
     always @(posedge clk) begin
-      dout_reg <= dina + dinb;
+      if (rst) begin
+        dout_reg <= 'b0;
+      end else if (ena) begin
+        dout_reg <= dina + dinb;
+      end else begin
+        dout_reg <= dout_reg;
+      end
     end
 
     assign dout = dout_reg;
 
   end else begin
 
-    // DSP adder
+    /* DSP adder.
+     * By default, both inputs and outputs are registered for performance.
+     */
 
     DSP48E1 #(
       .A_INPUT ("DIRECT"),
@@ -69,15 +84,15 @@ module math_add_48 #(
       .SEL_MASK ("MASK"),
       .SEL_PATTERN ("PATTERN"),
       .USE_PATTERN_DETECT ("NO_PATDET"),
-      .ACASCREG (1),
+      .ACASCREG (AREG),
       .ADREG (1),
       .ALUMODEREG (0),
-      .AREG (1),
-      .BCASCREG (1),
-      .BREG (1),
+      .AREG (AREG),
+      .BCASCREG (BREG),
+      .BREG (BREG),
       .CARRYINREG (0),
       .CARRYINSELREG (0),
-      .CREG (1),
+      .CREG (CREG),
       .DREG (1),
       .INMODEREG (0),
       .MREG (0),

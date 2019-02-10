@@ -155,8 +155,6 @@ module axis_fan_in #(
      * The channel number defaults to the one with the highest priority. This
      * module may bounce back-and-forth between channels if tlast is not used.
      */
-    // case 1: do not use tlast
-    // channel number = channel with highest priority
 
     always @* begin
       chan_num = prio_num;

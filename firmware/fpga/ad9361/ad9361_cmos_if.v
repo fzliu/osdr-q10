@@ -2,11 +2,14 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Dual-port half-duplex (RX-only) handler for a single AD9361.
+// Description
+// Dual-port half-duplex (receive only) handler for a single AD9361.
 //
+// Signals
 // enable  :  N/A
 // reset   :  active-high
 // latency :  2 cycles
+// output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -176,6 +179,7 @@ module ad9361_cmos_if #(
    * For unknown devices, try to coerce the synthesis tool to create a DDR
    * register.
    */
+
   end else begin
 
     // set receiver 0 data
