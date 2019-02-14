@@ -16,7 +16,7 @@
 // ADDER_WIDTH: width of adders used by axis_bit_corr
 // CORR_OFFSET: index of the first (zeroth) correlator to use
 //
-// enable  :  N/A
+// enable  :  active-high
 // reset   :  N/A
 // latency :  N/A
 // output  :  N/A
@@ -82,6 +82,7 @@ module anchor_top #(
   // master interface
 
   input             clk,
+  input             ena,
 
   // physical interface (receive_a)
 
@@ -230,12 +231,15 @@ module anchor_top #(
   wire    [ NT:0]   fanin_axis_tuser;
 
   /* Clock generation.
+   * Since AD9361_b is configured after AD9361_a, we use b's clock to avoid
+   * potential metastability issues.
    */
 
   anchor_clk_gen #()
   anchor_clk_gen (
     .clk_xtal (clk),
     .clk_ad9361 (a_data_clk),
+    .ena (ena),
     .m_clk (m_clk),
     .c_clk (c_clk),
     .d_clk (d_clk)
@@ -265,7 +269,7 @@ module anchor_top #(
   assign led_out[2] = valid_2;
   assign led_out[3] = valid_3;
   assign led_out[4] = 1'b0;
-  assign led_out[5] = ad9361_axis_tvalid;
+  assign led_out[5] = ena;
   assign led_out[6] = data_axis_tready;
   assign led_out[7] = ebi_ready;
 

@@ -5,7 +5,9 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 set_property CFGBVS VCCO [current_design]
 
 set_property PACKAGE_PIN AA3 [get_ports clk]
+set_property PACKAGE_PIN H26 [get_ports ena]
 set_property IOSTANDARD LVCMOS12 [get_ports clk]
+set_property IOSTANDARD LVCMOS33 [get_ports ena]
 
 set_property PACKAGE_PIN N26 [get_ports {ebi_data[0]}]
 set_property PACKAGE_PIN M26 [get_ports {ebi_data[1]}]
@@ -142,8 +144,8 @@ set_property SLEW FAST [get_ports a_enable]
 
 set_property PACKAGE_PIN C12 [get_ports a_rx_clk_in]
 set_property PACKAGE_PIN D10 [get_ports a_rx_frame_in]
-set_property PACKAGE_PIN D18 [get_ports b_rx_frame_in]
 set_property PACKAGE_PIN E18 [get_ports b_rx_clk_in]
+set_property PACKAGE_PIN D18 [get_ports b_rx_frame_in]
 set_property PACKAGE_PIN A9 [get_ports {a_rx_data_p0[0]}]
 set_property PACKAGE_PIN B12 [get_ports {a_rx_data_p0[1]}]
 set_property PACKAGE_PIN D11 [get_ports {a_rx_data_p0[2]}]
@@ -274,6 +276,13 @@ create_clock -period 20.000 -name a_rx_clk_in -waveform {0.000 10.000} [get_port
 create_clock -period 20.000 -name {VIRTUAL_pll_out[0]} -waveform {0.000 10.000}
 create_clock -period 10.000 -name {VIRTUAL_pll_out[1]} -waveform {0.000 5.000}
 create_clock -period 2.500 -name {VIRTUAL_pll_out[2]} -waveform {0.000 1.250}
+
+set_input_delay -clock [get_clocks a_rx_clk_in] -min -add_delay 0.000 [get_ports ena]
+set_input_delay -clock [get_clocks a_rx_clk_in] -max -add_delay 1.000 [get_ports ena]
+set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -min -add_delay 0.000 [get_ports ena]
+set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -max -add_delay 1.000 [get_ports ena]
+set_input_delay -clock [get_clocks {VIRTUAL_pll_out[2]}] -min -add_delay 0.000 [get_ports ena]
+set_input_delay -clock [get_clocks {VIRTUAL_pll_out[2]}] -max -add_delay 1.000 [get_ports ena]
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -min -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -max -add_delay 1.000 [get_ports {a_rx_data_p0[*]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -min -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]

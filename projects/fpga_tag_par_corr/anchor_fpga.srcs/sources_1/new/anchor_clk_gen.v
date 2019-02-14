@@ -12,6 +12,7 @@ module anchor_clk_gen (
 
   input             clk_xtal,
   input             clk_ad9361,
+  input             ena,
 
   output            d_clk,   /* data clock */
   output            m_clk,   /* main clock */
@@ -25,9 +26,7 @@ module anchor_clk_gen (
   wire              pll_fb;
   wire              pll_lock;
 
-  // clock generation
-
-  /**
+  /* Clock generation
    * Input: 50MHz (nominal)
    * Output 0: 50MHz, -pi/2 phase shift
    * Output 1: 100MHz
@@ -48,7 +47,9 @@ module anchor_clk_gen (
     .CLKOUT1_DUTY_CYCLE (0.500),
     .CLKOUT2_DIVIDE (4),
     .CLKOUT2_PHASE (0),
-    .CLKOUT2_DUTY_CYCLE (0.500)
+    .CLKOUT2_DUTY_CYCLE (0.500),
+    .REF_JITTER1 (0.0),
+    .STARTUP_WAIT ("TRUE")
   ) plle2_base (
     .CLKOUT0 (pll_out[0]),
     .CLKOUT1 (pll_out[1]),
@@ -64,21 +65,33 @@ module anchor_clk_gen (
     .CLKFBIN (pll_fb)
   );
 
+  /* 50MHz data clock (shifted)
+   * This clock is used to latch in data from the AD9361s.
+   */
+
   BUFGCE bufgce_0 (
     .I (pll_out[0]),
-    .CE (pll_lock),
+    .CE (ena),
     .O (d_clk)
   );
 
+  /* 100MHz main clock
+   * This clock is primarily used for buffering and control.
+   */
+
   BUFGCE bufgce_1 (
     .I (pll_out[1]),
-    .CE (pll_lock),
+    .CE (ena),
     .O (m_clk)
   );
 
+  /* 400MHz compute clock
+   * This clock is used in high-performance modules.
+   */
+
   BUFGCE bufgce_2 (
     .I (pll_out[2]),
-    .CE (pll_lock),
+    .CE (ena),
     .O (c_clk)
   );
 
