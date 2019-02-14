@@ -197,10 +197,6 @@ module anchor_top #(
   wire              ad9361_axis_tready;
   wire    [ WS:0]   ad9361_axis_tdata;
 
-  wire              data_axis_tvalid;
-  wire              data_axis_tready;
-  wire    [ WS:0]   data_axis_tdata;
-
   wire    [ NM:0]   distrib_axis_tvalid;
   wire    [ NM:0]   distrib_axis_tready;
   wire    [ W0:0]   distrib_axis_tdata;
@@ -209,11 +205,6 @@ module anchor_top #(
   wire    [ NM:0]   corr_axis_tready;
   wire    [ W1:0]   corr_axis_tdata;
   wire    [ W2:0]   corr_axis_tdest;
-
-  wire    [ NM:0]   clkx_axis_tvalid;
-  wire    [ NM:0]   clkx_axis_tready;
-  wire    [ W1:0]   clkx_axis_tdata;
-  wire    [ W2:0]   clkx_axis_tdest;
 
   wire    [ NT:0]   switch_axis_tvalid;
   wire    [ NT:0]   switch_axis_tready;
@@ -270,7 +261,7 @@ module anchor_top #(
   assign led_out[3] = valid_3;
   assign led_out[4] = 1'b0;
   assign led_out[5] = ena;
-  assign led_out[6] = data_axis_tready;
+  assign led_out[6] = ad9361_axis_tvalid;
   assign led_out[7] = ebi_ready;
 
   /* Receive interface (chip A).
@@ -415,44 +406,25 @@ module anchor_top #(
     .m_axis_tlast ()
   );
 
-  /* Clock conversion.
-   * Converts data clock to master clock and provides data buffering.
-   */
-
-  axis_fifo_sync #(
-    .MEMORY_TYPE ("block"),
-    .DATA_WIDTH (SAMPS_WIDTH),
-    .FIFO_DEPTH (65536),
-    .READ_LATENCY (2)
-  ) axis_fifo_sync (
-    .clk (d_clk),
-    .rst (1'b0),
-    .s_axis_tvalid (ad9361_axis_tvalid),
-    .s_axis_tready (ad9361_axis_tready),
-    .s_axis_tdata (ad9361_axis_tdata),
-    .m_axis_tvalid (data_axis_tvalid),
-    .m_axis_tready (data_axis_tready),
-    .m_axis_tdata (data_axis_tdata)
-  );
-
   /* Distribute to correlators.
-   * Converts master clock to data clock and distributes the data to the
+   * Converts data clock to data clock and distributes the data to the
    * compute modules.
    */
 
   axis_distrib #(
     .NUM_DISTRIB (NUM_COMPUTE),
     .DATA_WIDTH (SAMPS_WIDTH),
-    .USE_FIFOS (1),
+    .USE_FIFO (1),
     .FIFO_TYPE ("block"),
-    .FIFO_LATENCY (2)
+    .FIFO_DEPTH (65536),
+    .FIFO_LATENCY (4)
   ) axis_distrib (
     .s_axis_clk (d_clk),
     .s_axis_rst (1'b0),
     .m_axis_clk (c_clk),
-    .s_axis_tvalid (data_axis_tvalid),
-    .s_axis_tready (data_axis_tready),
-    .s_axis_tdata (data_axis_tdata),
+    .s_axis_tvalid (ad9361_axis_tvalid),
+    .s_axis_tready (ad9361_axis_tready),
+    .s_axis_tdata (ad9361_axis_tdata),
     .m_axis_tvalid (distrib_axis_tvalid),
     .m_axis_tready (distrib_axis_tready),
     .m_axis_tdata (distrib_axis_tdata)
@@ -492,37 +464,20 @@ module anchor_top #(
       .m_axis_tdest (corr_axis_tdest[k1:k0])
     );
 
-    axis_fifo_async #(
-      .MEMORY_TYPE ("block"),
-      .DATA_WIDTH (DATA_WIDTH + NUM_FANOUT),
-      .FIFO_DEPTH (16),
-      .READ_LATENCY (2)
-    ) axis_fifo_async (
+    axis_fan_out #(
+      .NUM_FANOUT (NUM_FANOUT),
+      .DATA_WIDTH (DATA_WIDTH),
+      .USE_FIFO (1),
+      .FIFO_TYPE ("block"),
+      .FIFO_LATENCY (2)
+    ) axis_fan_out (
       .s_axis_clk (c_clk),
       .s_axis_rst (1'b0),
       .m_axis_clk (m_clk),
       .s_axis_tvalid (corr_axis_tvalid[n]),
       .s_axis_tready (corr_axis_tready[n]),
-      .s_axis_tdata ({corr_axis_tdata[j1:j0],
-                      corr_axis_tdest[k1:k0]}),
-      .m_axis_tvalid (clkx_axis_tvalid[n]),
-      .m_axis_tready (clkx_axis_tready[n]),
-      .m_axis_tdata ({clkx_axis_tdata[j1:j0],
-                      clkx_axis_tdest[k1:k0]})
-    );
-
-    axis_fan_out #(
-      .NUM_FANOUT (NUM_FANOUT),
-      .DATA_WIDTH (DATA_WIDTH),
-      .USE_FIFOS (0)
-    ) axis_fan_out (
-      .s_axis_clk (m_clk),
-      .s_axis_rst (1'b0),
-      .m_axis_clk (),
-      .s_axis_tvalid (clkx_axis_tvalid[n]),
-      .s_axis_tready (clkx_axis_tready[n]),
-      .s_axis_tdata (clkx_axis_tdata[j1:j0]),
-      .s_axis_tdest (clkx_axis_tdest[k1:k0]),
+      .s_axis_tdata (corr_axis_tdata[j1:j0]),
+      .s_axis_tdest (corr_axis_tdest[k1:k0]),
       .m_axis_tvalid (switch_axis_tvalid[n1:n0]),
       .m_axis_tready (switch_axis_tready[n1:n0]),
       .m_axis_tdata (switch_axis_tdata[l1:l0])
@@ -570,7 +525,7 @@ module anchor_top #(
     .NUM_FANIN (NUM_TAGS),
     .DATA_WIDTH (DATA_WIDTH),
     .USE_AXIS_TLAST (1),
-    .USE_FIFOS (0)
+    .USE_FIFO (0)
   ) axis_fan_in (
     .s_axis_clk (m_clk),
     .s_axis_rst (1'b0),

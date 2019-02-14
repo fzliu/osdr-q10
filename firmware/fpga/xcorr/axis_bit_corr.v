@@ -232,7 +232,6 @@ module axis_bit_corr #(
     .dout (rd_addr)
   );
 
-
   /* Set correlator for current batch.
    * Once we have finished processing NUM_PARALLEL input channels, we must move
    * on to the next correlator. However, these bits must also go through

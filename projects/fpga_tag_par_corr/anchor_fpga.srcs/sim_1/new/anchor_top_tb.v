@@ -104,6 +104,7 @@ module anchor_top_tb;
     .CABS_DELAY (CABS_DELAY)
   ) anchor_top (
     .clk (clk),
+    .ena (1'b1),
     .a_rx_clk_in (rx_clk_in),
     .a_rx_frame_in (rx_frame_in),
     .a_rx_data_p0 (a_rx_data_p0),

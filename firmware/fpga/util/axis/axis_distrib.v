@@ -2,10 +2,12 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AXI-stream distributor. Similar to axis_fan_out but sends the
-// same data to all channels, i.e. waits for all channels to assert tready
-// before updating the bus data (m_axis_tdata).
+// Description
+// AXI-stream distributor. Similar to axis_fan_out but sends the same data to
+// all channels, i.e. waits for all channels to assert tready before updating
+// the bus data (m_axis_tdata).
 //
+// Signals
 // enable  :  N/A
 // reset   :  active-high
 // latency :  1 cycle
@@ -19,7 +21,7 @@ module axis_distrib #(
 
   parameter   NUM_DISTRIB = 6,
   parameter   DATA_WIDTH = 128,
-  parameter   USE_FIFOS = 0,
+  parameter   USE_FIFO = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_DEPTH = 32,
   parameter   FIFO_LATENCY = 2,
@@ -66,12 +68,45 @@ module axis_distrib #(
 
   // internal signals
 
-  wire              s_axis_frame;
+  wire              distrib_frame;
+  wire              distrib_valid;
+  wire              distrib_ready;
+  wire    [ WD:0]   distrib_data;
 
-  wire    [ ND:0]   distrib_frame;
-  wire    [ ND:0]   distrib_valid;
-  wire    [ ND:0]   distrib_ready;
-  wire    [ WP:0]   distrib_data;
+  wire              m_axis_frame;
+
+  /* Assign inputs.
+   * If a FIFO is not requested, directly assign inputs to s_axis.
+   */
+
+  generate
+  if (USE_FIFO) begin
+
+    axis_fifo_async #(
+      .MEMORY_TYPE (FIFO_TYPE),
+      .DATA_WIDTH (DATA_WIDTH),
+      .FIFO_DEPTH (FIFO_DEPTH),
+      .READ_LATENCY (FIFO_LATENCY)
+    ) axis_fifo_async (
+      .s_axis_clk (s_axis_clk),
+      .s_axis_rst (s_axis_rst),
+      .m_axis_clk (m_axis_clk),
+      .s_axis_tvalid (s_axis_tvalid),
+      .s_axis_tready (s_axis_tready),
+      .s_axis_tdata (s_axis_tdata),
+      .m_axis_tvalid (distrib_valid),
+      .m_axis_tready (distrib_ready),
+      .m_axis_tdata (distrib_data)
+    );
+
+  end else begin
+
+    assign s_axis_tready = distrib_ready;
+    assign distrib_valid = s_axis_tvalid;
+    assign distrib_data = s_axis_tdata;
+
+  end
+  endgenerate
 
   /* Slave interface.
    * The output ready signal goes high only when ALL channels are ready to
@@ -80,8 +115,8 @@ module axis_distrib #(
    * one set of flops is required to store state.
    */
 
-  assign s_axis_frame = s_axis_tvalid & s_axis_tready;
-  assign s_axis_tready = &(ready_all);
+  assign distrib_frame = distrib_valid & distrib_ready;
+  assign distrib_ready = &(ready_all);
 
   /* Ready logic.
    * Whenever new data is framed from the slave AXI-stream interface, the
@@ -92,11 +127,11 @@ module axis_distrib #(
    * "current" data.
    */
 
-  always @(posedge s_axis_clk) begin
-    if (s_axis_rst | s_axis_frame) begin
+  always @(posedge m_axis_clk) begin
+    if (distrib_frame) begin
       ready_all <= 'b0;
     end else begin
-      ready_all <= ready_all | distrib_frame;
+      ready_all <= ready_all | m_axis_frame;
     end
   end
 
@@ -105,45 +140,9 @@ module axis_distrib #(
    * the current data has not already been input.
    */
 
-  assign distrib_frame = distrib_valid & distrib_ready;
-  assign distrib_valid = s_axis_tvalid ? ~ready_all : 'b0;
-  assign distrib_data = {NUM_DISTRIB{s_axis_tdata}};
-
-  // assign outputs
-
-  genvar n;
-  generate
-  if (USE_FIFOS) begin
-
-    for (n = 0; n < NUM_DISTRIB; n = n + 1) begin
-      localparam n0 = n * DATA_WIDTH;
-      localparam n1 = n0 + WD;
-      axis_fifo_async #(
-        .MEMORY_TYPE (FIFO_TYPE),
-        .DATA_WIDTH (DATA_WIDTH),
-        .FIFO_DEPTH (FIFO_DEPTH),
-        .READ_LATENCY (FIFO_LATENCY)
-      ) axis_fifo_async (
-        .s_axis_clk (s_axis_clk),
-        .s_axis_rst (s_axis_rst),
-        .m_axis_clk (m_axis_clk),
-        .s_axis_tvalid (distrib_valid[n]),
-        .s_axis_tready (distrib_ready[n]),
-        .s_axis_tdata (distrib_data[n1:n0]),
-        .m_axis_tvalid (m_axis_tvalid[n]),
-        .m_axis_tready (m_axis_tready[n]),
-        .m_axis_tdata (m_axis_tdata[n1:n0])
-      );
-    end
-
-  end else begin
-
-    assign distrib_ready = m_axis_tready;
-    assign m_axis_tvalid = distrib_valid;
-    assign m_axis_tdata = distrib_data;
-
-  end
-  endgenerate
+  assign m_axis_frame = m_axis_tvalid & m_axis_tready;
+  assign m_axis_tvalid = distrib_valid ? ~ready_all : 'b0;
+  assign m_axis_tdata = {NUM_DISTRIB{distrib_data}};
 
 endmodule
 
