@@ -4,7 +4,7 @@
 //
 // Description
 // AXI-stream bit (-1 and 1) correlator implementation using adders. The module
-// clock frequency should be at least that of the input clock multiplied by the
+// clock frequency should be at least that of the data clock multiplied by the
 // number of channels. The number of parallel channels must be a power of two.
 // Computes y[n] = x[n] * h[n].
 //
@@ -34,7 +34,7 @@ module axis_bit_corr #(
   parameter   WAVE_WIDTH = 6,
   parameter   ADDER_WIDTH = 12,       // TODO(fzliu): ensure this is 2*N
   parameter   USE_STALL_SIGNAL = 1,
-  parameter   SHIFT_DEPTH = 1,        // TODO(fzliu): ensure >= 2
+  parameter   SHIFT_DEPTH = 2,        // TODO(fzliu): ensure >= 2
 
   // correlator parameters
 
@@ -100,9 +100,9 @@ module axis_bit_corr #(
   reg     [ WN:0]   p_count = 'b0;    // parallel count == count % NUM_PARALLEL
   reg     [ WN:0]   b_count = 'b0;    // batch count    == count / NUM_PARALLEL
 
-  reg               valid_out = 'b0;
-  reg     [ WO:0]   data_out = 'b0;
-  reg     [ N0:0]   dest_out = 'b0;
+  reg               out_valid = 'b0;
+  reg     [ WO:0]   out_data = 'b0;
+  reg     [ N0:0]   out_dest = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WO:0]   m_axis_tdata_reg = 'b0;
@@ -112,8 +112,11 @@ module axis_bit_corr #(
 
   wire    [ WA:0]   ram_dout [0:L0];
 
-  wire              s_axis_frame;
-  wire    [ WW:0]   s_axis_tdata_unpack [0:NP];
+  wire              in_frame;
+  wire              in_valid;
+  wire              in_ready;
+  wire    [ WI:0]   in_data;
+  wire    [ WW:0]   in_data_unpack [0:NP];
 
   wire              stall;
   wire              ena_int;
@@ -122,7 +125,7 @@ module axis_bit_corr #(
   wire    [ WN:0]   wr_addr;
   wire    [ WN:0]   rd_addr;
   wire    [ L0:0]   correlator;
-  wire    [ WW:0]   data_in;
+  wire    [ WW:0]   data_slice;
 
   wire    [ N0:0]   corr_num;
   wire    [ DM:0]   dout_wen;
@@ -145,6 +148,30 @@ module axis_bit_corr #(
   end
   endgenerate
 
+  /* Input FIFO.
+   * Since this module is the distributor's immediate downstream neighbor, the
+   * whole pipeline is prone to stalling for an extra cycle unless a (minimum
+   * two-element) FIFO is added to the input of axis_bit_corr. This stalling
+   * occurs because s_axis_tready is deasserted for the exact number of cycles
+   * that it takes for a new sample to come in, assuming NUM_TAGS == 1.
+   */
+
+   axis_fifo_sync #(
+     .MEMORY_TYPE ("block"),
+     .DATA_WIDTH (INPUT_WIDTH),
+     .FIFO_DEPTH (16),
+     .READ_LATENCY (3)  // extra latency to help meet timing
+   ) axis_fifo_sync (
+     .clk (clk),
+     .rst (1'b0),
+     .s_axis_tvalid (s_axis_tvalid),
+     .s_axis_tready (s_axis_tready),
+     .s_axis_tdata (s_axis_tdata),
+     .m_axis_tvalid (in_valid),
+     .m_axis_tready (in_ready),
+     .m_axis_tdata (in_data)
+   );
+
   /* Unpack input data.
    * For ease of use later on in this module.
    */
@@ -152,7 +179,7 @@ module axis_bit_corr #(
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     localparam n0 = n * WAVE_WIDTH, n1 = n0 + WW;
-    assign s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
+    assign in_data_unpack[n] = in_data[n1:n0];
   end
   endgenerate
 
@@ -166,12 +193,12 @@ module axis_bit_corr #(
    */
 
   generate
-    assign stall = USE_STALL_SIGNAL ? valid_out & m_axis_tvalid : 1'b0;
+    assign stall = USE_STALL_SIGNAL ? out_valid & m_axis_tvalid : 1'b0;
   endgenerate
 
-  assign ena_int = ~stall & s_axis_tvalid;
-  assign s_axis_tready = ~stall & (count == DM);
-  assign s_axis_frame = s_axis_tvalid & s_axis_tready;
+  assign ena_int = ~stall & in_valid;
+  assign in_ready = ~stall & (count == DM);
+  assign in_frame = in_valid & in_ready;
 
   /* Counter logic.
    * This counter tracks the current input set that this module is processing.
@@ -187,7 +214,7 @@ module axis_bit_corr #(
     .WRAPAROUND (0)
   ) counter (
     .clk (clk),
-    .rst (s_axis_frame),
+    .rst (in_frame),
     .ena (ena_int),
     .value (count)
   );
@@ -262,8 +289,8 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (ena_int),
-    .din (s_axis_tdata_unpack[p_count]),
-    .dout (data_in)
+    .din (in_data_unpack[p_count]),
+    .dout (data_slice)
   );
 
   generate
@@ -271,8 +298,8 @@ module axis_bit_corr #(
     always @(posedge clk) begin
       if (ena_int) begin
         adder_in0[n] <= correlator[CORR_LENGTH-n-1] ?
-                        `SIGN_EXT(data_in,WAVE_WIDTH,ADDER_WIDTH) :
-                        -`SIGN_EXT(data_in,WAVE_WIDTH,ADDER_WIDTH);
+                        `SIGN_EXT(data_slice,WAVE_WIDTH,ADDER_WIDTH) :
+                        -`SIGN_EXT(data_slice,WAVE_WIDTH,ADDER_WIDTH);
       end else begin
         adder_in0[n] <= adder_in0[n];
       end
@@ -359,9 +386,9 @@ module axis_bit_corr #(
     localparam n0 = n * ADDER_WIDTH, n1 = n0 + WA;
     always @(posedge clk) begin
       if (ena_int & dout_wen[n]) begin
-        data_out[n1:n0] <= adder_out[L0];
+        out_data[n1:n0] <= adder_out[L0];
       end else begin
-        data_out[n1:n0] <= data_out[n1:n0];
+        out_data[n1:n0] <= out_data[n1:n0];
       end
     end
   end
@@ -398,19 +425,19 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (ena_int & batch_done) begin
-      valid_out <= 1'b1;
+      out_valid <= 1'b1;
     end else if (m_axis_frame | ~m_axis_tvalid) begin
-      valid_out <= 1'b0;
+      out_valid <= 1'b0;
     end else begin
-      valid_out <= valid_out;
+      out_valid <= out_valid;
     end
   end
 
   always @(posedge clk) begin
     if (ena_int & batch_done) begin
-      dest_out <= corr_num;
+      out_dest <= corr_num;
     end else begin
-      dest_out <= dest_out;
+      out_dest <= out_dest;
     end
   end
 
@@ -423,9 +450,9 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (m_axis_frame | ~m_axis_tvalid) begin
-      m_axis_tvalid_reg <= valid_out;
-      m_axis_tdata_reg <= data_out;
-      m_axis_tdest_reg <= dest_out;
+      m_axis_tvalid_reg <= out_valid;
+      m_axis_tdata_reg <= out_data;
+      m_axis_tdest_reg <= out_dest;
     end else begin
       m_axis_tvalid_reg <= m_axis_tvalid;
       m_axis_tdata_reg <= m_axis_tdata;

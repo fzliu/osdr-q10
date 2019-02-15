@@ -45,15 +45,15 @@ module ad9361_dual_spi (
   // spi_a
 
   assign a_resetb = reset_a;
-  assign a_spi_sck = ~spi_cs_a ? spi_sck : 1'b0;
-  assign a_spi_di = ~spi_cs_a ? spi_mosi : 1'b0;
+  assign a_spi_sck = spi_sck;
+  assign a_spi_di = spi_mosi;
   assign a_spi_cs = spi_cs_a;
 
   // spi_b
 
   assign b_resetb = reset_b;
-  assign b_spi_sck = ~spi_cs_b ? spi_sck : 1'b0;
-  assign b_spi_di = ~spi_cs_b ? spi_mosi : 1'b0;
+  assign b_spi_sck = spi_sck;
+  assign b_spi_di = spi_mosi;
   assign b_spi_cs = spi_cs_b;
 
   // spi_miso
