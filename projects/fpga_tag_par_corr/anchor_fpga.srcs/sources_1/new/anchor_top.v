@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 12,
-  parameter   NUM_TAGS = 48,
+  parameter   NUM_COMPUTE = 10,
+  parameter   NUM_TAGS = 40,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -210,11 +210,6 @@ module anchor_top #(
   wire    [ W1:0]   corr_axis_tdata;
   wire    [ W2:0]   corr_axis_tdest;
 
-  wire    [ NM:0]   clkx_axis_tvalid;
-  wire    [ NM:0]   clkx_axis_tready;
-  wire    [ W1:0]   clkx_axis_tdata;
-  wire    [ W2:0]   clkx_axis_tdest;
-
   wire    [ NT:0]   switch_axis_tvalid;
   wire    [ NT:0]   switch_axis_tready;
   wire    [ W3:0]   switch_axis_tdata;
@@ -392,7 +387,6 @@ module anchor_top #(
   ad9361_dual_axis #(
     .PRECISION (PRECISION),
     .REVERSE_DATA (0),
-    .INDEP_CLOCKS (0),
     .USE_AXIS_TLAST (0)
   ) ad9361_dual_axis (
     .clk (d_clk),
@@ -492,37 +486,20 @@ module anchor_top #(
       .m_axis_tdest (corr_axis_tdest[k1:k0])
     );
 
-    axis_fifo_async #(
-      .MEMORY_TYPE ("block"),
-      .DATA_WIDTH (DATA_WIDTH + NUM_FANOUT),
-      .FIFO_DEPTH (16),
-      .READ_LATENCY (2)
-    ) axis_fifo_async (
+    axis_fan_out #(
+      .NUM_FANOUT (NUM_FANOUT),
+      .DATA_WIDTH (DATA_WIDTH),
+      .USE_FIFOS (1),
+      .FIFO_TYPE ("block"),
+      .FIFO_LATENCY (2)
+    ) axis_fan_out (
       .s_axis_clk (c_clk),
       .s_axis_rst (1'b0),
       .m_axis_clk (m_clk),
       .s_axis_tvalid (corr_axis_tvalid[n]),
       .s_axis_tready (corr_axis_tready[n]),
-      .s_axis_tdata ({corr_axis_tdata[j1:j0],
-                      corr_axis_tdest[k1:k0]}),
-      .m_axis_tvalid (clkx_axis_tvalid[n]),
-      .m_axis_tready (clkx_axis_tready[n]),
-      .m_axis_tdata ({clkx_axis_tdata[j1:j0],
-                      clkx_axis_tdest[k1:k0]})
-    );
-
-    axis_fan_out #(
-      .NUM_FANOUT (NUM_FANOUT),
-      .DATA_WIDTH (DATA_WIDTH),
-      .USE_FIFOS (0)
-    ) axis_fan_out (
-      .s_axis_clk (m_clk),
-      .s_axis_rst (1'b0),
-      .m_axis_clk (),
-      .s_axis_tvalid (clkx_axis_tvalid[n]),
-      .s_axis_tready (clkx_axis_tready[n]),
-      .s_axis_tdata (clkx_axis_tdata[j1:j0]),
-      .s_axis_tdest (clkx_axis_tdest[k1:k0]),
+      .s_axis_tdata (corr_axis_tdata[j1:j0]),
+      .s_axis_tdest (corr_axis_tdest[k1:k0]),
       .m_axis_tvalid (switch_axis_tvalid[n1:n0]),
       .m_axis_tready (switch_axis_tready[n1:n0]),
       .m_axis_tdata (switch_axis_tdata[l1:l0])

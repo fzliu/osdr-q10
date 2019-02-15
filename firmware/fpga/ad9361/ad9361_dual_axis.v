@@ -129,23 +129,23 @@ module ad9361_dual_axis #(
   generate
   if (INDEP_CLOCKS == 0) begin
 
-  // single clock domain, no need to synchronize
+    // single clock domain, no need to synchronize
 
-  always @* begin
-    m_axis_sync1_data = data_packed;
-    m_axis_sync1_update = data_frame;
-  end
+    always @* begin
+      m_axis_sync1_data = data_packed;
+      m_axis_sync1_update = data_frame;
+    end
 
   end else begin
 
-  // synchronize across clock domains
+    // synchronize across clock domains
 
-  always @(posedge m_axis_clk) begin
-    m_axis_sync0_data <= data_packed;
-    m_axis_sync1_data <= m_axis_sync0_data;
-    m_axis_sync0_update <= data_frame;
-    m_axis_sync1_update <= m_axis_sync0_update;
-  end
+    always @(posedge m_axis_clk) begin
+      m_axis_sync0_data <= data_packed;
+      m_axis_sync1_data <= m_axis_sync0_data;
+      m_axis_sync0_update <= data_frame;
+      m_axis_sync1_update <= m_axis_sync0_update;
+    end
 
   end
   endgenerate
@@ -158,7 +158,6 @@ module ad9361_dual_axis #(
 
   assign m_axis_update = m_axis_sync1_update ^ m_axis_update_delay;
   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
-  assign m_axis_tdata = m_axis_sync1_data;
 
   // master interface
 
@@ -173,6 +172,7 @@ module ad9361_dual_axis #(
   end
 
   assign m_axis_tvalid = m_axis_tvalid_reg;
+  assign m_axis_tdata = m_axis_sync1_data;
 
   // master interface tlast logic
 

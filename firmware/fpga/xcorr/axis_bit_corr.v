@@ -100,9 +100,9 @@ module axis_bit_corr #(
   reg     [ WN:0]   p_count = 'b0;    // parallel count == count % NUM_PARALLEL
   reg     [ WN:0]   b_count = 'b0;    // batch count    == count / NUM_PARALLEL
 
-  reg               valid_out = 'b0;
-  reg     [ WO:0]   data_out = 'b0;
-  reg     [ N0:0]   dest_out = 'b0;
+  reg               out_valid = 'b0;
+  reg     [ WO:0]   out_data = 'b0;
+  reg     [ N0:0]   out_dest = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WO:0]   m_axis_tdata_reg = 'b0;
@@ -122,7 +122,7 @@ module axis_bit_corr #(
   wire    [ WN:0]   wr_addr;
   wire    [ WN:0]   rd_addr;
   wire    [ L0:0]   correlator;
-  wire    [ WW:0]   data_in;
+  wire    [ WW:0]   data_slice;
 
   wire    [ N0:0]   corr_num;
   wire    [ DM:0]   dout_wen;
@@ -166,7 +166,7 @@ module axis_bit_corr #(
    */
 
   generate
-    assign stall = USE_STALL_SIGNAL ? valid_out & m_axis_tvalid : 1'b0;
+    assign stall = USE_STALL_SIGNAL ? out_valid & m_axis_tvalid : 1'b0;
   endgenerate
 
   assign ena_int = ~stall & s_axis_tvalid;
@@ -264,7 +264,7 @@ module axis_bit_corr #(
     .rst (1'b0),
     .ena (ena_int),
     .din (s_axis_tdata_unpack[p_count]),
-    .dout (data_in)
+    .dout (data_slice)
   );
 
   generate
@@ -272,8 +272,8 @@ module axis_bit_corr #(
     always @(posedge clk) begin
       if (ena_int) begin
         adder_in0[n] <= correlator[CORR_LENGTH-n-1] ?
-                        `SIGN_EXT(data_in,WAVE_WIDTH,ADDER_WIDTH) :
-                        -`SIGN_EXT(data_in,WAVE_WIDTH,ADDER_WIDTH);
+                        `SIGN_EXT(data_slice,WAVE_WIDTH,ADDER_WIDTH) :
+                        -`SIGN_EXT(data_slice,WAVE_WIDTH,ADDER_WIDTH);
       end else begin
         adder_in0[n] <= adder_in0[n];
       end
@@ -360,9 +360,9 @@ module axis_bit_corr #(
     localparam n0 = n * ADDER_WIDTH, n1 = n0 + WA;
     always @(posedge clk) begin
       if (ena_int & dout_wen[n]) begin
-        data_out[n1:n0] <= adder_out[L0];
+        out_data[n1:n0] <= adder_out[L0];
       end else begin
-        data_out[n1:n0] <= data_out[n1:n0];
+        out_data[n1:n0] <= out_data[n1:n0];
       end
     end
   end
@@ -399,19 +399,19 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (ena_int & batch_done) begin
-      valid_out <= 1'b1;
+      out_valid <= 1'b1;
     end else if (m_axis_frame | ~m_axis_tvalid) begin
-      valid_out <= 1'b0;
+      out_valid <= 1'b0;
     end else begin
-      valid_out <= valid_out;
+      out_valid <= out_valid;
     end
   end
 
   always @(posedge clk) begin
     if (ena_int & batch_done) begin
-      dest_out <= corr_num;
+      out_dest <= corr_num;
     end else begin
-      dest_out <= dest_out;
+      out_dest <= out_dest;
     end
   end
 
@@ -424,9 +424,9 @@ module axis_bit_corr #(
 
   always @(posedge clk) begin
     if (m_axis_frame | ~m_axis_tvalid) begin
-      m_axis_tvalid_reg <= valid_out;
-      m_axis_tdata_reg <= data_out;
-      m_axis_tdest_reg <= dest_out;
+      m_axis_tvalid_reg <= out_valid;
+      m_axis_tdata_reg <= out_data;
+      m_axis_tdest_reg <= out_dest;
     end else begin
       m_axis_tvalid_reg <= m_axis_tvalid;
       m_axis_tdata_reg <= m_axis_tdata;

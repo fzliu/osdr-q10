@@ -27,7 +27,7 @@ module ad9361_dual_spi (
 
   // multi-chip synchronization
 
-  output            sync_out,  
+  output            sync_out,
 
   // microprocessor interface
 
@@ -45,15 +45,15 @@ module ad9361_dual_spi (
   // spi_a
 
   assign a_resetb = reset_a;
-  assign a_spi_sck = ~spi_cs_a ? spi_sck : 1'b0;
-  assign a_spi_di = ~spi_cs_a ? spi_mosi : 1'b0;
+  assign a_spi_sck = spi_sck;
+  assign a_spi_di = spi_mosi;
   assign a_spi_cs = spi_cs_a;
 
   // spi_b
 
   assign b_resetb = reset_b;
-  assign b_spi_sck = ~spi_cs_b ? spi_sck : 1'b0;
-  assign b_spi_di = ~spi_cs_b ? spi_mosi : 1'b0;
+  assign b_spi_sck = spi_sck;
+  assign b_spi_di = spi_mosi;
   assign b_spi_cs = spi_cs_b;
 
   // spi_miso
@@ -61,7 +61,7 @@ module ad9361_dual_spi (
   assign spi_miso = ~a_spi_cs ? a_spi_do : (~b_spi_cs ? b_spi_do : 1'b0);
 
   // mcs
-  
+
   assign sync_out = sync_in;
 
 endmodule
