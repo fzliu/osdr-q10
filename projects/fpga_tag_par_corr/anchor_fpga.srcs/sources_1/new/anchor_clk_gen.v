@@ -22,9 +22,20 @@ module anchor_clk_gen (
 
   // internal signals
 
+  wire              pll_clk;
   wire    [  5:0]   pll_out;
   wire              pll_fb;
   wire              pll_lock;
+
+  /* Input clock.
+   *
+   */
+
+  BUFGCE bufgce_i (
+    .I (clk_ad9361),
+    .CE (ena),
+    .O (pll_clk)
+  );
 
   /* Clock generation
    * Input: 50MHz (nominal)
@@ -58,7 +69,7 @@ module anchor_clk_gen (
     .CLKOUT4 (pll_out[4]),
     .CLKOUT5 (pll_out[5]),
     .CLKFBOUT (pll_fb),
-    .CLKIN1 (clk_ad9361),
+    .CLKIN1 (pll_clk),
     .LOCKED (pll_lock),
     .PWRDWN (1'b0),
     .RST (1'b0),
@@ -71,7 +82,7 @@ module anchor_clk_gen (
 
   BUFGCE bufgce_0 (
     .I (pll_out[0]),
-    .CE (ena),
+    .CE (pll_lock),
     .O (d_clk)
   );
 
@@ -81,7 +92,7 @@ module anchor_clk_gen (
 
   BUFGCE bufgce_1 (
     .I (pll_out[1]),
-    .CE (ena),
+    .CE (pll_lock),
     .O (m_clk)
   );
 
@@ -91,7 +102,7 @@ module anchor_clk_gen (
 
   BUFGCE bufgce_2 (
     .I (pll_out[2]),
-    .CE (ena),
+    .CE (pll_lock),
     .O (c_clk)
   );
 

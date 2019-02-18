@@ -279,10 +279,6 @@ create_clock -period 2.500 -name {VIRTUAL_pll_out[2]} -waveform {0.000 1.250}
 
 set_input_delay -clock [get_clocks a_rx_clk_in] -min -add_delay 0.000 [get_ports ena]
 set_input_delay -clock [get_clocks a_rx_clk_in] -max -add_delay 1.000 [get_ports ena]
-set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -min -add_delay 0.000 [get_ports ena]
-set_input_delay -clock [get_clocks {VIRTUAL_pll_out[1]}] -max -add_delay 1.000 [get_ports ena]
-set_input_delay -clock [get_clocks {VIRTUAL_pll_out[2]}] -min -add_delay 0.000 [get_ports ena]
-set_input_delay -clock [get_clocks {VIRTUAL_pll_out[2]}] -max -add_delay 1.000 [get_ports ena]
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -min -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -clock_fall -max -add_delay 1.000 [get_ports {a_rx_data_p0[*]}]
 set_input_delay -clock [get_clocks a_rx_clk_in] -min -add_delay 0.000 [get_ports {a_rx_data_p0[*]}]

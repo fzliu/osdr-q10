@@ -264,7 +264,7 @@ module anchor_top #(
   assign led_out[2] = valid_2;
   assign led_out[3] = valid_3;
   assign led_out[4] = 1'b0;
-  assign led_out[5] = ena;
+  assign led_out[5] = ad9361_axis_tready;
   assign led_out[6] = data_axis_tready;
   assign led_out[7] = ebi_ready;
 
