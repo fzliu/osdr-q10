@@ -509,8 +509,8 @@ module anchor_top #(
   endgenerate
 
   /* Absolute value computation and peak detection.
-   * To save power and improve both routability and timing, these modules use
-   * the slower m_clk (100MHz) instead of the fast c_clk (400MHz).
+   * To save power and improve both routability and timing, this module uses
+   * the slow m_clk instead of the faster c_clk.
    */
 
   generate
