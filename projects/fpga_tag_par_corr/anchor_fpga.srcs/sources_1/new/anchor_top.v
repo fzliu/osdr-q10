@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 10,
-  parameter   NUM_TAGS = 40,
+  parameter   NUM_COMPUTE = 1,
+  parameter   NUM_TAGS = 4,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -226,8 +226,9 @@ module anchor_top #(
   wire    [ NT:0]   fanin_axis_tuser;
 
   /* Clock generation.
-   * Since AD9361_b is configured after AD9361_a, we use b's clock to avoid
-   * potential metastability issues.
+   * Both AD9361's will be synchronized via the SPI bus from the MCU and the
+   * sync_in signal common to both chips. We pick a_data_clk since doing so
+   * seems to improve timing.
    */
 
   anchor_clk_gen #()
@@ -264,7 +265,7 @@ module anchor_top #(
   assign led_out[2] = valid_2;
   assign led_out[3] = valid_3;
   assign led_out[4] = 1'b0;
-  assign led_out[5] = ad9361_axis_tready;
+  assign led_out[5] = ena;
   assign led_out[6] = data_axis_tready;
   assign led_out[7] = ebi_ready;
 

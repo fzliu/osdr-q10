@@ -3,7 +3,9 @@
 // Engineer: Frank Liu
 //
 // Description
-// Anchor clock generation module.
+// Anchor clock generation module. Input enable signals must be synchronized to
+// the respective clock domains to avoid metastability when using BUFGCE. Google
+// "xilinx tell timing to ignore this path" for more information.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,8 @@ module anchor_clk_gen (
   wire    [  5:0]   pll_out;
   wire              pll_fb;
   wire              pll_lock;
+
+  wire    [  5:0]   bufg_ce;
 
   /* Clock generation
    * Input: 50MHz (nominal)
@@ -66,33 +70,63 @@ module anchor_clk_gen (
     .CLKFBIN (pll_fb)
   );
 
-  /* 50MHz data clock (shifted)
+  /* 50MHz data clock (shifted).
    * This clock is used to latch in data from the AD9361s.
    */
 
+  xpm_cdc_single #(
+    .DEST_SYNC_FF (2),
+    .SRC_INPUT_REG (0)
+  ) xpm_cdc_single_0 (
+    .src_clk (),
+    .src_in (ena),
+    .dest_clk (pll_out[0]),
+    .dest_out (bufg_ce[0])
+  );
+
   BUFGCE bufgce_0 (
     .I (pll_out[0]),
-    .CE (ena),
+    .CE (bufg_ce[0]),
     .O (d_clk)
   );
 
-  /* 100MHz main clock
+  /* 100MHz main clock.
    * This clock is primarily used for buffering and control.
    */
 
+  xpm_cdc_single #(
+    .DEST_SYNC_FF (2),
+    .SRC_INPUT_REG (0)
+  ) xpm_cdc_single_1 (
+    .src_clk (),
+    .src_in (ena),
+    .dest_clk (pll_out[1]),
+    .dest_out (bufg_ce[1])
+  );
+
   BUFGCE bufgce_1 (
     .I (pll_out[1]),
-    .CE (ena),
+    .CE (bufg_ce[1]),
     .O (m_clk)
   );
 
-  /* 400MHz compute clock
+  /* 400MHz compute clock.
    * This clock is used in high-performance modules.
    */
 
+  xpm_cdc_single #(
+    .DEST_SYNC_FF (2),
+    .SRC_INPUT_REG (0)
+  ) xpm_cdc_single_2 (
+    .src_clk (),
+    .src_in (ena),
+    .dest_clk (pll_out[2]),
+    .dest_out (bufg_ce[2])
+  );
+
   BUFGCE bufgce_2 (
     .I (pll_out[2]),
-    .CE (ena),
+    .CE (bufg_ce[2]),
     .O (c_clk)
   );
 
