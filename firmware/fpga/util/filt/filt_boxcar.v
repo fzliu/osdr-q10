@@ -87,7 +87,7 @@ module filt_boxcar #(
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
-    .DEPTH (FILTER_LENGTH * NUM_CHANNELS)
+    .DEPTH (NUM_CHANNELS * FILTER_LENGTH)
   ) shift_reg (
     .clk (clk),
     .rst (rst),

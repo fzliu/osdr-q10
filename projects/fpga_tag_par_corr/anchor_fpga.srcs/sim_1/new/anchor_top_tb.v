@@ -13,7 +13,7 @@ module anchor_top_tb;
 
   parameter   NUM_COMPUTE = 1;    //1
   parameter   NUM_TAGS = 2;       //2
-  parameter   CORR_OFFSET = 19;   //19
+  parameter   CORR_OFFSET = 18;   //19
   parameter   CABS_DELAY = 9;
 
   // signals
@@ -70,7 +70,7 @@ module anchor_top_tb;
     a_rx_data_p1 <= 'b0;
     b_rx_data_p0 <= 'b0;
     b_rx_data_p1 <= 'b0;
-    #2500;
+    #12500; //#2500;
 
     for (i = 0; i < 1050; i = i + 1) begin
       #10;
@@ -86,14 +86,16 @@ module anchor_top_tb;
     b_rx_data_p1 <= 'b0;
   end
 
+  /*
   integer j;
   initial begin
-    #28000; //#15000;
+    #28000;
     for (j = 0; j < 264; j = j + 1) begin
       #20 ebi_nrde = 1'b0;
       #20 ebi_nrde = 1'b1;
     end
   end
+  */
 
   // anchor_top
 

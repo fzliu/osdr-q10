@@ -448,7 +448,7 @@ module axis_bit_corr #(
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     localparam n0 = n * ADDER_WIDTH, n1 = n0 + WA;
     always @(posedge clk) begin
-      if (m_axis_tvalid & (m_axis_tdest == 0)) begin
+      if (m_axis_tvalid & (m_axis_tdest == 1)) begin
         _corr_out[n] <= m_axis_tdata[n1:n0];
       end
     end

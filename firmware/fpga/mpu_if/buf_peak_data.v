@@ -68,6 +68,8 @@ module buf_peak_data #(
 
   reg               rd_ena_d = 'b0;
   reg               aux_valid = 'b0;
+  
+  reg     [ NT:0]   tag_num = 'b0;
 
   // internal signals
 
@@ -107,7 +109,15 @@ module buf_peak_data #(
     endcase
   end
 
-  assign aux_data = {{PAD_WIDTH{1'b0}}, s_axis_tuser};
+  always @(posedge clk) begin
+    if (s_axis_tlast) begin
+      tag_num <= s_axis_tuser;
+    end else begin
+      tag_num <= tag_num;
+    end
+  end
+
+  assign aux_data = {{PAD_WIDTH{1'b0}}, tag_num};
   assign aux_frame = aux_valid & ~fifo_full;
 
   /* FIFO instantiation.
@@ -186,16 +196,23 @@ module buf_peak_data #(
 
   assign rd_ready = ~fifo_empty;
 
-  // SIMULATION
+  ////////////////
+  // SIMULATION //
+  ////////////////
 
-  wire      [ WW:0]   _s_axis_tdata_unpack [0:NP];
+  reg     [ WW:0]   _data_in [0:NP];
 
   genvar n;
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
-    localparam n0 = n * WORD_WIDTH;
-    localparam n1 = n0 + WW;
-    assign _s_axis_tdata_unpack[n] = s_axis_tdata[n1:n0];
+    localparam n0 = n * WORD_WIDTH, n1 = n0 + WW;
+    always @(posedge clk) begin
+      if (s_axis_tvalid) begin
+        _data_in[n] = s_axis_tdata[n1:n0];
+      end else begin
+        _data_in[n] <= 'b0;
+      end
+    end
   end
   endgenerate
 

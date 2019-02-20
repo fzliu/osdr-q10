@@ -41,7 +41,9 @@ module axis_peak_detn #(
   localparam  ABS_WIDTH = (WORD_WIDTH <= 16) ? 16 : 32,
   localparam  PAD_WIDTH = CHANNEL_WIDTH - ABS_WIDTH,
   localparam  COUNT_WIDTH = log2(BURST_LENGTH),
-  localparam  SHIFT_DEPTH = NUM_CHANNELS * BURST_LENGTH,
+
+  localparam  CABS_SHIFT = NUM_CHANNELS * BURST_LENGTH / 2 + BOXCAR_DELAY,
+  localparam  DATA_SHIFT = (CABS_DELAY + BOXCAR_DELAY) / NUM_CHANNELS + 1,
 
   // bit width parameters
 
@@ -184,7 +186,7 @@ module axis_peak_detn #(
 
   shift_reg #(
     .WIDTH (CHANNEL_WIDTH),
-    .DEPTH (SHIFT_DEPTH / 2 + BOXCAR_DELAY),
+    .DEPTH (CABS_SHIFT),
     .USE_RAM (1)
   ) shift_reg_data_abs (
     .clk (clk),
@@ -246,7 +248,7 @@ module axis_peak_detn #(
 
   assign mem_ready = ~mem_count[WN];    // mem_count != BURST_LENGTH
   assign shift_ena = (m_axis_frame & mem_ready) |     // read enable
-                     (s_axis_tvalid & ~mem_ready);    // write enable
+                     (s_axis_frame & ~mem_ready);    // write enable
 
   /* Master interface.
    * Since the absolute value module has its own delay, we make sure the depth
@@ -261,7 +263,7 @@ module axis_peak_detn #(
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
-    .DEPTH (BURST_LENGTH + CABS_DELAY + 1),
+    .DEPTH (DATA_SHIFT + BURST_LENGTH),
     .USE_RAM (1)
   ) shift_reg_tdata (
     .clk (clk),
@@ -294,7 +296,6 @@ module axis_peak_detn #(
 
   generate
   for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
-    localparam n0 = n * ABS_WIDTH, n1 = n0 + WB;
     always @(posedge clk) begin
       if (s_axis_tvalid) begin
         _cabs_out[_wr_addr] <= cabs_dout;
