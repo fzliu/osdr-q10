@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 4,
-  parameter   NUM_TAGS = 16,
+  parameter   NUM_COMPUTE = 8,
+  parameter   NUM_TAGS = 32,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -148,7 +148,7 @@ module anchor_top #(
 
 );
 
-  `define CORRS(n) CORRELATORS[n*CORR_LENGTH+:NUM_FANOUT*CORR_LENGTH]
+  `define CORRS(n) CORRELATORS[(n)*CORR_LENGTH+:NUM_FANOUT*CORR_LENGTH]
 
   // internal signals (clock)
 
