@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 8,
-  parameter   NUM_TAGS = 32,
+  parameter   NUM_COMPUTE = 10,
+  parameter   NUM_TAGS = 40,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -266,7 +266,7 @@ module anchor_top #(
   assign led_out[3] = valid_3;
   assign led_out[4] = 1'b0;
   assign led_out[5] = ena;
-  assign led_out[6] = data_axis_tready;
+  assign led_out[6] = data_axis_tvalid;
   assign led_out[7] = ebi_ready;
 
   /* Receive interface (chip A).
