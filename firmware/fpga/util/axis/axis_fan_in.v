@@ -21,7 +21,7 @@ module axis_fan_in #(
   parameter   NUM_FANIN = 6,
   parameter   DATA_WIDTH = 128,
   parameter   USE_AXIS_TLAST = 1,
-  parameter   USE_FIFOS = 0,
+  parameter   USE_OUTPUT_FIFO = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_DEPTH = 32,
   parameter   FIFO_LATENCY = 2,
@@ -178,7 +178,7 @@ module axis_fan_in #(
   // assign outputs
 
   generate
-  if (USE_FIFOS) begin
+  if (USE_OUTPUT_FIFO) begin
 
     axis_fifo_async #(
       .MEMORY_TYPE (FIFO_TYPE),

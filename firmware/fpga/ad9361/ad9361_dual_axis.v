@@ -20,12 +20,17 @@ module ad9361_dual_axis #(
   parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
   parameter   AXIS_BURST_LENGTH = 512,
+  parameter   USE_OUTPUT_FIFO = 1,
+  parameter   FIFO_TYPE = "auto",
+  parameter   FIFO_DEPTH = 32,
+  parameter   FIFO_LATENCY = 2,
 
   // derived parameters
 
   localparam  SAMPS_WIDTH = 8 * PRECISION,
   localparam  COUNT_WIDTH = log2(AXIS_BURST_LENGTH - 1),
   localparam  REDUCE_PRECISION = 12 - PRECISION,
+  localparam  EXTRA_BIT = (USE_AXIS_TLAST != 0),
 
   // bit width parameters
 
@@ -35,9 +40,12 @@ module ad9361_dual_axis #(
 
 ) (
 
-  // data interface
+  // core interface
 
   input             clk,
+
+  // data interface
+
   input             valid_0,
   input   [ 11:0]   data_i0,
   input   [ 11:0]   data_q0,
@@ -53,7 +61,6 @@ module ad9361_dual_axis #(
 
   // axi-stream master interface
 
-  input             m_axis_clk,
   output            m_axis_tvalid,
   input             m_axis_tready,
   output  [ WS:0]   m_axis_tdata,
@@ -65,40 +72,28 @@ module ad9361_dual_axis #(
 
   // internal registers
 
-  reg               data_frame = 'b0;
-  reg     [ WS:0]   data_packed = 'b0;
-  reg               m_axis_tvalid_reg = 'b0;
-  reg     [ WC:0]   m_axis_count = 'b0;
+  reg               valid_int = 'b0;
 
-  reg     [ WS:0]   m_axis_sync0_data = 'b0;
-  reg     [ WS:0]   m_axis_sync1_data = 'b0;
-  reg               m_axis_sync0_update = 'b0;
-  reg               m_axis_sync1_update = 'b0;
-  reg               m_axis_update_delay = 'b0;
+  reg               samps_valid = 'b0;
+  reg     [ WS:0]   samps_data = 'b0;
+  reg     [ WC:0]   samps_count = 'b0;
 
   // internal signals
 
   wire    [ PR:0]   data_format [0:7];
 
-  wire              valid_int;
+  wire              samps_ready;
+  wire              samps_last;
 
-  wire              m_axis_update;
-  wire              m_axis_frame;
-  wire              m_axis_end_burst;
+  wire              m_axis_tvalid;
+  wire              m_axis_tready;
+  wire    [ WS:0]   m_axis_tdata;
+  wire              m_axis_tlast;
 
-  // input data domain
-
-  assign valid_int = valid_0 | valid_1 | valid_2 | valid_3;
-
-  always @(posedge clk) begin
-    if (valid_int) begin
-      data_frame <= ~data_frame;
-    end else begin
-      data_frame <= data_frame;
-    end
-  end
-
-  // format data to desired precision
+  /* Format data.
+   * The full 12-bit output data may not be required, so we (optionally) reduce
+   * the precision of the incoming data by grabbing the MSBs.
+   */
 
   assign data_format[0] = data_q3 >>> REDUCE_PRECISION;
   assign data_format[1] = data_i3 >>> REDUCE_PRECISION;
@@ -109,7 +104,20 @@ module ad9361_dual_axis #(
   assign data_format[6] = data_q0 >>> REDUCE_PRECISION;
   assign data_format[7] = data_i0 >>> REDUCE_PRECISION;
 
-  // pack sample data
+  /* Output valid.
+   * If any of the four channels is valid, i.e. has "non-zero" data, then we
+   * assert the output valid signal. This happens on the next cycle to ensure
+   * alignment with samps_data.
+   */
+
+  always @(posedge clk) begin
+    samps_valid <= valid_0 | valid_1 | valid_2 | valid_3;
+  end
+
+  /* Output data.
+   * An option to reverse the data is provided since some IP cores process data
+   * this way.
+   */
 
   genvar n;
   generate
@@ -118,82 +126,70 @@ module ad9361_dual_axis #(
     localparam n1 = n0 + PR;
     always @(posedge clk) begin
       if (REVERSE_DATA) begin
-        data_packed[n1:n0] <= data_format[7-n];
+        samps_data[n1:n0] <= data_format[7-n];
       end else begin
-        data_packed[n1:n0] <= data_format[n];
+        samps_data[n1:n0] <= data_format[n];
       end
     end
   end
   endgenerate
 
-  generate
-  if (INDEP_CLOCKS == 0) begin
-
-    // single clock domain, no need to synchronize
-
-    always @* begin
-      m_axis_sync1_data = data_packed;
-      m_axis_sync1_update = data_frame;
-    end
-
-  end else begin
-
-    // synchronize across clock domains
-
-    always @(posedge m_axis_clk) begin
-      m_axis_sync0_data <= data_packed;
-      m_axis_sync1_data <= m_axis_sync0_data;
-      m_axis_sync0_update <= data_frame;
-      m_axis_sync1_update <= m_axis_sync0_update;
-    end
-
-  end
-  endgenerate
-
-  // set data flow control signals
-
-  always @(posedge m_axis_clk) begin
-    m_axis_update_delay <= m_axis_sync1_update;
-  end
-
-  assign m_axis_update = m_axis_sync1_update ^ m_axis_update_delay;
-  assign m_axis_frame = m_axis_tvalid & m_axis_tready;
-
-  // master interface
-
-  always @(posedge m_axis_clk) begin
-    if (m_axis_update) begin
-      m_axis_tvalid_reg <= 1'b1;
-    end else if (m_axis_tvalid & ~m_axis_tready) begin
-      m_axis_tvalid_reg <= 1'b1;
-    end else begin
-      m_axis_tvalid_reg <= 1'b0;
-    end
-  end
-
-  assign m_axis_tvalid = m_axis_tvalid_reg;
-  assign m_axis_tdata = m_axis_sync1_data;
-
-  // master interface tlast logic
+  /* Output tlast logic.
+   * This signal should only be used when tlast is required, e.g. for the FFT
+   * module where the length is pre-determined.
+   */
 
   generate
   if (USE_AXIS_TLAST == 0) begin
 
-    assign m_axis_tlast = 1'b0;
+    assign samps_last = 1'b0;
 
   end else begin
 
-    assign m_axis_end_burst = (m_axis_count == AXIS_BURST_LENGTH - 1);
-
-    always @(posedge m_axis_clk) begin
-      casez ({m_axis_frame, m_axis_end_burst})
-        2'b11: m_axis_count <= 'b0;
-        2'b10: m_axis_count <= m_axis_count + 1'b1;
-        default: m_axis_count <= m_axis_count;
+    always @(posedge clk) begin
+      casez ({samps_valid, samps_ready, samps_last})
+        3'b111: samps_count <= 'b0;
+        3'b110: samps_count <= samps_count + 1'b1;
+        default: samps_count <= samps_count;
       endcase
     end
 
-    assign m_axis_tlast = m_axis_tvalid & m_axis_end_burst;
+    assign samps_last = (samps_count == AXIS_BURST_LENGTH - 1);
+
+  end
+  endgenerate
+
+  /* Master interface FIFO.
+   * Instantiate a FIFO only if requested.
+   */
+
+  generate
+  if (USE_OUTPUT_FIFO) begin
+
+    axis_fifo_sync #(
+      .MEMORY_TYPE ("block"),
+      .DATA_WIDTH (SAMPS_WIDTH + EXTRA_BIT),
+      .FIFO_DEPTH (FIFO_DEPTH),
+      .READ_LATENCY (FIFO_LATENCY)
+    ) axis_fifo_sync (
+      .clk (clk),
+      .rst (1'b0),
+      .s_axis_tvalid (samps_valid),
+      .s_axis_tready (samps_ready),
+      .s_axis_tdata ({samps_last,
+                      samps_data}),
+      .m_axis_tvalid (m_axis_tvalid),
+      .m_axis_tready (m_axis_tready),
+      .m_axis_tdata ({m_axis_tlast,
+                      m_axis_tdata})
+    );
+
+  end else begin
+
+    assign samps_ready = m_axis_tready;
+    assign m_axis_tvalid = samps_valid;
+    assign m_axis_tdata = samps_data;
+    assign m_axis_tlast = samps_last;
 
   end
   endgenerate

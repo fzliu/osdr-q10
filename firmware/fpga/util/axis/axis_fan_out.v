@@ -20,7 +20,7 @@ module axis_fan_out #(
 
   parameter   NUM_FANOUT = 6,
   parameter   DATA_WIDTH = 256,
-  parameter   USE_FIFOS = 0,
+  parameter   USE_OUTPUT_FIFO = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_DEPTH = 32,
   parameter   FIFO_LATENCY = 2,
@@ -79,7 +79,7 @@ module axis_fan_out #(
 
   genvar n;
   generate
-  if (USE_FIFOS) begin
+  if (USE_OUTPUT_FIFO) begin
 
     for (n = 0; n < NUM_FANOUT; n = n + 1) begin
       localparam i0 = n * DATA_WIDTH, i1 = i0 + WD;
