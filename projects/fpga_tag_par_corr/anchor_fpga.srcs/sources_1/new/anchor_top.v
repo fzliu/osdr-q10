@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 11,
-  parameter   NUM_TAGS = 44,
+  parameter   NUM_COMPUTE = 3,
+  parameter   NUM_TAGS = 12,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -41,7 +41,7 @@ module anchor_top #(
   parameter   CABS_DELAY = 10,
   parameter   BOXCAR_DELAY = 2,
   parameter   BURST_LENGTH = 32,
-  parameter   PEAK_THRESH_MULT = 8,
+  parameter   PEAK_THRESH_MULT = 7,
 
   // correlator parameters
 
@@ -248,7 +248,7 @@ module anchor_top #(
   ) xpm_cdc_single_rd_ena (
     .src_clk (),
     .src_in (~ebi_nrde),
-    .dest_clk (m_clk),
+    .dest_clk (c_clk),
     .dest_out (rd_ena)
   );
 
@@ -556,6 +556,7 @@ module anchor_top #(
     .MEMORY_TYPE ("block")
   ) buf_peak_data (
     .clk (m_clk),
+    .clk_out (c_clk),
     .s_axis_tvalid (fanin_axis_tvalid),
     .s_axis_tready (fanin_axis_tready),
     .s_axis_tdata (fanin_axis_tdata),

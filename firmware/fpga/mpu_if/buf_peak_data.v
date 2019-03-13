@@ -45,6 +45,7 @@ module buf_peak_data #(
   // core interface
 
   input             clk,
+  input             clk_out,
 
   // slave interface
 
@@ -126,9 +127,10 @@ module buf_peak_data #(
    * bus, use of a memory latch is okay.
    */
 
-  xpm_fifo_sync #(
+  xpm_fifo_async #(
     .FIFO_MEMORY_TYPE (MEMORY_TYPE),
     .ECC_MODE ("no_ecc"),
+    .RELATED_CLOCKS (0),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
     .WRITE_DATA_WIDTH (DATA_WIDTH),
     .WR_DATA_COUNT_WIDTH (0),
@@ -139,9 +141,9 @@ module buf_peak_data #(
     .READ_DATA_WIDTH (READ_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
+    .CDC_SYNC_STAGES (3),
     .WAKEUP_TIME (0)
   ) xpm_fifo_sync (
-    .sleep (1'b0),
     .rst (1'b0),
     .wr_clk (clk),
     .wr_en (aux_frame | s_axis_frame),
@@ -153,15 +155,17 @@ module buf_peak_data #(
     .almost_full (),
     .wr_ack (),
     .wr_rst_busy (fifo_wr_rst_busy),
+    .rd_clk (clk_out),
     .rd_en (rd_ena & ~rd_ena_d),
     .dout (rd_data[WR:0]),
     .empty (fifo_empty),
+    .underflow (),
     .rd_rst_busy (fifo_rd_rst_busy),
     .prog_empty (),
     .rd_data_count (),
     .almost_empty (),
     .data_valid (),
-    .underflow (),
+    .sleep (1'b0),
     .injectsbiterr (1'b0),
     .injectdbiterr (1'b0),
     .sbiterr (),
@@ -173,7 +177,7 @@ module buf_peak_data #(
    * rd_ena.
    */
 
-  always @(posedge clk) begin
+  always @(posedge clk_out) begin
     rd_ena_d <= rd_ena;
   end
 

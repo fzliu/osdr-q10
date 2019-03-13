@@ -85,11 +85,6 @@ module ad9361_dual_axis #(
   wire              samps_ready;
   wire              samps_last;
 
-  wire              m_axis_tvalid;
-  wire              m_axis_tready;
-  wire    [ WS:0]   m_axis_tdata;
-  wire              m_axis_tlast;
-
   /* Format data.
    * The full 12-bit output data may not be required, so we (optionally) reduce
    * the precision of the incoming data by grabbing the MSBs.
