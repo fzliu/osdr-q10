@@ -3,20 +3,20 @@
 // Engineer: Frank Liu
 //
 // Description
-// AXI-stream bit (-1 and 1) correlator implementation using adders. The module
-// clock frequency should be at least that of the input clock multiplied by the
-// number of channels. The number of parallel channels must be a power of two.
 // Computes y[n] = x[n] * h[n].
+// AXI-stream bit (-1 and 1) correlator implementation using adders. To
+// continuously process input data without stalling, the clock frequency should
+// be at least that of the sampling clock multiplied by the total number of
+// channels. The number of parallel channels must be a power of two.
 //
 // Parameters
 // NUM_PARALLEL: number of parallel input data streams (must be power of 2)
-// ADDER_WIDTH:
+// ADDER_WIDTH: width of the adders used by this module
 // USE_STALL_SIGNAL: set to 0 if the downstream module accepts data faster
 // SHIFT_DEPTH: internal pipeline depth for timing closure
-// NUM_CORRS:
-// CORR_OFFSET: index into correlators.vh which determines h[n]
-// CORR_LENGTH:
-// CORRELATORS:
+// NUM_CORRS: number of correlators to handle
+// CORR_LENGTH: length of each correlator
+// CORRELATORS: bits for all correlators
 //
 // Signals
 // enable  :  N/A

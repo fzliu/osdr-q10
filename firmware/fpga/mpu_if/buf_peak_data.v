@@ -44,8 +44,8 @@ module buf_peak_data #(
 
   // core interface
 
-  input             clk,
-  input             clk_out,
+  input             wr_clk,
+  input             rd_clk,
 
   // slave interface
 
@@ -101,7 +101,7 @@ module buf_peak_data #(
    * enable for this control logic.
    */
 
-  always @(posedge clk) begin
+  always @(posedge wr_clk) begin
     casez ({fifo_full, aux_frame, s_axis_frame, s_axis_tlast})
       4'b1???: aux_valid <= aux_valid;
       4'b01??: aux_valid <= 1'b0;
@@ -110,7 +110,7 @@ module buf_peak_data #(
     endcase
   end
 
-  always @(posedge clk) begin
+  always @(posedge wr_clk) begin
     if (s_axis_tlast) begin
       tag_num <= s_axis_tuser;
     end else begin
@@ -145,7 +145,7 @@ module buf_peak_data #(
     .WAKEUP_TIME (0)
   ) xpm_fifo_sync (
     .rst (1'b0),
-    .wr_clk (clk),
+    .wr_clk (wr_clk),
     .wr_en (aux_frame | s_axis_frame),
     .din (aux_valid ? aux_data : s_axis_tdata),
     .full (fifo_full),
@@ -155,7 +155,7 @@ module buf_peak_data #(
     .almost_full (),
     .wr_ack (),
     .wr_rst_busy (fifo_wr_rst_busy),
-    .rd_clk (clk_out),
+    .rd_clk (rd_clk),
     .rd_en (rd_ena & ~rd_ena_d),
     .dout (rd_data[WR:0]),
     .empty (fifo_empty),
@@ -177,7 +177,7 @@ module buf_peak_data #(
    * rd_ena.
    */
 
-  always @(posedge clk_out) begin
+  always @(posedge rd_clk) begin
     rd_ena_d <= rd_ena;
   end
 
@@ -210,7 +210,7 @@ module buf_peak_data #(
   generate
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     localparam n0 = n * WORD_WIDTH, n1 = n0 + WW;
-    always @(posedge clk) begin
+    always @(posedge wr_clk) begin
       if (s_axis_tvalid) begin
         _data_in[n] = s_axis_tdata[n1:n0];
       end else begin

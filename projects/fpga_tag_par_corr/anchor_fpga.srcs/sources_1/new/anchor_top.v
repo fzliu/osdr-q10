@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 3,
-  parameter   NUM_TAGS = 12,
+  parameter   NUM_COMPUTE = 12,
+  parameter   NUM_TAGS = 48,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -41,7 +41,7 @@ module anchor_top #(
   parameter   CABS_DELAY = 10,
   parameter   BOXCAR_DELAY = 2,
   parameter   BURST_LENGTH = 32,
-  parameter   PEAK_THRESH_MULT = 7,
+  parameter   PEAK_THRESH_MULT = 6,
 
   // correlator parameters
 
@@ -384,10 +384,11 @@ module anchor_top #(
   ad9361_dual_axis #(
     .PRECISION (PRECISION),
     .REVERSE_DATA (0),
+    .INDEP_CLOCKS (0),
     .USE_AXIS_TLAST (0),
     .USE_OUTPUT_FIFO (1),
     .FIFO_TYPE ("block"),
-    .FIFO_DEPTH (16384),  //65536
+    .FIFO_DEPTH (32768),  //65536
     .FIFO_LATENCY (2)
   ) ad9361_dual_axis (
     .clk (d_clk),
@@ -555,8 +556,8 @@ module anchor_top #(
     .READ_WIDTH (12),  //12
     .MEMORY_TYPE ("block")
   ) buf_peak_data (
-    .clk (m_clk),
-    .clk_out (c_clk),
+    .wr_clk (m_clk),
+    .rd_clk (c_clk),
     .s_axis_tvalid (fanin_axis_tvalid),
     .s_axis_tready (fanin_axis_tready),
     .s_axis_tdata (fanin_axis_tdata),
