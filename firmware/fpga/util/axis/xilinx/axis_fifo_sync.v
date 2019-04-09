@@ -17,12 +17,14 @@ module axis_fifo_sync #(
 
   parameter   MEMORY_TYPE = "auto",
   parameter   DATA_WIDTH = 72,
+  parameter   READ_WIDTH = DATA_WIDTH,
   parameter   FIFO_DEPTH = 16,
   parameter   READ_LATENCY = 2,
 
   // bit width parameters
 
-  localparam  WD = DATA_WIDTH - 1
+  localparam  WD = DATA_WIDTH - 1,
+  localparam  WR = READ_WIDTH - 1
 
 ) (
 
@@ -41,13 +43,9 @@ module axis_fifo_sync #(
 
   output            m_axis_tvalid,
   input             m_axis_tready,
-  output  [ WD:0]   m_axis_tdata
+  output  [ WR:0]   m_axis_tdata
 
 );
-
-  // internal registers
-
-  reg               ready_override = 1'b1;
 
   // internal signals
 
@@ -61,7 +59,7 @@ module axis_fifo_sync #(
   wire              fifo_read;
   wire              fifo_valid;
   wire    [ WD:0]   fifo_din;
-  wire    [ WD:0]   fifo_dout;
+  wire    [ WR:0]   fifo_dout;
 
   // slave interface
 
@@ -86,7 +84,7 @@ module axis_fifo_sync #(
     .USE_ADV_FEATURES ("1000"),
     .READ_MODE ("fwft"),
     .FIFO_READ_LATENCY (READ_LATENCY),
-    .READ_DATA_WIDTH (DATA_WIDTH),
+    .READ_DATA_WIDTH (READ_WIDTH),
     .RD_DATA_COUNT_WIDTH (0),
     .DOUT_RESET_VALUE ("0"),
     .WAKEUP_TIME (0)

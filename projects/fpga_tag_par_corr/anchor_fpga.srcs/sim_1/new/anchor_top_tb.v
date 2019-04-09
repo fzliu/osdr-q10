@@ -13,7 +13,7 @@ module anchor_top_tb;
 
   parameter   NUM_COMPUTE = 2;    //1
   parameter   NUM_TAGS = 4;       //2
-  parameter   CORR_OFFSET = 18;   //19
+  parameter   CORR_OFFSET = 16;   //19
   parameter   CABS_DELAY = 9;
 
   // signals

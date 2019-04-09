@@ -97,12 +97,13 @@ module axis_bit_corr #(
 
   // internal registers
 
-  reg     [ WN:0]   p_count = 'b0;    // parallel count == count % NUM_PARALLEL
-  reg     [ WN:0]   b_count = 'b0;    // batch count    == count / NUM_PARALLEL
+  reg     [ WN:0]   p_count = 'b0;  // parallel count (i.e. which sample?)
+  reg     [ WN:0]   b_count = 'b0;  // batch count (i.e. which correlator?)
 
   reg               out_valid = 'b0;
   reg     [ WO:0]   out_data = 'b0;
   reg     [ N0:0]   out_dest = 'b0;
+  reg     [ WA:0]   out_data_fix = 'b0;
 
   reg               m_axis_tvalid_reg = 'b0;
   reg     [ WO:0]   m_axis_tdata_reg = 'b0;
@@ -184,10 +185,10 @@ module axis_bit_corr #(
   counter #(
     .LOWER (0),
     .UPPER (DM),
-    .WRAPAROUND (0)
+    .WRAPAROUND (1)
   ) counter (
     .clk (clk),
-    .rst (s_axis_frame),
+    .rst (1'b0),
     .ena (ena_int),
     .value (count)
   );
@@ -231,7 +232,6 @@ module axis_bit_corr #(
     .din (count + 1'b1),
     .dout (rd_addr)
   );
-
 
   /* Set correlator for current batch.
    * Once we have finished processing NUM_PARALLEL input channels, we must move
@@ -345,6 +345,22 @@ module axis_bit_corr #(
   end
   endgenerate
 
+  /* Fix data for last channel.
+   * Because count for axis_bit_corr starts at zero, wr_addr starts at -1, i.e.
+   * the maximum possible writeable address. This means that the very last
+   * channel is always one step ahead of all other channels. There is no easy
+   * fix for this aside from tracking and compensating for this behavior using
+   * an extra set of flip-flops.
+   */
+
+  always @(posedge clk) begin
+    if (wr_addr == DM) begin
+      out_data_fix <= adder_out[L0];
+    end else begin
+      out_data_fix <= out_data_fix;
+    end
+  end
+
   /* Second-to-last data stage.
    * We do not have to use dual-port distributed RAM for the output memory
    * column. The synthesis tool should infer flops, which should improve
@@ -360,7 +376,7 @@ module axis_bit_corr #(
     localparam n0 = n * ADDER_WIDTH, n1 = n0 + WA;
     always @(posedge clk) begin
       if (ena_int & dout_wen[n]) begin
-        out_data[n1:n0] <= adder_out[L0];
+        out_data[n1:n0] <= (wr_addr == DM) ? out_data_fix : adder_out[L0];
       end else begin
         out_data[n1:n0] <= out_data[n1:n0];
       end
@@ -448,7 +464,7 @@ module axis_bit_corr #(
   for (n = 0; n < NUM_PARALLEL; n = n + 1) begin
     localparam n0 = n * ADDER_WIDTH, n1 = n0 + WA;
     always @(posedge clk) begin
-      if (m_axis_tvalid & (m_axis_tdest == 1)) begin
+      if (m_axis_tvalid & (m_axis_tdest == 3)) begin
         _corr_out[n] <= m_axis_tdata[n1:n0];
       end
     end
