@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 11,
-  parameter   NUM_TAGS = 44,
+  parameter   NUM_COMPUTE = 12,
+  parameter   NUM_TAGS = 48,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,

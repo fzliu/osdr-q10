@@ -31,7 +31,7 @@ module axis_peak_detn #(
   parameter   CABS_DELAY = 10,
   parameter   BOXCAR_DELAY = 2,
   parameter   BURST_LENGTH = 32,    // TODO(fzliu); ensure this = 2^N
-  parameter   PEAK_THRESH_MULT = 8, // TODO(fzliu): ensure this = 2^N
+  parameter   PEAK_THRESH_MULT = 8,
 
   // derived parameters
 
@@ -205,7 +205,8 @@ module axis_peak_detn #(
   filt_boxcar #(
     .DATA_WIDTH (CHANNEL_WIDTH),
     .NUM_CHANNELS (NUM_CHANNELS),
-    .FILTER_LENGTH (BURST_LENGTH)
+    .FILTER_LENGTH (BURST_LENGTH),
+    .SHIFT_REG_USE_RAM (1)
   ) filt_boxcar (
     .clk (clk),
     .rst (1'b0),

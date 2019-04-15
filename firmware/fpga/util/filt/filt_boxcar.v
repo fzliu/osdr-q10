@@ -23,6 +23,7 @@ module filt_boxcar #(
   parameter   DATA_WIDTH = 16,
   parameter   NUM_CHANNELS = 1,
   parameter   FILTER_LENGTH = 8,
+  parameter   SHIFT_REG_USE_RAM = 0,
 
   // derived parameters
 
@@ -87,7 +88,8 @@ module filt_boxcar #(
 
   shift_reg #(
     .WIDTH (DATA_WIDTH),
-    .DEPTH (NUM_CHANNELS * FILTER_LENGTH)
+    .DEPTH (NUM_CHANNELS * FILTER_LENGTH),
+    .USE_RAM (SHIFT_REG_USE_RAM)
   ) shift_reg (
     .clk (clk),
     .rst (rst),
