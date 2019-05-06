@@ -28,8 +28,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 12,
-  parameter   NUM_TAGS = 48,
+  parameter   NUM_COMPUTE = 8,
+  parameter   NUM_TAGS = 32,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -253,17 +253,16 @@ module anchor_top #(
   );
 
   /* LED control.
-   * The fifth output is currently set low due to a bug in the hardware.
    */
 
   assign led_out[0] = valid_1;
   assign led_out[1] = valid_0;
   assign led_out[2] = valid_2;
   assign led_out[3] = valid_3;
-  assign led_out[4] = 1'b0;
-  assign led_out[5] = ena;
+  assign led_out[4] = ad9361_axis_tvalid;
+  assign led_out[5] = ebi_ready;
   assign led_out[6] = 1'b0;
-  assign led_out[7] = ebi_ready;
+  assign led_out[7] = 1'b0;
 
   /* Receive interface (chip A).
    */
