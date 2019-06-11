@@ -85,6 +85,9 @@ module ad9361_dual_axis #(
   wire              samps_ready;
   wire              samps_last;
 
+  wire              fifo_full;
+  wire              fifo_empty;
+
   /* Format data.
    * The full 12-bit output data may not be required, so we (optionally) reduce
    * the precision of the incoming data by grabbing the MSBs.
@@ -161,12 +164,10 @@ module ad9361_dual_axis #(
   generate
   if (USE_OUTPUT_FIFO) begin
 
-    axis_fifo_sync #(
-      .MEMORY_TYPE ("block"),
+    axis_fifo #(
       .DATA_WIDTH (SAMPS_WIDTH + EXTRA_BIT),
-      .FIFO_DEPTH (FIFO_DEPTH),
-      .READ_LATENCY (FIFO_LATENCY)
-    ) axis_fifo_sync (
+      .FIFO_DEPTH (FIFO_DEPTH)
+    ) axis_fifo (
       .clk (clk),
       .rst (1'b0),
       .s_axis_tvalid (samps_valid),

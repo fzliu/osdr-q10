@@ -30,11 +30,11 @@ module axis_bit_corr #(
 
   // parameters
 
-  parameter   NUM_PARALLEL = 8,       // TODO(fzliu): ensure this is 2^N
+  parameter   NUM_PARALLEL = 8,       // TODO(fzliu): ensure this is 2^N, N > 0
   parameter   WAVE_WIDTH = 6,
   parameter   ADDER_WIDTH = 12,       // TODO(fzliu): ensure this is 2*N
   parameter   USE_STALL_SIGNAL = 1,
-  parameter   SHIFT_DEPTH = 1,        // TODO(fzliu): ensure >= 2
+  parameter   SHIFT_DEPTH = 2,        // TODO(fzliu): ensure >= 2
 
   // correlator parameters
 
@@ -118,6 +118,7 @@ module axis_bit_corr #(
 
   wire              stall;
   wire              ena_int;
+  wire              ena_ram;
 
   wire    [ WN:0]   count;
   wire    [ WN:0]   wr_addr;
@@ -161,7 +162,7 @@ module axis_bit_corr #(
    * If USE_STALL_SIGNAL is set, then the downstream module may not process the
    * outgoing data as quickly as axis_bit_corr does. In this case, we check to
    * make sure that a) the output m_axis does not contain data that has not
-   * yet been read by the downstream AXI block, or b) second-to-last set ot
+   * yet been read by the downstream AXI block, or b) second-to-last set of
    * output registers also does not contain data. If USE_STALL_SIGNAL is not set
    * (i.e. === 0). then we can safely remove the stall signal by zeroing it.
    */
@@ -308,8 +309,13 @@ module axis_bit_corr #(
    * intermediate results must be stored in memory. Previously, we directly
    * instantiated a series of simple dual-port distributed RAMs to do this. Now,
    * we let the tool infer the RAM block to provide interoperability between
-   * different FPGA devices.
+   * different FPGA devices. If we have a sufficient number of parallel
+   * input streams, we can avoid gating the RAM with a clock enable since a read
+   * and write to the same address will never occur. This should improve timing
+   * and (maybe) provide smoother current draw in the hardware level.
    */
+
+  assign ena_ram = (MEMORY_DEPTH > 3) ? 1'b1 : ena_int;
 
   generate
   for (n = 0; n < CORR_LENGTH - 1; n = n + 1) begin
@@ -319,7 +325,7 @@ module axis_bit_corr #(
       .NUM_CORRS (NUM_CORRS)
     ) corr_ram_blk (
       .clk (clk),
-      .ena (ena_int),
+      .ena (ena_ram),
       .rd_addr (rd_addr),
       .wr_addr (wr_addr),
       .din (adder_out[n]),
