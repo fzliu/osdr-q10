@@ -219,7 +219,7 @@ module anchor_top #(
   wire              fanin_axis_tready;
   wire    [ WD:0]   fanin_axis_tdata;
   wire              fanin_axis_tlast;
-  wire    [ NT:0]   fanin_axis_tuser;
+  wire    [ NT:0]   fanin_axis_tdest;
 
   /* Clock generation.
    * Both AD9361's will be synchronized via the SPI bus from the MCU and the
@@ -540,7 +540,7 @@ module anchor_top #(
     .m_axis_tready (fanin_axis_tready),
     .m_axis_tdata (fanin_axis_tdata),
     .m_axis_tlast (fanin_axis_tlast),
-    .m_axis_tuser (fanin_axis_tuser)
+    .m_axis_tdest (fanin_axis_tdest)
   );
 
   /* Microprocessor interface.
@@ -561,7 +561,7 @@ module anchor_top #(
     .s_axis_tready (fanin_axis_tready),
     .s_axis_tdata (fanin_axis_tdata),
     .s_axis_tlast (fanin_axis_tlast),
-    .s_axis_tuser (fanin_axis_tuser),
+    .s_axis_tdest (fanin_axis_tdest),
     .rd_ena (rd_ena),
     .rd_ready (ebi_ready),
     .rd_data (ebi_data)

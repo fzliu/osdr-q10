@@ -52,7 +52,7 @@ module buf_peak_data #(
   input             s_axis_tvalid,
   output            s_axis_tready,
   input   [ WD:0]   s_axis_tdata,
-  input   [ NT:0]   s_axis_tuser,
+  input   [ NT:0]   s_axis_tdest,
   input             s_axis_tlast,
 
   // microcontroller interface
@@ -69,7 +69,7 @@ module buf_peak_data #(
 
   reg               rd_ena_d = 'b0;
   reg               aux_valid = 'b0;
-  
+
   reg     [ NT:0]   tag_num = 'b0;
 
   // internal signals
@@ -112,7 +112,7 @@ module buf_peak_data #(
 
   always @(posedge wr_clk) begin
     if (s_axis_tlast) begin
-      tag_num <= s_axis_tuser;
+      tag_num <= s_axis_tdest;
     end else begin
       tag_num <= tag_num;
     end

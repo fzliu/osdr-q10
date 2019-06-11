@@ -4,7 +4,7 @@
 //
 // Description
 // AXI-stream fan-in implementation. The relevant input channel is stored in
-// m_axis_tuser. Preference is given to earlier (MSB) input channels.
+// m_axis_tdest. Preference is given to earlier (MSB) input channels.
 //
 // Signals
 // enable  :  N/A
@@ -58,7 +58,7 @@ module axis_fan_in #(
   input             m_axis_tready,
   output  [ WD:0]   m_axis_tdata,
   output            m_axis_tlast,
-  output  [ NF:0]   m_axis_tuser
+  output  [ NF:0]   m_axis_tdest
 
 );
 
@@ -80,7 +80,7 @@ module axis_fan_in #(
   wire              fanin_ready;
   wire    [ WD:0]   fanin_data;
   wire              fanin_last;
-  wire    [ NF:0]   fanin_user;
+  wire    [ NF:0]   fanin_dest;
 
   /* Slave interface.
    * We unpack input data for ease of use later on. The ready signal is asserted
@@ -167,7 +167,7 @@ module axis_fan_in #(
 
   assign fanin_valid = s_axis_tvalid[chan_num];
   assign fanin_data = s_axis_tdata_unpack[chan_num];
-  assign fanin_user = chan_num;
+  assign fanin_dest = chan_num;
 
   generate
   if (USE_AXIS_TLAST) begin
@@ -193,12 +193,12 @@ module axis_fan_in #(
       .s_axis_tready (fanin_ready),
       .s_axis_tdata ({fanin_last,   // EXTRA_BIT == 0 ? truncated :
                       fanin_data,
-                      fanin_user}),
+                      fanin_dest}),
       .m_axis_tvalid (m_axis_tvalid),
       .m_axis_tready (m_axis_tready),
       .m_axis_tdata ({m_axis_tlast,
                       m_axis_tdata,
-                      m_axis_tuser})
+                      m_axis_tdest})
     );
 
   end else begin
@@ -207,7 +207,7 @@ module axis_fan_in #(
     assign m_axis_tvalid = fanin_valid;
     assign m_axis_tdata = fanin_data;
     assign m_axis_tlast = fanin_last;
-    assign m_axis_tuser = fanin_user;
+    assign m_axis_tdest = fanin_dest;
 
   end
   endgenerate

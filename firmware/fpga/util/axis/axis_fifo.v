@@ -38,6 +38,11 @@ module axis_fifo #(
   input             ena,
   input             rst,
 
+  // status signals
+
+  output            full,
+  output            empty,
+
   // slave interface
 
   input             s_axis_tvalid,
@@ -48,12 +53,7 @@ module axis_fifo #(
 
   output            m_axis_tvalid,
   input             m_axis_tready,
-  output  [ WD:0]   m_axis_tdata,
-
-  // status outputs
-
-  output            full,
-  output            empty
+  output  [ WD:0]   m_axis_tdata
 
  );
 
@@ -68,7 +68,7 @@ module axis_fifo #(
   reg               wr_flag = 1'b0; // Flag write pointer to point to the top.
   reg               rd_flag = 1'b0; // Flag read pointer to point to the top.
 
-  reg     [ WD:0]   fifo_dout1 = 'b0;
+  reg     [ WD:0]   mem_dout = 'b0;
   reg     [ WD:0]   fifo_dout = 'b0;
   reg     [ WD:0]   fifo_reg = 'b0;
 
@@ -82,18 +82,22 @@ module axis_fifo #(
 
   wire              m_axis_frame;
 
-  wire              fifo_write;
-  wire              fifo_read;
-
-  wire    [ WD:0]   fifo_din;
-
+  wire              wr_ena;
+  wire              rd_ena;
   wire    [ WA:0]   wr_addr;
   wire    [ WA:0]   rd_addr;
 
-  // FIFO glue logic
+  /* Output status signals.
+   */
 
-  assign fifo_write = s_axis_tvalid & s_axis_tready;
-  assign fifo_din = s_axis_tdata;
+  assign full = fifo_full;
+  assign empty = fifo_empty;
+
+  /* FIFO glue logic.
+   */
+
+  assign wr_ena = s_axis_tvalid & s_axis_tready;
+  assign rd_ena = (~m_axis_tvalid | m_axis_frame) & !fifo_empty;
   assign m_axis_tdata = fifo_dout;
   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
 
@@ -107,43 +111,53 @@ module axis_fifo #(
   generate
   if (FIFO_DEPTH == 1) begin
 
+    /* "Write" logic.
+     */
+
     always @(posedge clk) begin
       if (rst) begin
         fifo_reg <= 'b0;
-      end else if (ena & fifo_write) begin
-        fifo_reg <= fifo_din;
+      end else if (ena & wr_ena) begin
+        fifo_reg <= s_axis_tdata;
       end else begin
         fifo_reg <= fifo_reg;
       end
     end
+
+    /* Empty/full indicator.
+     * Since this version of the FIFO has only one element, there is no need
+     * for both fifo_empty and fifo_full signals; one is enough to track both
+     * statuses.
+     */
 
     always @(posedge clk) begin
       if (rst) begin
         fifo_empty <= 1'b1;
       end else if (!ena) begin
         fifo_empty <= fifo_empty;
-      end else if ((!fifo_empty | fifo_write) & !fifo_read) begin
+      end else if ((!fifo_empty | wr_ena) & !rd_ena) begin
         fifo_empty <= 1'b0;
       end else begin
         fifo_empty <= 1'b1;
       end
     end
 
+    /* "Read" logic.
+     */
+
     always @(posedge clk) begin
-      if (rst | !ena) begin
+      if (rst) begin
         fifo_dout <= 'b0;
         fifo_valid <= 1'b0;
-      end else if (
-        fifo_read) begin
+      end else if (ena & rd_ena) begin
         fifo_dout <= fifo_reg;
         fifo_valid <= 1'b1;
       end else begin
-        fifo_dout <= 'b0;
+        fifo_dout <= fifo_dout;
         fifo_valid <= fifo_valid;
       end
     end
 
-    assign fifo_read = (~m_axis_tvalid | m_axis_frame) & !fifo_empty;
     assign m_axis_tvalid = fifo_valid;
     assign s_axis_tready = fifo_empty;
 
@@ -152,27 +166,19 @@ module axis_fifo #(
     // slave interface
 
     always @(posedge clk) begin
-      if (rst | !ena) begin
+      if (rst) begin
         fifo_valid <= 1'b0;
-      end else if ( ~m_axis_tvalid | m_axis_frame) begin
-        fifo_valid <= !fifo_empty;
-      end else begin
-        fifo_valid <= fifo_valid;
-      end
-    end
-
-    always @(posedge clk) begin
-      if(rst) begin
         m_axis_tvalid_reg <= 1'b0;
-      end else if(ena) begin
+      end else if (ena & ~m_axis_tvalid | m_axis_frame) begin
+        fifo_valid <= !fifo_empty;
         m_axis_tvalid_reg <= fifo_valid;
       end else begin
-        m_axis_tvalid_reg <= 1'b0;
+        fifo_valid <= fifo_valid;
+        m_axis_tvalid_reg <= m_axis_tvalid_reg;
       end
     end
 
     assign s_axis_tready = ~fifo_full;
-    assign fifo_read = (~fifo_valid | (fifo_valid & m_axis_tready)) & !fifo_empty;
     assign m_axis_tvalid = m_axis_tvalid_reg;
 
     /* Write pointer
@@ -188,7 +194,7 @@ module axis_fifo #(
     ) counter_wr_addr (
       .clk (clk),
       .rst (rst),
-      .ena (ena & fifo_write),
+      .ena (ena & wr_ena),
       .value (wr_addr)
     );
 
@@ -197,7 +203,7 @@ module axis_fifo #(
     always @(posedge clk) begin
       if (rst) begin
         wr_flag <= 1'b0;
-      end else if (ena & wr_addr == DF & fifo_write) begin
+      end else if (ena & wr_ena & (wr_addr == DF)) begin
         wr_flag <= wr_flag + 1'b1;
       end else begin
         wr_flag <= wr_flag;
@@ -209,12 +215,8 @@ module axis_fifo #(
      */
 
     always @(posedge clk) begin
-      if (rst) begin
-        mem[wr_addr] <= 'b0;
-      end else if (ena & fifo_write) begin
-        mem[wr_addr] <= fifo_din;
-      end else begin
-        mem[wr_addr] <= mem[wr_addr];
+      if (ena & wr_ena) begin
+        mem[wr_addr] <= s_axis_tdata;
       end
     end
 
@@ -231,7 +233,7 @@ module axis_fifo #(
     ) counter_rd_addr (
       .clk (clk),
       .rst (rst),
-      .ena (ena & fifo_read),
+      .ena (ena & rd_ena),
       .value (rd_addr)
     );
 
@@ -240,7 +242,7 @@ module axis_fifo #(
     always @(posedge clk) begin
       if (rst) begin
         rd_flag <= 1'b0;
-      end else if (ena & rd_addr == DF & fifo_read) begin
+      end else if (ena & rd_ena & (rd_addr == DF)) begin
         rd_flag <= rd_flag + 1'b1;
       end else begin
         rd_flag <= rd_flag;
@@ -252,15 +254,18 @@ module axis_fifo #(
      */
 
     always @(posedge clk) begin
-      if (rst | fifo_empty) begin
-        fifo_dout1 <= 'b0;
+      if (ena & rd_ena) begin
+        mem_dout <= mem[rd_addr];
+      end
+    end
+
+    always @(posedge clk) begin
+      if (rst) begin
         fifo_dout <= 'b0;
-      end else if (ena & fifo_read) begin
-        fifo_dout1 <= mem[rd_addr];
-        fifo_dout <= fifo_dout1;
+      end else if (ena & ~m_axis_tvalid | m_axis_frame) begin
+        fifo_dout <= mem_dout;
       end else begin
-        fifo_dout1 <= 'b0;
-        fifo_dout <= 'b0;
+        fifo_dout <= fifo_dout;
       end
     end
 
@@ -289,11 +294,5 @@ module axis_fifo #(
 
   end
   endgenerate
-
-  /* Control signals.
-   */
-
-  assign full = fifo_full;
-  assign empty = fifo_empty;
 
 endmodule

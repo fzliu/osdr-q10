@@ -2,8 +2,10 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Serializes AD9361 raw data into AXI-stream data.
+// Description
+// Serializes AD9361 raw data into AXI-stream data.
 //
+// Signals
 // enable  :  N/A
 // reset   :  N/A
 // latency :  2 (single clock only)
@@ -170,6 +172,9 @@ module ad9361_dual_axis #(
     ) axis_fifo (
       .clk (clk),
       .rst (1'b0),
+      .ena (1'b1),
+      .full (fifo_full),
+      .empty (fifo_empty),
       .s_axis_tvalid (samps_valid),
       .s_axis_tready (samps_ready),
       .s_axis_tdata ({samps_last,
