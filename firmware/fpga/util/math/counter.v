@@ -35,6 +35,7 @@ module counter #(
 
   // data interface
 
+  output            at_max,
   output  [ W0:0]   value
 
 );
@@ -47,15 +48,15 @@ module counter #(
 
   // internal signals
 
-  wire              at_upper;
+  wire              at_max;
 
   // counter implementation
 
-  assign at_upper = (count == UPPER);
+  assign at_max = (count == UPPER);
 
   generate
   always @(posedge clk) begin
-    casez ({rst, ena, at_upper})
+    casez ({rst, ena, at_max})
       3'b1??: count <= LOWER;
       3'b011: count <= WRAPAROUND ? LOWER : UPPER;
       3'b010: count <= count + 1'b1;

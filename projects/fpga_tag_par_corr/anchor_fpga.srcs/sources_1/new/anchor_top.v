@@ -16,6 +16,7 @@
 // ADDER_WIDTH: width of adders used by axis_bit_corr
 // CORR_OFFSET: index of the first (zeroth) correlator to use
 //
+// Signals
 // enable  :  active-high
 // reset   :  N/A
 // latency :  N/A
@@ -36,6 +37,7 @@ module anchor_top #(
   parameter   ADDER_WIDTH = 12,
   parameter   CORR_OFFSET = 0,
 
+  parameter   RAMP_DELAY = 16777216,  // 2^24 cycles
   parameter   PIPELINE_DEPTH = 3,
   parameter   USE_STALL_SIGNAL = 0,
   parameter   CABS_DELAY = 10,
@@ -376,16 +378,16 @@ module anchor_top #(
   );
 
   /* Serialize data.
-   * The input and master AXI-stream clocks are the same, so we set
-   * INDEP_CLOCKS to zero.
+   * To ensure that the bit correlators are always active, we set
+   * CONTINUOUS_DATA to 1.
    */
 
   ad9361_dual_axis #(
     .PRECISION (PRECISION),
     .REVERSE_DATA (0),
-    .INDEP_CLOCKS (0),
     .USE_AXIS_TLAST (0),
     .USE_OUTPUT_FIFO (1),
+    .CONTINUOUS_DATA (1),
     .FIFO_TYPE ("block"),
     .FIFO_DEPTH (32768),  //65536
     .FIFO_LATENCY (2)
@@ -417,6 +419,8 @@ module anchor_top #(
   axis_distrib #(
     .NUM_DISTRIB (NUM_COMPUTE),
     .DATA_WIDTH (SAMPS_WIDTH),
+    .RAMP_START (1),
+    .RAMP_DELAY (16777216),
     .USE_OUTPUT_FIFO (1),
     .FIFO_TYPE ("block"),
     .FIFO_LATENCY (2)
@@ -551,7 +555,7 @@ module anchor_top #(
     .NUM_TAGS (NUM_TAGS),
     .NUM_CHANNELS (NUM_CHANNELS),
     .CHANNEL_WIDTH (CHANNEL_WIDTH),
-    .FIFO_DEPTH (32),
+    .FIFO_DEPTH (64),
     .READ_WIDTH (12),  //12
     .MEMORY_TYPE ("block")
   ) buf_peak_data (

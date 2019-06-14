@@ -138,6 +138,7 @@ module axis_peak_detn #(
     .clk (clk),
     .rst (s_axis_frame),
     .ena (s_axis_tvalid),
+    .at_max (),
     .value (chan_idx)
   );
 
@@ -244,6 +245,7 @@ module axis_peak_detn #(
     .clk (clk),
     .rst (has_peak & ~mem_ready),
     .ena (m_axis_frame),
+    .at_max (),
     .value (mem_count)
   );
 

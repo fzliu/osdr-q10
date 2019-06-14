@@ -11,7 +11,8 @@
 //
 // Parameters
 // NUM_PARALLEL: number of parallel input data streams (must be power of 2)
-// ADDER_WIDTH: width of the adders used by this module
+// WAVE_WIDTH: bit width of each sample of the input waveform data
+// ADDER_WIDTH: bit width of the adders used by this module
 // USE_STALL_SIGNAL: set to 0 if the downstream module accepts data faster
 // SHIFT_DEPTH: internal pipeline depth for timing closure
 // NUM_CORRS: number of correlators to handle
@@ -191,6 +192,7 @@ module axis_bit_corr #(
     .clk (clk),
     .rst (1'b0),
     .ena (ena_int),
+    .at_max (),
     .value (count)
   );
 

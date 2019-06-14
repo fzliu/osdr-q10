@@ -130,6 +130,7 @@ module ad9361_dual_filt #(
       .clk (clk),
       .rst (data_pass[n]),
       .ena (1'b1),
+      .at_max (),
       .value (pad_count[n])
     );
 

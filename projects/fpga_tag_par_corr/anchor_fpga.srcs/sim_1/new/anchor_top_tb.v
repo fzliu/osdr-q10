@@ -14,6 +14,7 @@ module anchor_top_tb;
   parameter   NUM_COMPUTE = 1;    //1
   parameter   NUM_TAGS = 4;       //2
   parameter   CORR_OFFSET = 16;   //19
+  parameter   RAMP_DELAY = 32;
   parameter   CABS_DELAY = 9;
 
   // signals
@@ -103,6 +104,7 @@ module anchor_top_tb;
     .NUM_COMPUTE (NUM_COMPUTE),
     .NUM_TAGS (NUM_TAGS),
     .CORR_OFFSET (CORR_OFFSET),
+    .RAMP_DELAY (RAMP_DELAY),
     .CABS_DELAY (CABS_DELAY)
   ) anchor_top (
     .clk (clk),

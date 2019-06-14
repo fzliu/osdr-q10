@@ -19,6 +19,8 @@ module axis_fifo #(
 
   parameter   DATA_WIDTH = 8,
   parameter   FIFO_DEPTH = 16,
+  parameter   FULL_THRESH = FIFO_DEPTH - 2,
+  parameter   EMPTY_THRESH = 2,
 
   // derived parameters
 
@@ -67,16 +69,16 @@ module axis_fifo #(
 
   reg               wr_flag = 1'b0; // Flag write pointer to point to the top.
   reg               rd_flag = 1'b0; // Flag read pointer to point to the top.
+  reg               mem_full = 1'b0;
+  reg               mem_empty = 1'b1;
 
   reg     [ WD:0]   mem_dout = 'b0;
-  reg     [ WD:0]   fifo_dout = 'b0;
-  reg     [ WD:0]   fifo_reg = 'b0;
-
-  reg               fifo_valid = 1'b0;
-  reg               fifo_full = 1'b0;
-  reg               fifo_empty = 1'b1;
+  reg               mem_valid = 1'b0;
 
   reg               m_axis_tvalid_reg = 1'b0;
+  reg     [ WD:0]   m_axis_tdata_reg = 'b0;
+
+  reg     [ WA:0]   count = 'b0;
 
   // internal signals
 
@@ -87,19 +89,16 @@ module axis_fifo #(
   wire    [ WA:0]   wr_addr;
   wire    [ WA:0]   rd_addr;
 
-  /* Output status signals.
+  /* Slave interface.
    */
 
-  assign full = fifo_full;
-  assign empty = fifo_empty;
+  assign s_axis_tready = ~mem_full;
 
   /* FIFO glue logic.
    */
 
   assign wr_ena = s_axis_tvalid & s_axis_tready;
-  assign rd_ena = (~m_axis_tvalid | m_axis_frame) & !fifo_empty;
-  assign m_axis_tdata = fifo_dout;
-  assign m_axis_frame = m_axis_tvalid & m_axis_tready;
+  assign rd_ena = (~m_axis_tvalid | m_axis_frame) & !mem_empty;
 
   /*
    * FIFO_DEPTH == 1,does not use the address pointer, can simplify the logic.
@@ -115,31 +114,31 @@ module axis_fifo #(
      */
 
     always @(posedge clk) begin
-      if (rst) begin
-        fifo_reg <= 'b0;
-      end else if (ena & wr_ena) begin
-        fifo_reg <= s_axis_tdata;
-      end else begin
-        fifo_reg <= fifo_reg;
+      if (ena & wr_ena) begin
+        mem[0] <= s_axis_tdata;
       end
     end
 
-    /* Empty/full indicator.
+    /* Empty/full status.
      * Since this version of the FIFO has only one element, there is no need
-     * for both fifo_empty and fifo_full signals; one is enough to track both
+     * for both mem_empty and mem_full signals; one is enough to track both
      * statuses.
      */
 
     always @(posedge clk) begin
       if (rst) begin
-        fifo_empty <= 1'b1;
+        mem_empty <= 1'b1;
       end else if (!ena) begin
-        fifo_empty <= fifo_empty;
-      end else if ((!fifo_empty | wr_ena) & !rd_ena) begin
-        fifo_empty <= 1'b0;
+        mem_empty <= mem_empty;
+      end else if ((!mem_empty | wr_ena) & !rd_ena) begin
+        mem_empty <= 1'b0;
       end else begin
-        fifo_empty <= 1'b1;
+        mem_empty <= 1'b1;
       end
+    end
+
+    always @* begin
+      mem_full = ~mem_empty;
     end
 
     /* "Read" logic.
@@ -147,43 +146,25 @@ module axis_fifo #(
 
     always @(posedge clk) begin
       if (rst) begin
-        fifo_dout <= 'b0;
-        fifo_valid <= 1'b0;
+        m_axis_tdata_reg <= 'b0;
+        m_axis_tvalid_reg <= 1'b0;
       end else if (ena & rd_ena) begin
-        fifo_dout <= fifo_reg;
-        fifo_valid <= 1'b1;
+        m_axis_tdata_reg <= mem[0];
+        m_axis_tvalid_reg <= 1'b1;
       end else begin
-        fifo_dout <= fifo_dout;
-        fifo_valid <= fifo_valid;
+        m_axis_tdata_reg <= m_axis_tdata_reg;
+        m_axis_tvalid_reg <= m_axis_tvalid;
       end
     end
 
-    assign m_axis_tvalid = fifo_valid;
-    assign s_axis_tready = fifo_empty;
+    assign full = mem_full;
+    assign empty = mem_empty;
 
   end else begin
 
-    // slave interface
-
-    always @(posedge clk) begin
-      if (rst) begin
-        fifo_valid <= 1'b0;
-        m_axis_tvalid_reg <= 1'b0;
-      end else if (ena & ~m_axis_tvalid | m_axis_frame) begin
-        fifo_valid <= !fifo_empty;
-        m_axis_tvalid_reg <= fifo_valid;
-      end else begin
-        fifo_valid <= fifo_valid;
-        m_axis_tvalid_reg <= m_axis_tvalid_reg;
-      end
-    end
-
-    assign s_axis_tready = ~fifo_full;
-    assign m_axis_tvalid = m_axis_tvalid_reg;
-
     /* Write pointer
-     * Always points to the next unit to be written when reset, points to the first
-     * unit.
+     * Always points to the next unit to be written when reset, points to the
+     * first unit.
      */
 
     counter #(
@@ -204,7 +185,7 @@ module axis_fifo #(
       if (rst) begin
         wr_flag <= 1'b0;
       end else if (ena & wr_ena & (wr_addr == DF)) begin
-        wr_flag <= wr_flag + 1'b1;
+        wr_flag <= ~wr_flag;
       end else begin
         wr_flag <= wr_flag;
       end
@@ -243,14 +224,13 @@ module axis_fifo #(
       if (rst) begin
         rd_flag <= 1'b0;
       end else if (ena & rd_ena & (rd_addr == DF)) begin
-        rd_flag <= rd_flag + 1'b1;
+        rd_flag <= ~rd_flag;
       end else begin
         rd_flag <= rd_flag;
       end
     end
 
-    /* Read from FIFO
-     * Readout is 0 when the reset or FIFO status is empty.
+    /* Read from FIFO.
      */
 
     always @(posedge clk) begin
@@ -261,38 +241,73 @@ module axis_fifo #(
 
     always @(posedge clk) begin
       if (rst) begin
-        fifo_dout <= 'b0;
+        mem_valid <= 1'b0;
       end else if (ena & ~m_axis_tvalid | m_axis_frame) begin
-        fifo_dout <= mem_dout;
+        mem_valid <= ~mem_empty;
       end else begin
-        fifo_dout <= fifo_dout;
+        mem_valid <= mem_valid;
       end
     end
 
-    /* FIFO status
-     * When the read pointer and the write pointer are the same, if the two pointer
-     * flags are different, it means that the write pointer is folded back more than
-     * the read pointer and is full. if the two pointer flags are the same, it means
-     * that the two pointers are folded back the same number of times and are empty.
+    always @(posedge clk) begin
+      if (rst) begin
+        m_axis_tvalid_reg <= 1'b0;
+        m_axis_tdata_reg <= 'b0;
+      end else if (ena & ~m_axis_tvalid | m_axis_frame) begin
+        m_axis_tvalid_reg <= mem_valid;
+        m_axis_tdata_reg <= mem_dout;
+      end else begin
+        m_axis_tvalid_reg <= m_axis_tvalid;
+        m_axis_tdata_reg <= m_axis_tdata;
+      end
+    end
+
+    /* FIFO status.
+     * When the read pointer and the write pointer are the same, if the two
+     * pointer flags are different, it means that the write pointer is folded
+     * back more than the read pointer and is full. if the two pointer flags are
+     * the same, it means that the two pointers are folded back the same number
+     * of times and are empty.
      */
 
     always @* begin
       if ((wr_addr == rd_addr) & (rd_flag == !wr_flag)) begin
-        fifo_full = 1'b1;
+        mem_full = 1'b1;
       end else begin
-        fifo_full = 1'b0;
+        mem_full = 1'b0;
       end
     end
 
     always @* begin
       if ((wr_addr == rd_addr) & (rd_flag == wr_flag)) begin
-        fifo_empty = 1'b1;
+        mem_empty = 1'b1;
       end else begin
-        fifo_empty = 1'b0;
+        mem_empty = 1'b0;
       end
     end
 
+    /* Output status signals.
+      */
+
+    always @(posedge clk) begin
+      casez ({ena, wr_ena, rd_ena})
+        3'b110: count <= count + 1'b1;
+        3'b101: count <= count - 1'b1;
+        default: count <= count;
+      endcase
+    end
+
+    assign full = (count >= FULL_THRESH);
+    assign empty = (count <= EMPTY_THRESH);
+
   end
   endgenerate
+
+  /* Master interface.
+   */
+
+   assign m_axis_frame = m_axis_tvalid & m_axis_tready;
+   assign m_axis_tvalid = m_axis_tvalid_reg;
+   assign m_axis_tdata = m_axis_tdata_reg;
 
 endmodule

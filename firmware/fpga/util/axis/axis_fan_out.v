@@ -6,6 +6,14 @@
 // AXI-stream fan-out implementation. Unless a FIFO is used, this is a purely
 // combinational block.
 //
+// Parameters
+// NUM_DISTRIB: number of output AXI streams, e.g. 7 if 1-7 fan-out
+// DATA_WIDTH: width of input data (and per-channel output data)
+// USE_OUTPUT_FIFO: if 0, the output FIFO is disabled
+// FIFO_TYPE: "auto", "block", or "distributed"; see Vivado templates
+// FIFO_DEPTH: depth of output FIFO, if enabled
+// FIFO_LATENCY: latency of output FIFO, if enabled
+//
 // Signals
 // enable  :  N/A
 // reset   :  active-high

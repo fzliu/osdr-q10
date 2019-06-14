@@ -25,7 +25,6 @@ module ad9361_dual #(
   parameter   FILTER_LENGTH = 16,
 
   parameter   REVERSE_DATA = 0,
-  parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
 
   // bit width parameters
@@ -272,7 +271,6 @@ module ad9361_dual #(
     .SAMPS_WIDTH (SAMPS_WIDTH),
     .PRECISION (PRECISION),
     .REVERSE_DATA (REVERSE_DATA),
-    .INDEP_CLOCKS (INDEP_CLOCKS),
     .USE_AXIS_TLAST (USE_AXIS_TLAST)
   ) ad9361_dual_axis (
     .clk (clk),

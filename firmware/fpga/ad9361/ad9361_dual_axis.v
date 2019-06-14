@@ -5,6 +5,16 @@
 // Description
 // Serializes AD9361 raw data into AXI-stream data.
 //
+// Parameters
+// PRECISION: the number of MSBs to keep in the input data before forwarding
+// REVERSE_DATA: if 1, reverses the data bits; otherwise, keeps it as is
+// USE_AXIS_TLAST: if 1, enables m_axis_tlast; disables it otherwise
+// AXIS_BURST_LENGTH: the number of samples before tlast goes high
+// USE_OUTPUT_FIFO: if 1, enables the output FIFO; disables it otherwise
+// CONTINUOUS_DATA: if 1, ensures that the FIFO always has some data in it
+// CORR_LENGTH: length of each correlator
+// CORRELATORS: bits for all correlators
+//
 // Signals
 // enable  :  N/A
 // reset   :  N/A
@@ -19,10 +29,10 @@ module ad9361_dual_axis #(
 
   parameter   PRECISION = 12,
   parameter   REVERSE_DATA = 0,
-  parameter   INDEP_CLOCKS = 0,
   parameter   USE_AXIS_TLAST = 0,
   parameter   AXIS_BURST_LENGTH = 512,
   parameter   USE_OUTPUT_FIFO = 1,
+  parameter   CONTINUOUS_DATA = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_DEPTH = 32,
   parameter   FIFO_LATENCY = 2,
@@ -74,13 +84,13 @@ module ad9361_dual_axis #(
 
   // internal registers
 
-  reg               valid_int = 'b0;
-
   reg               samps_valid = 'b0;
   reg     [ WS:0]   samps_data = 'b0;
   reg     [ WC:0]   samps_count = 'b0;
 
   // internal signals
+
+  wire              valid_int;
 
   wire    [ PR:0]   data_format [0:7];
 
@@ -110,8 +120,13 @@ module ad9361_dual_axis #(
    * alignment with samps_data.
    */
 
+  generate
+  assign valid_int = (USE_OUTPUT_FIFO && CONTINUOUS_DATA) ?
+                     fifo_empty : 1'b0;
+  endgenerate
+
   always @(posedge clk) begin
-    samps_valid <= valid_0 | valid_1 | valid_2 | valid_3;
+    samps_valid <= valid_0 | valid_1 | valid_2 | valid_3 | valid_int;
   end
 
   /* Output data.
@@ -168,7 +183,9 @@ module ad9361_dual_axis #(
 
     axis_fifo #(
       .DATA_WIDTH (SAMPS_WIDTH + EXTRA_BIT),
-      .FIFO_DEPTH (FIFO_DEPTH)
+      .FIFO_DEPTH (FIFO_DEPTH),
+      .FULL_THRESH (-1),
+      .EMPTY_THRESH (CONTINUOUS_DATA ? 3 : -1)
     ) axis_fifo (
       .clk (clk),
       .rst (1'b0),

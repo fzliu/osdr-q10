@@ -2,13 +2,24 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AXI-stream distributor. Similar to axis_fan_out but sends the
-// same data to all channels, i.e. waits for all channels to assert tready
-// before updating the bus data (m_axis_tdata).
+// Description
+// AXI-stream distributor. Similar to axis_fan_out but sends the same data to
+// all channels, i.e. waits for all channels to assert tready before updating
+// the bus data (m_axis_tdata). Optional "ramp start" functionality is
+// implemented in this module, staggers the data sent to each output channel.
 //
+// Parameters
+// NUM_DISTRIB: number of output AXI streams, e.g. 7 if 1-7 distributor
+// DATA_WIDTH: width of input data (and per-channel output data)
+// USE_OUTPUT_FIFO: if 0, the output FIFO is disabled
+// FIFO_TYPE: "auto", "block", or "distributed"; see Vivado templates
+// FIFO_DEPTH: depth of output FIFO, if enabled
+// FIFO_LATENCY: latency of output FIFO, if enabled
+//
+// Signals
 // enable  :  N/A
 // reset   :  active-high
-// latency :  1 cycle
+// latency :  variable
 // output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +30,8 @@ module axis_distrib #(
 
   parameter   NUM_DISTRIB = 6,
   parameter   DATA_WIDTH = 128,
+  parameter   RAMP_START = 0,
+  parameter   RAMP_DELAY = 1024,
   parameter   USE_OUTPUT_FIFO = 0,
   parameter   FIFO_TYPE = "auto",
   parameter   FIFO_DEPTH = 32,
@@ -62,11 +75,14 @@ module axis_distrib #(
 
   // internal registers
 
+  reg     [ ND:0]   chan_ena = 'b0;
   reg     [ ND:0]   ready_all = 'b0;
 
   // internal signals
 
   wire              s_axis_frame;
+
+  wire              ramp_next;
 
   wire    [ ND:0]   distrib_frame;
   wire    [ ND:0]   distrib_valid;
@@ -83,6 +99,43 @@ module axis_distrib #(
   assign s_axis_frame = s_axis_tvalid & s_axis_tready;
   assign s_axis_tready = &(ready_all);
 
+  /* Ramped, i.e. staggered start.
+   * The staggered start is achieved via the use of a continuously running
+   * counter.
+   */
+
+  generate
+  if (RAMP_START) begin
+
+    counter #(
+      .LOWER (0),
+      .UPPER (RAMP_DELAY - 1),
+      .WRAPAROUND (1)
+    ) counter (
+      .clk (s_axis_clk),
+      .rst (1'b0),
+      .ena (1'b1),
+      .at_max (ramp_next),
+      .value ()
+    );
+
+    always @(posedge s_axis_clk) begin
+      if (ramp_next) begin
+        chan_ena <= {chan_ena[ND-1:0], 1'b1};
+      end else begin
+        chan_ena <= chan_ena;
+      end
+    end
+
+  end else begin
+
+    always @* begin
+      chan_ena = {NUM_DISTRIB{1'b1}};
+    end
+
+  end
+  endgenerate
+
   /* Ready logic.
    * Whenever new data is framed from the slave AXI-stream interface, the
    * internal ready logic for all output channels goes low. These signals go
@@ -94,7 +147,7 @@ module axis_distrib #(
 
   always @(posedge s_axis_clk) begin
     if (s_axis_rst | s_axis_frame) begin
-      ready_all <= 'b0;
+      ready_all <= ~chan_ena;
     end else begin
       ready_all <= ready_all | distrib_frame;
     end

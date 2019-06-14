@@ -116,6 +116,7 @@ module filt_boxcar #(
     .clk (clk),
     .rst (1'b0),
     .ena (ena),
+    .at_max (),
     .value (count)
   );
 

@@ -6,6 +6,15 @@
 // AXI-stream fan-in implementation. The relevant input channel is stored in
 // m_axis_tdest. Preference is given to earlier (MSB) input channels.
 //
+// Parameters
+// NUM_FANIN: number of input AXI streams, e.g. 7 if 7-1 fan-in
+// DATA_WIDTH: width of output data (and per-channel input data)
+// USE_AXIS_TLAST: if 0, the module does not arbitrate using s_axis_tlast
+// USE_OUTPUT_FIFO: if 0, the output FIFO is disabled
+// FIFO_TYPE: "auto", "block", or "distributed"; see Vivado templates
+// FIFO_DEPTH: depth of output FIFO, if enabled
+// FIFO_LATENCY: latency of output FIFO, if enabled
+//
 // Signals
 // enable  :  N/A
 // reset   :  active-high
@@ -163,7 +172,8 @@ module axis_fan_in #(
   end
   endgenerate
 
-  // master interface
+  /* Master interface.
+   */
 
   assign fanin_valid = s_axis_tvalid[chan_num];
   assign fanin_data = s_axis_tdata_unpack[chan_num];
@@ -175,7 +185,10 @@ module axis_fan_in #(
   end
   endgenerate
 
-  // assign outputs
+  /* Assign outputs.
+   * If an output FIFO is requested, instantiate a FIFO instead of directly
+   * assigning fan-in outputs to m_axis.
+   */
 
   generate
   if (USE_OUTPUT_FIFO) begin
