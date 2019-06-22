@@ -29,15 +29,16 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 10,
-  parameter   NUM_TAGS = 40,
+  parameter   NUM_COMPUTE = 6,
+  parameter   NUM_TAGS = 24,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
   parameter   ADDER_WIDTH = 12,
   parameter   CORR_OFFSET = 0,
 
-  parameter   RAMP_DELAY = 16777216,  // 2^24 cycles
+  parameter   RAMP_DELAY = 0,  // 16777216
+  parameter   CONTINUOUS_DATA = 0,
   parameter   PIPELINE_DEPTH = 3,
   parameter   USE_STALL_SIGNAL = 0,
   parameter   CABS_DELAY = 10,
@@ -378,8 +379,8 @@ module anchor_top #(
   );
 
   /* Serialize data.
-   * To ensure that the bit correlators are always active, we set
-   * CONTINUOUS_DATA to 1.
+   * To ensure that the bit correlators are always active, CONTINUOUS_DATA may
+   * be set to 1.
    */
 
   ad9361_dual_axis #(
@@ -387,7 +388,7 @@ module anchor_top #(
     .REVERSE_DATA (0),
     .USE_AXIS_TLAST (0),
     .USE_OUTPUT_FIFO (1),
-    .CONTINUOUS_DATA (1),
+    .CONTINUOUS_DATA (CONTINUOUS_DATA),
     .FIFO_TYPE ("block"),
     .FIFO_DEPTH (32768),  //65536
     .FIFO_LATENCY (2)
@@ -419,8 +420,7 @@ module anchor_top #(
   axis_distrib #(
     .NUM_DISTRIB (NUM_COMPUTE),
     .DATA_WIDTH (SAMPS_WIDTH),
-    .RAMP_START (1),
-    .RAMP_DELAY (16777216),
+    .RAMP_DELAY (RAMP_DELAY),
     .USE_OUTPUT_FIFO (1),
     .FIFO_TYPE ("block"),
     .FIFO_LATENCY (2)

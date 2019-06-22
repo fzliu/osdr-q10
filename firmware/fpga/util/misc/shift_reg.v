@@ -103,6 +103,7 @@ module shift_reg #(
       .clk (clk),
       .rst (rst),
       .ena (ena),
+      .at_max (),
       .value (rd_addr)
     );
 

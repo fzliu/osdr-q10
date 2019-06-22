@@ -50,7 +50,7 @@ module anchor_clk_gen (
     .CLKOUT1_DIVIDE (16),
     .CLKOUT1_PHASE (0),
     .CLKOUT1_DUTY_CYCLE (0.500),
-    .CLKOUT2_DIVIDE (4),
+    .CLKOUT2_DIVIDE (8),  //4
     .CLKOUT2_PHASE (0),
     .CLKOUT2_DUTY_CYCLE (0.500),
     .REF_JITTER1 (0.0),

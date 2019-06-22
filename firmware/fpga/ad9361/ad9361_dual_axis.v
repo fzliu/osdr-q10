@@ -184,8 +184,8 @@ module ad9361_dual_axis #(
     axis_fifo #(
       .DATA_WIDTH (SAMPS_WIDTH + EXTRA_BIT),
       .FIFO_DEPTH (FIFO_DEPTH),
-      .FULL_THRESH (-1),
-      .EMPTY_THRESH (CONTINUOUS_DATA ? 3 : -1)
+      .FULL_THRESH (FIFO_DEPTH - 3),
+      .EMPTY_THRESH (3)
     ) axis_fifo (
       .clk (clk),
       .rst (1'b0),

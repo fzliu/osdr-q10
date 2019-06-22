@@ -46,10 +46,6 @@ module counter #(
 
   reg     [ W0:0]   count = INIT_VALUE;
 
-  // internal signals
-
-  wire              at_max;
-
   // counter implementation
 
   assign at_max = (count == UPPER);

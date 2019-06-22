@@ -86,6 +86,8 @@ module axis_fifo #(
 
   wire              wr_ena;
   wire              rd_ena;
+  wire              wr_max;
+  wire              rd_max;
   wire    [ WA:0]   wr_addr;
   wire    [ WA:0]   rd_addr;
 
@@ -176,6 +178,7 @@ module axis_fifo #(
       .clk (clk),
       .rst (rst),
       .ena (ena & wr_ena),
+      .at_max (wr_max),
       .value (wr_addr)
     );
 
@@ -184,7 +187,7 @@ module axis_fifo #(
     always @(posedge clk) begin
       if (rst) begin
         wr_flag <= 1'b0;
-      end else if (ena & wr_ena & (wr_addr == DF)) begin
+      end else if (ena & wr_ena & wr_max) begin
         wr_flag <= ~wr_flag;
       end else begin
         wr_flag <= wr_flag;
@@ -215,6 +218,7 @@ module axis_fifo #(
       .clk (clk),
       .rst (rst),
       .ena (ena & rd_ena),
+      .at_max (rd_max),
       .value (rd_addr)
     );
 
@@ -223,7 +227,7 @@ module axis_fifo #(
     always @(posedge clk) begin
       if (rst) begin
         rd_flag <= 1'b0;
-      end else if (ena & rd_ena & (rd_addr == DF)) begin
+      end else if (ena & rd_ena & rd_max) begin
         rd_flag <= ~rd_flag;
       end else begin
         rd_flag <= rd_flag;

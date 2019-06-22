@@ -30,7 +30,6 @@ module axis_distrib #(
 
   parameter   NUM_DISTRIB = 6,
   parameter   DATA_WIDTH = 128,
-  parameter   RAMP_START = 0,
   parameter   RAMP_DELAY = 1024,
   parameter   USE_OUTPUT_FIFO = 0,
   parameter   FIFO_TYPE = "auto",
@@ -105,7 +104,7 @@ module axis_distrib #(
    */
 
   generate
-  if (RAMP_START) begin
+  if (RAMP_DELAY > 0) begin
 
     counter #(
       .LOWER (0),
@@ -121,7 +120,7 @@ module axis_distrib #(
 
     always @(posedge s_axis_clk) begin
       if (ramp_next) begin
-        chan_ena <= {chan_ena[ND-1:0], 1'b1};
+        chan_ena <= (chan_ena << 1) + 1'b1;
       end else begin
         chan_ena <= chan_ena;
       end
