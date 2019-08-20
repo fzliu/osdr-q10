@@ -11,19 +11,31 @@
 
 module ad9361_dual #(
 
+  // parameters
+
+  parameter   SAMPS_WIDTH = 64,
+  parameter   PRECISION = 12,
+
   parameter   DEVICE_TYPE = "7SERIES",
   parameter   REALTIME_ENABLE = 1,
-  parameter   INDEP_CLOCKS = 0,
+
+  parameter   USE_SAMPLE_FILTER = 1,
+  parameter   NUM_PAD_SAMPS = 7,
+  parameter   DATA_PASS_VALUE = 20,
+  parameter   FILTER_LENGTH = 16,
+
   parameter   REVERSE_DATA = 0,
   parameter   USE_AXIS_TLAST = 0,
-  parameter   SAMP_FILT_ENABLE = 1
+
+  // bit width parameters
+
+  localparam  WS = SAMPS_WIDTH - 1
 
 ) (
 
   // core interface
 
   input             clk,
-  input             rst,
 
   // physical interface (receive_a)
 
@@ -49,6 +61,7 @@ module ad9361_dual #(
   output            b_resetb,
   output            b_enable,
   output            b_txnrx,
+  output            sync_out,
 
   // physical interface (spi_a)
 
@@ -73,6 +86,14 @@ module ad9361_dual #(
   output            spi_miso,
   input             spi_cs_a,
   input             spi_cs_b,
+  input             sync_in,
+
+  // output valid flags
+
+  output            a_valid_0,
+  output            a_valid_1,
+  output            b_valid_0,
+  output            b_valid_1,
 
   // axi-stream interface
 
@@ -80,9 +101,11 @@ module ad9361_dual #(
   output            m_axis_tvalid,
   input             m_axis_tready,
   output            m_axis_tlast,
-  output  [127:0]   m_axis_tdata
+  output  [ WS:0]   m_axis_tdata
 
 );
+
+  `include "func_log2.vh"
 
   // internal signals
 
@@ -112,6 +135,10 @@ module ad9361_dual #(
   wire    [ 11:0]   data_i3_sf;
   wire    [ 11:0]   data_q3_sf;
 
+  // multi-chip sync
+
+  assign sync_out = sync_in;
+
   // receive_a
 
   ad9361_cmos_if #(
@@ -120,7 +147,6 @@ module ad9361_dual #(
     .REALTIME_ENABLE (REALTIME_ENABLE)
   ) ad9361_cmos_if_a (
     .clk (clk),
-    .rst (rst),
     .rx_clk_in (a_rx_clk_in),
     .rx_frame_in (a_rx_frame_in),
     .rx_data_p0 (a_rx_data_p0),
@@ -142,11 +168,10 @@ module ad9361_dual #(
 
   ad9361_cmos_if #(
     .DEVICE_TYPE (DEVICE_TYPE),
-    .USE_EXT_CLOCK (1'b1),
+    .USE_EXT_CLOCK (1),
     .REALTIME_ENABLE (REALTIME_ENABLE)
   ) ad9361_cmos_if_b (
     .clk (clk),
-    .rst (rst),
     .rx_clk_in (b_rx_clk_in),
     .rx_frame_in (b_rx_frame_in),
     .rx_data_p0 (b_rx_data_p0),
@@ -166,36 +191,29 @@ module ad9361_dual #(
 
   // spi
 
-  ad9361_dual_spi #(
-  ) ad9361_dual_spi (
-    .a_spi_sck (a_spi_sck),
-    .a_spi_di (a_spi_di),
-    .a_spi_do (a_spi_do),
-    .a_spi_cs (a_spi_cs),
-    .b_spi_sck (b_spi_sck),
-    .b_spi_di (b_spi_di),
-    .b_spi_do (b_spi_do),
-    .b_spi_cs (b_spi_cs),
-    .spi_sck (spi_sck),
-    .spi_mosi (spi_mosi),
-    .spi_miso (spi_miso),
-    .spi_cs_a (spi_cs_a),
-    .spi_cs_b (spi_cs_b)
-  );
+  assign a_spi_sck = ~spi_cs_a ? spi_sck : 1'b0;
+  assign a_spi_di = ~spi_cs_a ? spi_mosi : 1'b0;
+  assign a_spi_cs = spi_cs_a;
+
+  assign b_spi_sck = ~spi_cs_b ? spi_sck : 1'b0;
+  assign b_spi_di = ~spi_cs_b ? spi_mosi : 1'b0;
+  assign b_spi_cs = spi_cs_b;
+
+  assign spi_miso = ~a_spi_cs ? a_spi_do : (~b_spi_cs ? b_spi_do : 1'b0);
 
   // sample filter
 
   generate
-  if (SAMP_FILT_ENABLE == 1) begin
+  if (USE_SAMPLE_FILTER) begin
 
-    ad9361_samp_filt #(
-      .DATA_MODULUS_MIN (20),
-      .LOG2_FILTER_LENGTH (3),
+    ad9361_dual_filt #(
+      .ABS_WIDTH (16),
       .NUM_DELAY (26),
-      .ABS_WIDTH (16)
-    ) ad9361_samp_filt (
+      .NUM_PAD_SAMPS (NUM_PAD_SAMPS),
+      .DATA_PASS_VALUE (DATA_PASS_VALUE),
+      .LOG2_FILTER_LENGTH (log2(FILTER_LENGTH-1))
+    ) ad9361_dual_filt (
       .clk (clk),
-      .rst (rst),
       .valid_0_in (valid_0),
       .data_i0_in (data_i0),
       .data_q0_in (data_q0),
@@ -240,14 +258,22 @@ module ad9361_dual #(
   end
   endgenerate
 
+  // set valid signals
+
+  assign a_valid_0 = valid_0;
+  assign a_valid_1 = valid_1;
+  assign b_valid_0 = valid_2;
+  assign b_valid_1 = valid_3;
+
   // serialize data
 
   ad9361_dual_axis #(
-    .INDEP_CLOCKS (INDEP_CLOCKS),
+    .SAMPS_WIDTH (SAMPS_WIDTH),
+    .PRECISION (PRECISION),
     .REVERSE_DATA (REVERSE_DATA),
     .USE_AXIS_TLAST (USE_AXIS_TLAST)
   ) ad9361_dual_axis (
-    .data_clk (clk),
+    .clk (clk),
     .valid_0 (valid_0_sf),
     .data_i0 (data_i0_sf),
     .data_q0 (data_q0_sf),

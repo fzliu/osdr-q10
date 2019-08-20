@@ -1,0 +1,2 @@
+phys_opt_design -directive AlternateReplication
+phys_opt_design -directive AggressiveFanoutOpt

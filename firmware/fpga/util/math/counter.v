@@ -2,11 +2,9 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Parameterizable upward counter. Single-cycle latency.
-//
-// Revision: N/A
-// Additional Comments: If WRAPAROUND is set to false, the counter will hold
-// its value once it reaches the maximum.
+// Description: Parameterizable upward counter. Single-cycle latency. If
+// WRAPAROUND is set to false, the counter will hold its value once it reaches
+// the maximum.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +15,7 @@ module counter #(
   parameter   LOWER = 0,
   parameter   UPPER = 255,
   parameter   WRAPAROUND = 0,
+  parameter   INIT_VALUE = 0,
 
   // derived parameters
 
@@ -31,32 +30,29 @@ module counter #(
   // master interface
 
   input             clk,
-  input             ena,
   input             rst,
+  input             ena,
 
   // data interface
 
+  output            at_max,
   output  [ W0:0]   value
 
 );
 
-  `include "log2_func.v"
-
-  // internal signals
-
-  wire              at_upper;
+  `include "func_log2.vh"
 
   // internal registers
 
-  reg     [ W0:0]   count = LOWER;
+  reg     [ W0:0]   count = INIT_VALUE;
 
   // counter implementation
 
-  assign at_upper = (count == UPPER);
+  assign at_max = (count == UPPER);
 
   generate
   always @(posedge clk) begin
-    casez ({rst, ena, at_upper})
+    casez ({rst, ena, at_max})
       3'b1??: count <= LOWER;
       3'b011: count <= WRAPAROUND ? LOWER : UPPER;
       3'b010: count <= count + 1'b1;

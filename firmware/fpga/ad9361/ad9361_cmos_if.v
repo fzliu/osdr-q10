@@ -2,11 +2,14 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Dual-port half-duplex (RX-only) handler for a single AD9361.
+// Description
+// Dual-port half-duplex (receive only) handler for a single AD9361.
 //
+// Signals
 // enable  :  N/A
 // reset   :  active-high
 // latency :  2 cycles
+// output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +17,7 @@ module ad9361_cmos_if #(
 
   // parameters
 
-  parameter   DEVICE_TYPE = "7SERIES",
+  parameter   DEVICE = "7SERIES",
   parameter   USE_EXT_CLOCK = 1,
   parameter   REALTIME_ENABLE = 1,
   parameter   RESET_DELAY = 16,
@@ -34,7 +37,6 @@ module ad9361_cmos_if #(
   // core interface
 
   input             clk,
-  input             rst,
 
   // physical interface
 
@@ -60,7 +62,7 @@ module ad9361_cmos_if #(
 
 );
 
-  `include "log2_func.v"
+  `include "func_log2.vh"
 
   // internal signals
 
@@ -84,20 +86,20 @@ module ad9361_cmos_if #(
   reg     [ 11:0]   data_q1_reg = 'b0;
 
   reg               enable_reg = 'b0;
-  reg     [ W0:0]   rt_count = 'b0;
+  reg     [ W0:0]   rt_count = COUNT_MAX;
 
   // set module clock
 
   assign data_clk = rx_clk_in;
 
   generate
-    assign rx_clk = (USE_EXT_CLOCK != 0) ? clk : data_clk;
+    assign rx_clk = USE_EXT_CLOCK ? clk : data_clk;
   endgenerate
 
   // register data
 
   generate
-  if (DEVICE_TYPE == "7SERIES") begin
+  if (DEVICE == "7SERIES") begin
 
     // data port 0
 
@@ -173,10 +175,11 @@ module ad9361_cmos_if #(
       valid_1_reg <= valid_frame & ~rx_frame_in_p;
     end
 
-  /**
+  /* Infer DDR register.
    * For unknown devices, try to coerce the synthesis tool to create a DDR
    * register.
    */
+
   end else begin
 
     // set receiver 0 data
@@ -212,26 +215,23 @@ module ad9361_cmos_if #(
   assign txnrx = 1'b0;
 
   generate
-  if (REALTIME_ENABLE == 0) begin
+  if (REALTIME_ENABLE) begin
 
-  always @* begin
-    enable_reg = 1'b0;
-  end
+    always @(posedge rx_clk) begin
+      if (rt_count > 1'b0) begin
+        rt_count <= rt_count - 1'b1;
+        enable_reg <= (rt_count > ENABLE_CYCLES);
+      end else begin
+        rt_count <= rt_count;
+        enable_reg <= 1'b0;
+      end
+    end
 
   end else begin
 
-  always @(posedge rx_clk) begin
-    if (rst) begin
-      rt_count <= COUNT_MAX;
-      enable_reg <= 1'b0;
-    end else if (rt_count > 1'b0) begin
-      rt_count <= rt_count - 1'b1;
-      enable_reg <= (rt_count > ENABLE_CYCLES);
-    end else begin
-      rt_count <= rt_count;
-      enable_reg <= 1'b0;
+    always @* begin
+      enable_reg = 1'b0;
     end
-  end
 
   end
   endgenerate

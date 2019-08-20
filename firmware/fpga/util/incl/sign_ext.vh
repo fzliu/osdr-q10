@@ -1,0 +1,15 @@
+////////////////////////////////////////////////////////////////////////////////
+// Company: 奥新智能
+// Engineer: Frank Liu
+//
+// Description: Sign extension macro.
+// sig: input signal (输入信号)
+// li : input length (本信号长度)
+// lo : output length (输出长度)
+//
+////////////////////////////////////////////////////////////////////////////////
+
+`ifndef SIGN_EXT
+  `define SIGN_EXT(sig,li,lo) {{(lo-li){sig[li-1]}}, sig}
+`else
+`endif

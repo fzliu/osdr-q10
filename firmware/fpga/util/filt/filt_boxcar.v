@@ -2,15 +2,17 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: Parameterized module which computes the moving average of the
-// inputs (aka boxcar filter).
+// Description
+// Parameterized module which computes the moving average of the inputs (aka
+// boxcar filter). This module is synchronous, and is computed by adding the
+// newest value while subtracting the oldest. This module must be reset before
+// use. No overflow checking is performed.
 //
-// Revision: N/A
-// Additional Comments: This module is synchronous, and is computed by adding
-// the newest value while subtracting the oldest. This module must be reset
-// before use. No overflow checking is performed.
-//
-// TODO(fzliu): Implement this with distributed RAM.
+// Signals
+// enable  :  active-high
+// reset   :  active-high
+// latency :  2 cycles
+// output  :  registered
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -19,16 +21,19 @@ module filt_boxcar #(
   // parameters
 
   parameter   DATA_WIDTH = 16,
-  parameter   FILTER_POWER = 3,
+  parameter   NUM_CHANNELS = 1,
+  parameter   FILTER_LENGTH = 8,
+  parameter   SHIFT_REG_USE_RAM = 0,
 
   // derived parameters
 
-  localparam  FILTER_LENGTH = 2**FILTER_POWER,
+  localparam  COUNT_WIDTH = log2(NUM_CHANNELS - 1),
 
   // bit width parameters
 
-  localparam  N0 = DATA_WIDTH - 1,
-  localparam  N1 = FILTER_LENGTH - 1
+  localparam  WD = DATA_WIDTH - 1,
+  localparam  NC = NUM_CHANNELS - 1,
+  localparam  WN = COUNT_WIDTH - 1
 
 ) (
 
@@ -36,62 +41,133 @@ module filt_boxcar #(
 
   input             clk,
   input             rst,
+  input             ena,
 
   // data interface
 
-  input   [ N0:0]   data_in,
-  output  [ N0:0]   avg_out
+  input   [ WD:0]   din,
+  output  [ WD:0]   dout
 
 );
 
-  // shift register
+  `include "func_log2.vh"
 
-  reg     [ N0:0]   shift[N1:0];
+  // internal memories
+
+  reg     [ WD:0]   sum_mem [0:NC];
 
   // internal registers
 
-  reg     [ N0:0]   sum_reg;
+  reg     [ WD:0]   sum_diff = 'b0;
+  reg     [ WN:0]   count_d = 'b0;
 
   // internal signals
 
-  wire    [ N0:0]   sum_step;
-  wire    [ N0:0]   sum_out;
+  wire    [ WN:0]   count;
+  wire    [ WD:0]   shift_out;
 
-  // shift register implementation
+  /* Initialize output memory.
+   * This prevents values from appearing on the output of this module before any
+   * computation has occurred.
+   */
 
-  genvar i;
+  genvar n;
   generate
-  for (i = 0; i < FILTER_LENGTH; i = i + 1) begin : shift_reg
-
-    always @(posedge clk) begin
-      if (rst) begin
-        shift[i] <= {DATA_WIDTH{1'b0}};
-      end else begin
-        shift[i] <= (i == 0) ? data_in : shift[i-1];
-      end
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    initial begin
+      sum_mem[n] = 'b0;
     end
-
   end
   endgenerate
 
-  // boxcar filter implementation
+  /* Shift register instantiation.
+   * Because data is assumed to be shifted into filt_boxcar in serial fashion,
+   * this shift register should accomodate the enough elements to store the
+   * length multiplied by the number of channels.
+   */
+
+  shift_reg #(
+    .WIDTH (DATA_WIDTH),
+    .DEPTH (NUM_CHANNELS * FILTER_LENGTH),
+    .USE_RAM (SHIFT_REG_USE_RAM)
+  ) shift_reg (
+    .clk (clk),
+    .rst (rst),
+    .ena (ena),
+    .din (din),
+    .dout (shift_out)
+  );
+
+  /* Index counter.
+   * Since we have an extra cycle of output latency to accomodate high
+   * performance applications, this count should always be at the "previous"
+   * value. As a result, we start it with an initial value of NUM_CHANNELS - 1
+   * rather than 0. Assuming filt_boxcar has been parameterized correctly, this
+   * should have no effect on the output result, since all elements of the shift
+   * register have been pre-initialized to 0.
+   */
+
+  counter #(
+    .LOWER (0),
+    .UPPER (NC),
+    .WRAPAROUND (1),
+    .INIT_VALUE (NC)  // active channel always preceding current
+  ) counter (
+    .clk (clk),
+    .rst (1'b0),
+    .ena (ena),
+    .at_max (),
+    .value (count)
+  );
+
+  /* Boxcar filter implementation.
+   * For a filter length of n, note the following:
+   * x[1] + x[2] + ... + x[n] =
+   * x[0] + x[1] + ... + x[n-1] + (x[n] - x[0])
+   * In other words, we can simply subtract continuously subtract the oldest
+   * value from the newest one to implement this filter with minimal resources.
+   */
 
   always @(posedge clk) begin
     if (rst) begin
-      sum_reg <= {DATA_WIDTH{1'b0}};
+      sum_diff <= 'b0;
+    end else if (ena) begin
+      sum_diff <= din - shift_out;
     end else begin
-      sum_reg <= sum_out;
+      sum_diff <= sum_diff;
     end
   end
 
-  assign sum_step = sum_reg + data_in;
-  assign sum_out = sum_step - shift[N1];
+  generate
+  for (n = 0; n < NUM_CHANNELS; n = n + 1) begin
+    always @(posedge clk) begin
+      if (rst) begin
+        sum_mem[n] <= 'b0;
+      end else if (ena & (n == count)) begin
+        sum_mem[n] <= sum_mem[count] + sum_diff;
+      end else begin
+        sum_mem[n] <= sum_mem[n];
+      end
+    end
+  end
+  endgenerate
 
-  // assign output
+  /* Assign output.
+   * We do this by first indexing into the "sum" memory and extracting the
+   * proper "previous" value to compute the output.
+   */
 
-  assign avg_out = sum_reg[N0] ?
-                   -(-sum_reg >> FILTER_POWER) :
-                   sum_reg >> FILTER_POWER;
+  always @(posedge clk) begin
+    if (rst) begin
+      count_d <= 'b0;
+    end else if (ena) begin
+      count_d <= count;
+    end else begin
+      count_d <= count_d;
+    end
+  end
+
+  assign dout = sum_mem[count_d] / FILTER_LENGTH;
 
 endmodule
 

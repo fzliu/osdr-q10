@@ -2,14 +2,14 @@
 // Company: 奥新智能
 // Engineer: Frank Liu
 //
-// Description: AD9361 top-level module. Handles the default dual-AD9361
-// configuration used by the Orion anchor.
+// Description
+// Anchor top-level module.
 //
-// Revision:
-//
+// Signals
 // enable  :  N/A
-// reset   :  active-high
-// latency :  multiple
+// reset   :  N/A
+// latency :  N/A
+// output  :  N/A
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +18,6 @@ module anchor_top (
   // master interface
 
   input             clk,
-  input             rst,
 
   // physical interface (receive_a)
 
@@ -76,7 +75,7 @@ module anchor_top (
 
   input             ebi_nrde,
   output  [ 15:0]   ebi_data,
-  output            ready
+  output            ebi_ready
 
 );
 
@@ -84,8 +83,6 @@ module anchor_top (
 
   wire              rd_clk;
   wire              wr_clk;
-  wire              rd_rst;
-  wire              wr_rst;
 
   wire              rd_ena;
 
@@ -93,7 +90,7 @@ module anchor_top (
   wire              b_data_clk;
 
   wire              samp_valid;
-  wire              samp_last;
+  wire              samp_ready;
   wire    [127:0]   samp_data;
 
   // clock generation
@@ -107,15 +104,13 @@ module anchor_top (
 
   // synchronize external signals
 
-  anchor_ext_sync #()
-  anchor_ext_sync (
-    .rd_clk (rd_clk),
-    .wr_clk (wr_clk),
-    .rst (rst),
-    .rd_rst (rd_rst),
-    .wr_rst (wr_rst),
-    .ebi_nrde (ebi_nrde),
-    .rd_ena (rd_ena)
+  xpm_cdc_single #(
+    .DEST_SYNC_FF (2),
+    .SRC_INPUT_REG (0)
+  ) xpm_cdc_single_nrde (
+    .src_in (~ebi_nrde),
+    .dest_clk (rd_clk),
+    .dest_out (rd_ena)
   );
 
   // dual-9361 controller
@@ -123,12 +118,17 @@ module anchor_top (
   ad9361_dual #(
     .DEVICE_TYPE ("7SERIES"),
     .REALTIME_ENABLE (1),
+    .USE_SAMPLE_FILTER (1),
+    .NUM_PAD_SAMPS (31),
+    .DATA_PASS_VALUE (64),
+    .FILTER_LENGTH (16),
+    .SAMPS_WIDTH (128),
+    .PRECISION (12),
+    .REVERSE_DATA (0),
     .INDEP_CLOCKS (0),
-    .REVERSE_DATA (1),
     .USE_AXIS_TLAST (0)
   ) ad9361_dual (
     .clk (wr_clk),
-    .rst (wr_rst),
     .a_rx_clk_in (a_rx_clk_in),
     .a_rx_frame_in (a_rx_frame_in),
     .a_rx_data_p0 (a_rx_data_p0),
@@ -162,8 +162,8 @@ module anchor_top (
     .spi_cs_b (spi_cs_b),
     .m_axis_clk (wr_clk),
     .m_axis_tvalid (samp_valid),
-    .m_axis_tready (1'b1),
-    .m_axis_tlast (samp_last),
+    .m_axis_tready (samp_ready),
+    .m_axis_tlast (),
     .m_axis_tdata (samp_data)
   );
 
@@ -171,19 +171,19 @@ module anchor_top (
 
   // sample buffer
 
-  samp_buff #(
+  buf_samp_data #(
     .FIFO_DEPTH (65536),
-    .WIDTH_WR (128),
-    .WIDTH_RD (16)
-  ) samp_buff (
+    .WRITE_WIDTH (128),
+    .READ_WIDTH (16)
+  ) buf_samp_data (
     .wr_clk (wr_clk),
     .rd_clk (rd_clk),
-    .rst (wr_rst),
-    .valid (samp_valid),
-    .samp_in (samp_data),
+    .s_axis_tvalid (samp_valid),
+    .s_axis_tready (samp_ready),
+    .s_axis_tdata (samp_data),
     .rd_ena (rd_ena),
-    .ready (ready),
-    .data_out (ebi_data)
+    .rd_ready (ebi_ready),
+    .rd_data (ebi_data)
   );
 
 endmodule
