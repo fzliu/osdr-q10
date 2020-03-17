@@ -9,7 +9,6 @@
 // PRECISION: the number of MSBs to keep in the input data before forwarding
 // REVERSE_DATA: if 1, reverses the data bits; otherwise, keeps it as is
 // USE_AXIS_TLAST: if 1, enables m_axis_tlast; disables it otherwise
-// AXIS_BURST_LENGTH: the number of samples before tlast goes high
 // USE_OUTPUT_FIFO: if 1, enables the output FIFO; disables it otherwise
 // CONTINUOUS_DATA: if 1, ensures that the FIFO always has some data in it
 // CORR_LENGTH: length of each correlator
@@ -30,25 +29,20 @@ module ad9361_dual_axis #(
   parameter   PRECISION = 12,
   parameter   REVERSE_DATA = 0,
   parameter   USE_AXIS_TLAST = 0,
-  parameter   AXIS_BURST_LENGTH = 512,
   parameter   USE_OUTPUT_FIFO = 1,
   parameter   CONTINUOUS_DATA = 0,
-  parameter   FIFO_TYPE = "auto",
   parameter   FIFO_DEPTH = 32,
-  parameter   FIFO_LATENCY = 2,
 
   // derived parameters
 
   localparam  SAMPS_WIDTH = 8 * PRECISION,
-  localparam  COUNT_WIDTH = log2(AXIS_BURST_LENGTH - 1),
-  localparam  REDUCE_PRECISION = 12 - PRECISION,
+  localparam  REDUCE_PRECISION = (PRECISION < 12) ? 12 - PRECISION : 0,
   localparam  EXTRA_BIT = (USE_AXIS_TLAST != 0),
 
   // bit width parameters
 
   localparam  PR = PRECISION - 1,
-  localparam  WS = SAMPS_WIDTH - 1,
-  localparam  WC = COUNT_WIDTH - 1
+  localparam  WS = SAMPS_WIDTH - 1
 
 ) (
 
@@ -86,12 +80,10 @@ module ad9361_dual_axis #(
 
   reg               samps_valid = 'b0;
   reg     [ WS:0]   samps_data = 'b0;
-  reg     [ WC:0]   samps_count = 'b0;
 
   // internal signals
 
-  wire              valid_int;
-
+  wire              valid_all;
   wire    [ PR:0]   data_format [0:7];
 
   wire              samps_ready;
@@ -105,14 +97,31 @@ module ad9361_dual_axis #(
    * the precision of the incoming data by grabbing the MSBs.
    */
 
-  assign data_format[0] = data_q3 >>> REDUCE_PRECISION;
-  assign data_format[1] = data_i3 >>> REDUCE_PRECISION;
-  assign data_format[2] = data_q2 >>> REDUCE_PRECISION;
-  assign data_format[3] = data_i2 >>> REDUCE_PRECISION;
-  assign data_format[4] = data_q1 >>> REDUCE_PRECISION;
-  assign data_format[5] = data_i1 >>> REDUCE_PRECISION;
-  assign data_format[6] = data_q0 >>> REDUCE_PRECISION;
-  assign data_format[7] = data_i0 >>> REDUCE_PRECISION;
+  generate
+  if (PRECISION > 12) begin
+
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_q3};
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_i3};
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_q2};
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_i2};
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_q1};
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_i1};
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_q0};
+    assign data_format[0] = {{(PRECISION - 12){samps_last}}, data_i0};
+
+  end else begin
+
+    assign data_format[0] = data_q3 >>> (12 - PRECISION);
+    assign data_format[1] = data_i3 >>> (12 - PRECISION);
+    assign data_format[2] = data_q2 >>> (12 - PRECISION);
+    assign data_format[3] = data_i2 >>> (12 - PRECISION);
+    assign data_format[4] = data_q1 >>> (12 - PRECISION);
+    assign data_format[5] = data_i1 >>> (12 - PRECISION);
+    assign data_format[6] = data_q0 >>> (12 - PRECISION);
+    assign data_format[7] = data_i0 >>> (12 - PRECISION);
+  
+  end
+  endgenerate
 
   /* Output valid.
    * If any of the four channels is valid, i.e. has "non-zero" data, then we
@@ -120,13 +129,10 @@ module ad9361_dual_axis #(
    * alignment with samps_data.
    */
 
-  generate
-  assign valid_int = (USE_OUTPUT_FIFO && CONTINUOUS_DATA) ?
-                     fifo_empty : 1'b0;
-  endgenerate
+  assign valid_all = valid_0 | valid_1 | valid_2 | valid_3;
 
   always @(posedge clk) begin
-    samps_valid <= valid_0 | valid_1 | valid_2 | valid_3 | valid_int;
+    samps_valid <= valid_all;
   end
 
   /* Output data.
@@ -150,26 +156,17 @@ module ad9361_dual_axis #(
   endgenerate
 
   /* Output tlast logic.
-   * This signal should only be used when tlast is required, e.g. for the FFT
-   * module where the length is pre-determined.
+   * This signal should only be used when tlast is required,.
    */
 
   generate
-  if (USE_AXIS_TLAST == 0) begin
+  if (USE_AXIS_TLAST) begin
 
-    assign samps_last = 1'b0;
+    assign samps_last = samps_valid & ~valid_all;   
 
   end else begin
 
-    always @(posedge clk) begin
-      casez ({samps_valid, samps_ready, samps_last})
-        3'b111: samps_count <= 'b0;
-        3'b110: samps_count <= samps_count + 1'b1;
-        default: samps_count <= samps_count;
-      endcase
-    end
-
-    assign samps_last = (samps_count == AXIS_BURST_LENGTH - 1);
+    assign samps_last = 1'b0;
 
   end
   endgenerate

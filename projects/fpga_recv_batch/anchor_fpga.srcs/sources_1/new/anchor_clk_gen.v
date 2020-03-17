@@ -24,21 +24,21 @@ module anchor_clk_gen (
   wire              pll0_lock;
 
   /**
-   * Input: 50MHz (maximum)
-   * Output 0: 50MHz, -pi/2 phase shift
-   * Output 1: 200MHz
+   * Input: 2MHz
+   * Output 0: 2MHz, -pi/2 phase shift
+   * Output 1: 128MHz
    */
 
   PLLE2_BASE #(
     .BANDWIDTH ("OPTIMIZED"),
-    .CLKIN1_PERIOD (20),
+    .CLKIN1_PERIOD (500),
     .DIVCLK_DIVIDE (1),
-    .CLKFBOUT_MULT (16),
+    .CLKFBOUT_MULT (64),
     .CLKFBOUT_PHASE (0.000),
-    .CLKOUT0_DIVIDE (16),
+    .CLKOUT0_DIVIDE (64),
     .CLKOUT0_PHASE (-90.000),
     .CLKOUT0_DUTY_CYCLE (0.500),
-    .CLKOUT1_DIVIDE (4),
+    .CLKOUT1_DIVIDE (1),
     .CLKOUT1_PHASE (0.000),
     .CLKOUT1_DUTY_CYCLE (0.500)
   ) plle2_base (

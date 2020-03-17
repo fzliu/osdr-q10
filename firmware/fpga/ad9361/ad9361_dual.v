@@ -211,7 +211,7 @@ module ad9361_dual #(
       .NUM_DELAY (26),
       .NUM_PAD_SAMPS (NUM_PAD_SAMPS),
       .DATA_PASS_VALUE (DATA_PASS_VALUE),
-      .LOG2_FILTER_LENGTH (log2(FILTER_LENGTH-1))
+      .FILTER_LENGTH (FILTER_LENGTH)
     ) ad9361_dual_filt (
       .clk (clk),
       .valid_0_in (valid_0),

@@ -35,15 +35,12 @@ module counter #(
 
   // data interface
 
+  output            at_max,
   output  [ W0:0]   value
 
 );
 
   `include "func_log2.vh"
-
-  // internal signals
-
-  wire              at_upper;
 
   // internal registers
 
@@ -53,7 +50,7 @@ module counter #(
    * When the counter has reached its highest value, this bit is asserted.
    */
 
-  assign at_upper = (count == UPPER);
+  assign at_max = (count == UPPER);
 
   /* Counter implementation.
    * If UPPER == 0, we assign the output to a constant zero value instead to
@@ -70,7 +67,7 @@ module counter #(
   end else begin
 
     always @(posedge clk) begin
-      casez ({rst, ena, at_upper})
+      casez ({rst, ena, at_max})
         3'b1??: count <= INIT_VALUE;
         3'b011: count <= WRAPAROUND ? LOWER : UPPER;
         3'b010: count <= count + 1'b1;

@@ -21,7 +21,6 @@ module shift_reg #(
   parameter   WIDTH = 1,
   parameter   DEPTH = 32,
   parameter   USE_RAM = 0,  // TODO(fzliu): DEPTH >= 2 if USE_RAM == 1
-  parameter   DEVICE = "7SERIES",
 
   // derived parameters
 

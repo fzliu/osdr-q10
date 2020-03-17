@@ -38,7 +38,6 @@ module anchor_top #(
   parameter   CORR_OFFSET = 0,
 
   parameter   RAMP_DELAY = 0,  // 16777216
-  parameter   CONTINUOUS_DATA = 0,
   parameter   PIPELINE_DEPTH = 3,
   parameter   USE_STALL_SIGNAL = 0,
   parameter   CABS_DELAY = 10,
@@ -379,8 +378,6 @@ module anchor_top #(
   );
 
   /* Serialize data.
-   * To ensure that the bit correlators are always active, CONTINUOUS_DATA may
-   * be set to 1.
    */
 
   ad9361_dual_axis #(
@@ -388,7 +385,6 @@ module anchor_top #(
     .REVERSE_DATA (0),
     .USE_AXIS_TLAST (0),
     .USE_OUTPUT_FIFO (1),
-    .CONTINUOUS_DATA (CONTINUOUS_DATA),
     .FIFO_TYPE ("block"),
     .FIFO_DEPTH (32768),  //65536
     .FIFO_LATENCY (2)
