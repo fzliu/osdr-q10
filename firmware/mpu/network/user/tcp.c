@@ -18,20 +18,23 @@ void *thread_tcp(void *arg)
     /* create socket */
     int fd_tcp_srv = socket(AF_INET, SOCK_STREAM, 0);
     setsockopt(fd_tcp_srv, SOL_SOCKET, SO_REUSEADDR, NULL, 1);
-    bind(fd_tcp_srv, (struct sockaddr *)&server, sizeof(server));
+    bind(fd_tcp_srv, (struct sockaddr *)&server, sizeof(server));  
     listen(fd_tcp_srv, 5);
 
     while(1) {
         int len = sizeof(struct sockaddr);  
-        int fd_tcp_cli = accept(fd_tcp_srv, (struct sockaddr *)&client, (socklen_t *)&len);
-        printf("client %s:%d connected !\n\r", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
-        fpga_led(4, 1);
-
+        int fd_tcp_cli = accept(fd_tcp_srv, (struct sockaddr *)&client,
+                                (socklen_t *)&len);
+        /* print client information */
+        printf("client %s:%d connected !\n\r", inet_ntoa(client.sin_addr),
+               ntohs(client.sin_port));
+        
+        fpga_led(CONN_LED, 1);
         do {
             len = read(fd_tcp_cli, buf, sizeof(buf));
 
             /* setup massage */
-            udp_data.addr = client.sin_addr;
+            udp_data.addr = client.sin_addr.s_addr;
             udp_data.port = ntohs(client.sin_port) + 1000;
             msg_tcp_cmd.type = 1;
             msg_tcp_cmd.pdata = &udp_data;            
@@ -45,24 +48,29 @@ void *thread_tcp(void *arg)
                 udp_data.flag = UDP_FLAG_STOP;
             } else if(0 == memcmp(buf, "boot", 4)) {
                 system("reboot");
+            } else if(0 == memcmp(buf, "addr", 4)) {
+                udp_data.flag = UDP_FLAG_ADDR;
+                printf("recv addr \n");
+            } else if(0 == memcmp(buf, "test", 4)) {
+                //udp_data.flag = UDP_FLAG_ADDR;
+                printf("recv test \n");
             } else {
                 udp_data.flag = UDP_FLAG_NONE;
                 printf("tcp unknow cmd \n\r");
             }
 
             /* send massage to udp thread */
-            if (msgsnd(msg_cmd, (void *)&msg_tcp_cmd, sizeof(msg_tcp_cmd.pdata), 0) == -1) {
+            if (msgsnd(msg_cmd, (void *)&msg_tcp_cmd,
+                       sizeof(msg_tcp_cmd.pdata), 0) == -1) {
                 printf("send msg_cmd error \r\n");
             }
         } while(len > 0);
         
         close(fd_tcp_cli);      
-        fpga_led(4, 0);
+        fpga_led(CONN_LED, 0);
         printf("client disconnected \n\r");         
     }
     close(fd_tcp_srv);
 
     pthread_exit("tcp thread end");
 }
-
-
