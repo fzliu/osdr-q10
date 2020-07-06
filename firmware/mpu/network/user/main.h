@@ -27,14 +27,9 @@ typedef struct {
 
 
 extern int msg_cmd;
-extern int min_sz;
-
-
-
-
-
-
-
+extern bool rssi;
+extern bool verbose;
+extern char ip_str[20];
 
 
 

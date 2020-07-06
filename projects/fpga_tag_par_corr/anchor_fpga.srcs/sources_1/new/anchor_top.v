@@ -29,8 +29,8 @@ module anchor_top #(
   // parameters
 
   parameter   DEVICE = "7SERIES",
-  parameter   NUM_COMPUTE = 6,
-  parameter   NUM_TAGS = 24,
+  parameter   NUM_COMPUTE = 4,
+  parameter   NUM_TAGS = 16,
   parameter   NUM_CHANNELS = 4,
 
   parameter   PRECISION = 6,
@@ -38,13 +38,15 @@ module anchor_top #(
   parameter   CORR_OFFSET = 0,
 
   parameter   RAMP_DELAY = 0,  // 16777216
-  parameter   CONTINUOUS_DATA = 0,
   parameter   PIPELINE_DEPTH = 3,
   parameter   USE_STALL_SIGNAL = 0,
   parameter   CABS_DELAY = 10,
   parameter   BOXCAR_DELAY = 2,
   parameter   BURST_LENGTH = 32,
   parameter   PEAK_THRESH_MULT = 6,
+  
+  parameter   EBI_ADDR_WIDTH = 15,
+  parameter   EBI_DATA_WIDTH = 16,
 
   // correlator parameters
 
@@ -140,10 +142,13 @@ module anchor_top #(
   input             sync_in,
 
   // microprocessor interface (comms)
-
+  
+  input   [ 14:0]   ebi_addr,
+  input             ebi_clk,
   input             ebi_nrde,
-  output  [ 15:0]   ebi_data,
-  output            ebi_ready,
+  input             ebi_nwre,
+  inout   [ 15:0]   ebi_data,
+ // output            ebi_ready,
 
   // LED interface
 
@@ -176,6 +181,19 @@ module anchor_top #(
   wire              valid_3;
   wire    [ 11:0]   data_i3;
   wire    [ 11:0]   data_q3;
+  
+  wire              valid_co_0;
+  wire    [ 11:0]   data_co_i0;
+  wire    [ 11:0]   data_co_q0;
+  wire              valid_co_1;
+  wire    [ 11:0]   data_co_i1;
+  wire    [ 11:0]   data_co_q1;
+  wire              valid_co_2;
+  wire    [ 11:0]   data_co_i2;
+  wire    [ 11:0]   data_co_q2;
+  wire              valid_co_3;
+  wire    [ 11:0]   data_co_i3;
+  wire    [ 11:0]   data_co_q3;  
 
   wire              valid_0_sf;
   wire    [ 11:0]   data_i0_sf;
@@ -189,7 +207,11 @@ module anchor_top #(
   wire              valid_3_sf;
   wire    [ 11:0]   data_i3_sf;
   wire    [ 11:0]   data_q3_sf;
-
+  
+  //angle data (cordic)
+  
+  wire    [ 15:0]   arg_data;
+  
   // internal signals (microprocessor)
 
   wire              rd_ena;
@@ -243,7 +265,7 @@ module anchor_top #(
   /* Synchronize external signals.
    * EBI bus's read enable signal is active-low, so we invert it before
    * synchronizing.
-   */
+   
 
   xpm_cdc_single #(
     .DEST_SYNC_FF (2),
@@ -254,6 +276,7 @@ module anchor_top #(
     .dest_clk (c_clk),
     .dest_out (rd_ena)
   );
+ */
 
   /* LED control.
    */
@@ -263,7 +286,7 @@ module anchor_top #(
   assign led_out[2] = valid_2;
   assign led_out[3] = valid_3;
   assign led_out[4] = ad9361_axis_tvalid;
-  assign led_out[5] = ebi_ready;
+//  assign led_out[5] = ebi_ready;
   assign led_out[6] = 1'b0;
   assign led_out[7] = 1'b0;
 
@@ -340,7 +363,42 @@ module anchor_top #(
     .spi_cs_b (spi_cs_b),
     .sync_in (sync_in)
   );
-
+  
+  /* Cordic Module
+   */
+   
+  ad9361_cordic #(
+    .WAVE_BIT_WIDTH(12),
+    .OUPUT_BIT_WIDTH(16) 
+  ) ad9361_cordic(
+    .clk(d_clk),
+    .valid_ci_0(valid_0),
+    .data_ci_i0(data_i0),
+    .data_ci_q0(data_q0),
+    .valid_ci_1(valid_1),
+    .data_ci_i1(data_i1),
+    .data_ci_q1(data_q1),
+    .valid_ci_2(valid_2),
+    .data_ci_i2(data_i2),
+    .data_ci_q2(data_q2),
+    .valid_ci_3(valid_3),
+    .data_ci_i3(data_i3),
+    .data_ci_q3(data_q3),
+    .valid_co_0(valid_co_0),
+    .data_co_i0(data_co_i0),
+    .data_co_q0(data_co_q0),
+    .valid_co_1(valid_co_1),
+    .data_co_i1(data_co_i1),
+    .data_co_q1(data_co_q1),
+    .valid_co_2(valid_co_2),
+    .data_co_i2(data_co_i2),
+    .data_co_q2(data_co_q2),
+    .valid_co_3(valid_co_3),
+    .data_co_i3(data_co_i3),
+    .data_co_q3(data_co_q3),
+    .arg_in(arg_data)
+  );
+  
   /* Sample filter.
    */
 
@@ -352,7 +410,19 @@ module anchor_top #(
     .FILTER_LENGTH (16)
   ) ad9361_dual_filt (
     .clk (d_clk),
-    .valid_0_in (valid_0),
+    .valid_0_in (valid_co_0),
+    .data_i0_in (data_co_i0),
+    .data_q0_in (data_co_q0),
+    .valid_1_in (valid_co_1),
+    .data_i1_in (data_co_i1),
+    .data_q1_in (data_co_q1),
+    .valid_2_in (valid_co_2),
+    .data_i2_in (data_co_i2),
+    .data_q2_in (data_co_q2),
+    .valid_3_in (valid_co_3),
+    .data_i3_in (data_co_i3),
+    .data_q3_in (data_co_q3),
+   /* .valid_0_in (valid_0),
     .data_i0_in (data_i0),
     .data_q0_in (data_q0),
     .valid_1_in (valid_1),
@@ -363,7 +433,7 @@ module anchor_top #(
     .data_q2_in (data_q2),
     .valid_3_in (valid_3),
     .data_i3_in (data_i3),
-    .data_q3_in (data_q3),
+    .data_q3_in (data_q3),*/
     .valid_0_out (valid_0_sf),
     .data_i0_out (data_i0_sf),
     .data_q0_out (data_q0_sf),
@@ -379,8 +449,6 @@ module anchor_top #(
   );
 
   /* Serialize data.
-   * To ensure that the bit correlators are always active, CONTINUOUS_DATA may
-   * be set to 1.
    */
 
   ad9361_dual_axis #(
@@ -388,10 +456,7 @@ module anchor_top #(
     .REVERSE_DATA (0),
     .USE_AXIS_TLAST (0),
     .USE_OUTPUT_FIFO (1),
-    .CONTINUOUS_DATA (CONTINUOUS_DATA),
-    .FIFO_TYPE ("block"),
-    .FIFO_DEPTH (32768),  //65536
-    .FIFO_LATENCY (2)
+    .FIFO_DEPTH (32768)  //65536
   ) ad9361_dual_axis (
     .clk (d_clk),
     .valid_0 (valid_0_sf),
@@ -551,6 +616,25 @@ module anchor_top #(
    * To save compute resources, use block RAM instead of distributed RAM.
    */
 
+  axis_ebi_iface #(
+    .NUM_CHANNELS(NUM_CHANNELS),
+    .ADDER_WIDTH(ADDER_WIDTH),
+    .MAX_ADDR_WIDTH(EBI_ADDR_WIDTH),
+    .MAX_DATA_WIDTH(EBI_DATA_WIDTH)
+  ) axis_ebi_iface(
+    .clk_f(m_clk),
+    .clk_ebi(ebi_clk),
+    .nwe_ebi(ebi_nwre),
+    .addr_ebi(ebi_addr),
+    .s_axis_tvalid (fanin_axis_tvalid),
+    .s_axis_tready (fanin_axis_tready),
+    .s_axis_tdata (fanin_axis_tdata),
+    .data_ebi(ebi_data),
+    .nrd_ebi(ebi_nrde),
+    .arg_out(arg_data)
+  );
+
+/*  
   buf_peak_data #(
     .NUM_TAGS (NUM_TAGS),
     .NUM_CHANNELS (NUM_CHANNELS),
@@ -570,5 +654,5 @@ module anchor_top #(
     .rd_ready (ebi_ready),
     .rd_data (ebi_data)
   );
-
+*/
 endmodule

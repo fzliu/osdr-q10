@@ -4,33 +4,11 @@
 
 
 
-
-
 #define TCP_PORT  2206
-
-
-
 
 
 void *thread_tcp(void *arg);
 void *thread_tcp_server(void *arg);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

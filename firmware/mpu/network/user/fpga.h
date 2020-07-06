@@ -4,8 +4,23 @@
 
 #include "main.h"
 
+#define FPGA_RAM_WE     0x4000
+#define FPGA_RAM_RN     (FPGA_RAM_WE + 1)
+#define FPGA_RAM_RST    (FPGA_RAM_WE + 2)
+#define FPGA_RAM_TOP    (FPGA_RAM_WE + 3)
+#define FPGA_RAM_ARG    (FPGA_RAM_WE + 5)
 
-#define MEM_ADDR        0x70000000   //FPGA
+#define MEM_ADDR        0x70000000   /* FPGA */
+#define TEMP_OFFSET     0x40
+#define VOLT_OFFSET     0x50
+
+#define RUN_LED         5
+#define CONN_LED        4
+#define DATA_LED        3
+#define TEMP_LED        2
+#define VOLT_LED        1
+
+
 #define MMAP_MEM_LEN    0X200000
 #define MMAP_SYSC_LEN   0x4000  /* PIOA - PIOE */
 
@@ -16,10 +31,9 @@
 #define PIOD_OFFSET   0x3800
 #define PIOE_OFFSET   0x3A00
 
-#define PIN_EBI_RST    16
-#define PIN_EBI_RDST   15
-#define PIN_EBI_DONE   14
-#define PIN_EBI_RDSTV  18
+#define PIN_EBI_RST    19
+#define PIN_EBI_DONE   20
+#define PIN_EBI_EN     29
 
 typedef struct {
 	uint32_t per;    /* 0x0000 */
@@ -80,8 +94,9 @@ extern ebi_st ebi_ctrl;
 
 int fpga_init(void);
 void fpga_close(void);
+void fpga_enable(void);
 void fpga_rst(void);
 bool fpga_wait_done(void);
-void fpga_led(uint8_t num, int value);
+void fpga_led(uint8_t num, bool value);
 
 #endif
