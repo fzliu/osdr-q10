@@ -9,6 +9,10 @@
 // 程序包含18个周期的延迟，
 // 延迟包括1个输入周期，16个迭代计算周期以及1个输出周期。
 // 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -69,8 +73,8 @@ module math_cordic #(
 
   /* cordic迭代寄存器 */
 
-  reg        [WR:0]     cordic_x[NC+1:0];
-  reg        [WR:0]     cordic_y[NC+1:0];
+  reg signed [WR:0]     cordic_x[NC+1:0];
+  reg signed [WR:0]     cordic_y[NC+1:0];
   reg        [WR:0]     cordic_arg[NC:0];
   reg        [WR:0]     run_arg[NC+1:0];
   
@@ -133,22 +137,28 @@ module math_cordic #(
     if (!arg_in[BA]) begin
       if (arg_in[BA-1:0] > 15'd90) begin
         x_signal <= ~wave_num_in[BW];
-        target_arg[BA-1:0] <= 15'd180 - arg_in[BA-1:0];
       end else begin
         x_signal <= wave_num_in[BW];
-        target_arg[BA-1:0] <= arg_in[BA-1:0];
       end
       y_signal <= wave_num_in[BW];
+      if (arg_in[BA-1:0] > 15'd90) begin
+        target_arg[BA-1:0] <= 15'd180 - arg_in[BA-1:0];
+      end else begin
+        target_arg[BA-1:0] <= arg_in[BA-1:0];
+      end
       target_arg[BA] <= 1'b0;
     end else begin
       if ((~arg_in[BA-1:0]) > 15'd89) begin
         x_signal <= ~wave_num_in[BW];
-        target_arg[BA-1:0] <= 15'd179 - (~arg_in[BA-1:0]);
       end else begin
         x_signal <= wave_num_in[BW];
-        target_arg[BA-1:0] <= (~arg_in[BA-1:0]) + 1'b1;
       end
       y_signal <= ~wave_num_in[BW];
+      if ((~arg_in[BA-1:0]) > 15'd89) begin
+        target_arg[BA-1:0] <= 15'd179 - (~arg_in[BA-1:0]);
+      end else begin
+        target_arg[BA-1:0] <= (~arg_in[BA-1:0]) + 1'b1;
+      end
       target_arg[BA] <= 1'b0;
     end
   end
@@ -161,15 +171,16 @@ module math_cordic #(
     begin:cordic
       
       assign comp_arg[i] = cordic_arg[i] - run_arg[i];
-      
-      always @(posedge clk) begin  
+
+      always @(posedge clk) begin
+        
         if (!(comp_arg[i][WR])) begin
-          cordic_x[i+1] <= cordic_x[i] + ({(WR+1){cordic_x[i][WR]}} << (NC - i)) | (cordic_x[i] >> i);
-          cordic_y[i+1] <= cordic_y[i] - ({(WR+1){cordic_y[i][WR]}} << (NC - i)) | (cordic_y[i] >> i);
+          cordic_x[i+1] <= cordic_x[i] + (cordic_y[i] >>> i);
+          cordic_y[i+1] <= cordic_y[i] - (cordic_x[i] >>> i);
           cordic_arg[i+1] <= cordic_arg[i] - tan_arg[i];
         end else begin
-          cordic_x[i+1] <= cordic_x[i] - ({(WR+1){cordic_y[i][WR]}} << (NC - i)) | (cordic_y[i] >> i);
-          cordic_y[i+1] <= cordic_y[i] + ({(WR+1){cordic_x[i][WR]}} << (NC - i)) | (cordic_x[i] >> i);
+          cordic_x[i+1] <= cordic_x[i] - (cordic_y[i] >>> i);
+          cordic_y[i+1] <= cordic_y[i] + (cordic_x[i] >>> i);
           cordic_arg[i+1] <= cordic_arg[i] + tan_arg[i];
         end
           run_arg[i+1] <= run_arg[i];
