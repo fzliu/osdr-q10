@@ -12,11 +12,11 @@
 // The angle register is used to store the θ value required by CORDIC.
 // 
 // signals: (controlled by EBI)
-// reset:active low
-// WE:active high
+// reset:active-low
+// WE:active-high
 //
 // signals: (controlled by FPGA)
-// RN:active high
+// RN:active-high
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
