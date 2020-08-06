@@ -9,8 +9,7 @@
 // EBI includes four parts: read enable, write enable, read-write address and data.
 // Several control registers are added beside the ram. See the definition in the 
 // program for more information.
-// The angle register is used to store the ¦È value required by CORDIC.
-// 
+// The angle register is used to store the Î¸ value required by CORDIC.
 // 
 // Revision:
 // Revision 0.01 - File Created
