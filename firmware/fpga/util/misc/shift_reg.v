@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Company: 奥新智能
+// Company: ????
 // Engineer: Frank Liu
 //
 // Description
-// Parameterizable shift register utility for any device. DEPTH == 0 will set
-// dout = din.
+// Parameterizable shift register utility for Xilinx devices. DEPTH == 0 will
+// set dout = din.
 //
 // Signals
 // enable  :  active-high
@@ -21,7 +21,6 @@ module shift_reg #(
   parameter   WIDTH = 1,
   parameter   DEPTH = 32,
   parameter   USE_RAM = 0,  // TODO(fzliu): DEPTH >= 2 if USE_RAM == 1
-  parameter   DEVICE = "7SERIES",
 
   // derived parameters
 

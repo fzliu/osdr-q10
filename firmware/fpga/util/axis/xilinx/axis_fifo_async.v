@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Company: 奥新智能
+// Company: ????
 // Engineer: Frank Liu
 //
 // Description: AXI-stream clock converter using FIFO.
@@ -19,7 +19,6 @@ module axis_fifo_async #(
   parameter   DATA_WIDTH = 72,
   parameter   READ_WIDTH = DATA_WIDTH,
   parameter   FIFO_DEPTH = 16,
-  parameter   READ_LATENCY = 2,
 
   // bit width parameters
 
@@ -62,18 +61,21 @@ module axis_fifo_async #(
   wire    [ WD:0]   fifo_din;
   wire    [ WR:0]   fifo_dout;
 
-  // slave interface
+  /* Slave interface.
+   */
 
-  assign s_axis_tready = ~fifo_full;
+  assign s_axis_tready = ~s_axis_rst & ~fifo_wr_rst_busy & ~fifo_full;
 
-  // fifo glue logic
+  /* FIFO glue logic.
+   */
 
   assign fifo_write = s_axis_tvalid & s_axis_tready;
   assign fifo_din = s_axis_tdata;
 
   assign fifo_read = m_axis_tvalid & m_axis_tready;
 
-  // fifo instantitation
+  /* FIFO instantiation.
+   */
 
   xpm_fifo_async #(
     .FIFO_MEMORY_TYPE (MEMORY_TYPE),
@@ -81,13 +83,13 @@ module axis_fifo_async #(
     .RELATED_CLOCKS (0),
     .FIFO_WRITE_DEPTH (FIFO_DEPTH),
     .WRITE_DATA_WIDTH (DATA_WIDTH),
-    .WR_DATA_COUNT_WIDTH (0),
+    .WR_DATA_COUNT_WIDTH (1),
     .FULL_RESET_VALUE (0),
     .USE_ADV_FEATURES ("1000"),
     .READ_MODE ("fwft"),
-    .FIFO_READ_LATENCY (READ_LATENCY),
+    .FIFO_READ_LATENCY (0),
     .READ_DATA_WIDTH (READ_WIDTH),
-    .RD_DATA_COUNT_WIDTH (0),
+    .RD_DATA_COUNT_WIDTH (1),
     .DOUT_RESET_VALUE ("0"),
     .CDC_SYNC_STAGES (2),
     .WAKEUP_TIME (0)
@@ -120,10 +122,11 @@ module axis_fifo_async #(
     .dbiterr ()
   );
 
-  // master interface
+  /* Master interface.
+   */
 
   assign m_axis_tdata = fifo_dout;
-  assign m_axis_tvalid = fifo_valid;
+  assign m_axis_tvalid = ~fifo_rd_rst_busy & fifo_valid;
 
 endmodule
 

@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Company: 奥新智能
+// Company: ????
 // Engineer: Frank Liu
 //
 // Description
@@ -15,7 +15,7 @@ module counter #(
   parameter   LOWER = 0,
   parameter   UPPER = 255,
   parameter   WRAPAROUND = 0,
-  parameter   INIT_VALUE = 0,
+  parameter   INIT_VALUE = LOWER,
 
   // derived parameters
 
@@ -35,15 +35,12 @@ module counter #(
 
   // data interface
 
+  output            done,
   output  [ W0:0]   value
 
 );
 
   `include "func_log2.vh"
-
-  // internal signals
-
-  wire              at_upper;
 
   // internal registers
 
@@ -53,10 +50,10 @@ module counter #(
    * When the counter has reached its highest value, this bit is asserted.
    */
 
-  assign at_upper = (count == UPPER);
+  assign done = (count == UPPER);
 
   /* Counter implementation.
-   * If UPPER == 0, we assign the output to a constant zero value instead to
+   * If WIDTH == 0, we assign the output to a constant zero value instead to
    * avoid creating unnecessary logic.
    */
 
@@ -64,13 +61,13 @@ module counter #(
   if (WIDTH == 0) begin
 
     always @* begin
-      count <= 'b0;
+      count = 'b0;
     end
 
   end else begin
 
     always @(posedge clk) begin
-      casez ({rst, ena, at_upper})
+      casez ({rst, ena, done})
         3'b1??: count <= INIT_VALUE;
         3'b011: count <= WRAPAROUND ? LOWER : UPPER;
         3'b010: count <= count + 1'b1;
