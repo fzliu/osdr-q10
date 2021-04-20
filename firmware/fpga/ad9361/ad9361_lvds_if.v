@@ -29,7 +29,9 @@ module ad9361_lvds_if #(
   parameter   ODELAY_DATA = 0,
   parameter   IDELAY_CLOCK = 0,
   parameter   IDELAY_FRAME = 0,
-  parameter   IDELAY_DATA = 0
+  parameter   IDELAY_DATA = 0,
+
+  parameter   DEBUG_TX = 0
 
   // derived parameters
 
@@ -121,6 +123,35 @@ module ad9361_lvds_if #(
   reg     [ 11:0]   rx_data_q0_reg = 'b0;
   reg     [ 11:0]   rx_data_i1_reg = 'b0;
   reg     [ 11:0]   rx_data_q1_reg = 'b0;
+
+  // internal test signals
+
+  reg     [ 11:0]   tx_data_i0_test = 'h0;
+  reg     [ 11:0]   tx_data_q0_test = 'h0;
+  reg     [ 11:0]   tx_data_i1_test = 'h0;
+  reg     [ 11:0]   tx_data_q1_test = 'h0;
+
+  // generate test signal waveforms
+
+  generate
+  if (DEBUG_TX) begin
+
+    always @(posedge d_clk) begin
+      if (tx_done) begin
+        tx_data_i0_test <= tx_data_i0_test + 1'b1;
+        tx_data_q0_test <= tx_data_q0_test + 1'b1;
+        tx_data_i1_test <= tx_data_i1_test + 1'b1;
+        tx_data_q1_test <= tx_data_q1_test + 1'b1;
+      end else begin
+        tx_data_i0_test <= tx_data_i0_test;
+        tx_data_q0_test <= tx_data_q0_test;
+        tx_data_i1_test <= tx_data_i1_test;
+        tx_data_q1_test <= tx_data_q1_test;
+      end
+    end
+
+  end
+  endgenerate
 
   /* Create IO clock and data clock.
    */
@@ -308,15 +339,33 @@ module ad9361_lvds_if #(
    * i[11:6], q[11:6], i[5:0], q[5:0], repeat
    */
 
-  always @* begin
-    casez (tx_step)
-      2'b00: tx_data_reg = {tx_data_i0[11:6], tx_data_q0[11:6]};
-      2'b01: tx_data_reg = {tx_data_i0[5:0], tx_data_q0[5:0]};
-      2'b10: tx_data_reg = {tx_data_i1[11:6], tx_data_q1[11:6]};
-      2'b11: tx_data_reg = {tx_data_i1[5:0], tx_data_q1[5:0]};
-      default: tx_data_reg = 12'h000;
-    endcase
+  generate
+  if (DEBUG_TX) begin
+
+    always @* begin
+      casez (tx_step)
+        2'b00: tx_data_reg = {tx_data_i0_test[11:6], tx_data_q0_test[11:6]};
+        2'b01: tx_data_reg = {tx_data_i0_test[5:0], tx_data_q0_test[5:0]};
+        2'b10: tx_data_reg = {tx_data_i1_test[11:6], tx_data_q1_test[11:6]};
+        2'b11: tx_data_reg = {tx_data_i1_test[5:0], tx_data_q1_test[5:0]};
+        default: tx_data_reg = 12'h000;
+      endcase
+    end
+  
+  end else begin
+
+    always @* begin
+      casez (tx_step)
+        2'b00: tx_data_reg = {tx_data_i0[11:6], tx_data_q0[11:6]};
+        2'b01: tx_data_reg = {tx_data_i0[5:0], tx_data_q0[5:0]};
+        2'b10: tx_data_reg = {tx_data_i1[11:6], tx_data_q1[11:6]};
+        2'b11: tx_data_reg = {tx_data_i1[5:0], tx_data_q1[5:0]};
+        default: tx_data_reg = 12'h000;
+      endcase
+    end
+
   end
+  endgenerate
 
   assign tx_frame = ~tx_step[1];
   assign tx_data = tx_data_reg;

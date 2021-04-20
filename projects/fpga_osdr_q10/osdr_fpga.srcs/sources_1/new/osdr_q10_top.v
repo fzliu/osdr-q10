@@ -523,7 +523,8 @@ module osdr_q10_top #(
     .ebi_nwre (ebi_nwre),
     .ebi_irq (),
     .ebi_data (ebi_data),
-    .fifo_rst (c_rst)
+    .fifo_rst (c_rst),
+    .act_chan (act_chan)
   );
 
   /* USB data FIFOs.
@@ -587,15 +588,12 @@ module osdr_q10_top #(
 
   /* LED output.
    */
-
-  assign led_out[0] = ~d_clk_a;
-  assign led_out[1] = 1'b0;
-  assign led_out[2] = 1'b0;
-  assign led_out[3] = ~d_clk_b;
-
-  assign led_out[4] = cfg_rst;
+  
+  assign led_out[7] = ~usb_txe_n;
+  assign led_out[6] = ~usb_rxf_n;
   assign led_out[5] = 1'b0;
-  assign led_out[6] = usb_rdy_out;  // TX fifo full
-  assign led_out[7] = usb_rx_rdy;  // RX fifo full
+  assign led_out[4] = cfg_rst;
+
+  assign led_out[3:0] = act_chan;
 
 endmodule

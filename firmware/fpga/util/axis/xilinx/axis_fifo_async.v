@@ -125,7 +125,7 @@ module axis_fifo_async #(
   /* Master interface.
    */
 
-  assign m_axis_tdata = fifo_dout;
+  assign m_axis_tdata = fifo_valid ? fifo_dout : {READ_WIDTH{1'b0}};
   assign m_axis_tvalid = ~fifo_rd_rst_busy & fifo_valid;
 
 endmodule

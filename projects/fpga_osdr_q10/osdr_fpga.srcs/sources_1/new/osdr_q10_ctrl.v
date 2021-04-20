@@ -72,9 +72,11 @@ module osdr_q10_ctrl (
 
   // top-level reset
 
-  output            fifo_rst
+  output            fifo_rst,
 
   // misc signals
+
+  output  [  3:0]   act_chan
 
 );
 
@@ -263,12 +265,14 @@ module osdr_q10_ctrl (
   end
 
   /* Transmit data.
-   * Apply a single element buffer to the output TX data to avoid updating the
-   * sample data as it is being transmitted.
+   * When a command interrupt is received, always force the ready signal high
+   * to avoid deadlocks. Furthermore, we apply a single element buffer to the
+   * output TX data to avoid updating the sample data as it is being
+   * transmitted.
    */
 
   assign tx_end = tx_chan == n_chan - 1'b1;
-  assign usb_rdy_in = ~ebi_wre & (~cmd_done | ~tx_end | tx_done);
+  assign usb_rdy_in = cmd_irq | (~ebi_wre & (~cmd_done | ~tx_end | tx_done));
   assign usb_frm_in = usb_val_in & usb_rdy_in;
 
   always @(posedge clk) begin
@@ -500,5 +504,13 @@ module osdr_q10_ctrl (
                                                mem_rdata   ;
 
   assign ebi_data = out_ena ? ebi_out : 16'hzzzz;
+  
+  /* Active channel indicator.
+   */
+
+  assign act_chan[3] = n_chan >= 7'd4;
+  assign act_chan[2] = n_chan >= 7'd3;
+  assign act_chan[1] = n_chan >= 7'd2;
+  assign act_chan[0] = n_chan >= 7'd1;
 
 endmodule
