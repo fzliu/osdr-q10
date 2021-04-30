@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-/*
+
 module osdr_q10_tb(
 );
 
@@ -197,10 +197,10 @@ assign usb_be = (adbus_oe)?'dz:2'b11;
       .led_out()
     );
 endmodule
-*/
 
 
-module osdr_q10_tb(
+
+/*module osdr_q10_tb(
 );
 
 reg ref_clk;
@@ -335,3 +335,4 @@ assign usb_be = (adbus_oe)?'dz:2'b11;
       .led_out()
     );
 endmodule
+*/

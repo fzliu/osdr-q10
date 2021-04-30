@@ -12,6 +12,10 @@ module osdr_q10_ctrl (
 
   input             clk,
 
+  // top-level output reset
+
+  output            fifo_rst,
+
   // clock reconfiguration
 
   output            cfg_rst,
@@ -32,7 +36,7 @@ module osdr_q10_ctrl (
 
   // sample data
 
-  input             tx_done,
+  input             tx_ready,
   output  [ 11:0]   tx_data_i0,
   output  [ 11:0]   tx_data_q0,
   output  [ 11:0]   tx_data_i1,
@@ -42,7 +46,7 @@ module osdr_q10_ctrl (
   output  [ 11:0]   tx_data_i3,
   output  [ 11:0]   tx_data_q3,
 
-  input             rx_done,
+  input             rx_valid,
   input   [ 11:0]   rx_data_i0,
   input   [ 11:0]   rx_data_q0,
   input   [ 11:0]   rx_data_i1,
@@ -69,10 +73,6 @@ module osdr_q10_ctrl (
   input             usb_val_in,
   output            usb_rdy_in,
   input   [ 15:0]   usb_data_in,
-
-  // top-level reset
-
-  output            fifo_rst,
 
   // misc signals
 
@@ -135,7 +135,7 @@ module osdr_q10_ctrl (
   reg               ena_int = 1'b1;
   reg               rst_int = 1'b0;
 
-  reg     [  7:0]   n_chan = 'd1;
+  reg     [  1:0]   n_chan = 'b0;
 
   reg     [  1:0]   tx_chan = 'b0;
   reg     [  1:0]   rx_chan = 'b0;
@@ -260,7 +260,7 @@ module osdr_q10_ctrl (
 
   always @(posedge clk) begin
     if (ebi_wre & (ebi_addr == 15'h7f30)) begin
-      n_chan <= ebi_data[7:0];
+      n_chan <= ebi_data[1:0];
     end
   end
 
@@ -271,12 +271,12 @@ module osdr_q10_ctrl (
    * transmitted.
    */
 
-  assign tx_end = tx_chan == n_chan - 1'b1;
-  assign usb_rdy_in = cmd_irq | (~ebi_wre & (~cmd_done | ~tx_end | tx_done));
+  assign tx_end = (tx_chan == n_chan);
+  assign usb_rdy_in = cmd_irq | (~ebi_wre & (~cmd_done | ~tx_end | tx_ready));
   assign usb_frm_in = usb_val_in & usb_rdy_in;
 
   always @(posedge clk) begin
-    if (tx_done) begin
+    if (tx_ready) begin
       tx_chan <= 2'b00;
     end else if (ena_int & usb_frm_in) begin
       tx_chan <= tx_end ? 2'b00 : tx_chan + 1'b1;
@@ -297,7 +297,7 @@ module osdr_q10_ctrl (
   end
 
   always @(posedge clk) begin
-    if (tx_done & tx_end & usb_val_in) begin
+    if (tx_ready & tx_end & usb_val_in) begin
       {tx_data_i0_reg, tx_data_q0_reg} <= tx_data_0;
       {tx_data_i1_reg, tx_data_q1_reg} <= tx_data_1;
       {tx_data_i2_reg, tx_data_q2_reg} <= tx_data_2;
@@ -321,12 +321,12 @@ module osdr_q10_ctrl (
    * high.
    */
 
-  assign rx_end = rx_chan == n_chan - 1'b1;
-  assign usb_val_out = ena_int & (rst_int | ~rx_end | rx_done);
+  assign rx_end = (rx_chan == n_chan);
+  assign usb_val_out = ena_int & (rst_int | ~rx_end | rx_valid);
   assign usb_frm_out = usb_val_out & usb_rdy_out;
 
   always @(posedge clk) begin
-    if (rx_done & rx_end & usb_rdy_out) begin
+    if (rx_valid & rx_end & usb_rdy_out) begin
       rx_data_0 <= {rx_data_i0[11:4], rx_data_q0[11:4]};
       rx_data_1 <= {rx_data_i1[11:4], rx_data_q1[11:4]};
       rx_data_2 <= {rx_data_i2[11:4], rx_data_q2[11:4]};
@@ -335,9 +335,10 @@ module osdr_q10_ctrl (
   end
 
   always @(posedge clk) begin
-    if (rx_done) begin
-      rx_chan <= 2'b00;
-    end else if (ena_int & usb_frm_out) begin
+    //if (rx_valid) begin
+    //  rx_chan <= 2'b00;
+    //end else 
+    if (ena_int & usb_frm_out) begin
       rx_chan <= rx_end ? 2'b00 : rx_chan + 1'b1;
     end else begin
       rx_chan <= rx_chan;
@@ -508,9 +509,9 @@ module osdr_q10_ctrl (
   /* Active channel indicator.
    */
 
-  assign act_chan[3] = n_chan >= 7'd4;
-  assign act_chan[2] = n_chan >= 7'd3;
-  assign act_chan[1] = n_chan >= 7'd2;
-  assign act_chan[0] = n_chan >= 7'd1;
+  assign act_chan[3] = (n_chan >= 2'd3);
+  assign act_chan[2] = (n_chan >= 2'd2);
+  assign act_chan[1] = (n_chan >= 2'd1);
+  assign act_chan[0] = (n_chan >= 2'd0);
 
 endmodule

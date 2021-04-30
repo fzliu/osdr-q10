@@ -78,7 +78,7 @@ module ad9361_lvds_if #(
 
   // output interface
 
-  output            d_clk,
+  output            clk_out,
   output            lock,
 
   output            tx_done,
@@ -99,9 +99,10 @@ module ad9361_lvds_if #(
 
   // internal signals
 
-  wire              data_clk;
-
+  wire              d_clk;
   wire              d_rst;
+
+  wire              data_clk;
 
   wire              tx_rst;
   wire    [  1:0]   tx_step;
@@ -164,12 +165,15 @@ module ad9361_lvds_if #(
     .INPUT_MULT (CLOCK_MULT),
     .OUTPUT0_DIVIDE (CLOCK_DIVIDE),
     .OUTPUT0_PHASE (CLOCK_PHASE),
-    .OUTPUT0_BUFFER ("REGIONAL")
+    .OUTPUT0_BUFFER ("REGIONAL"),
+    .OUTPUT1_DIVIDE (CLOCK_DIVIDE),
+    .OUTPUT1_PHASE (CLOCK_PHASE),
+    .OUTPUT1_BUFFER ("GLOBAL")
   ) clock_gen (
     .rst (rst),
     .clk_in (data_clk),
     .clk_out_0 (d_clk),
-    .clk_out_1 (),
+    .clk_out_1 (clk_out),
     .clk_out_2 (),
     .cfg_clk (cfg_clk),
     .cfg_ena (cfg_ena),

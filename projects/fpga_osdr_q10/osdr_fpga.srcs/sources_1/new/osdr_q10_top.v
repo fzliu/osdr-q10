@@ -127,18 +127,17 @@ module osdr_q10_top #(
 
   // internal signals (core)
 
-  wire              d_clk_a;  // data clock (AD9361_A)
-  wire              d_clk_b;  // data clock (AD9361_B)
-  wire              c_clk;    // compute clock
+  wire              s_clk;    // sample clock
+  wire              c_clk;    // core clock
   wire              u_clk;    // USB clock
 
   wire              c_rst;
   wire              u_rst;
 
-  wire              lock_a;
-  wire              lock_b;
+  // internal signals (data clock)
 
-  wire    [  3:0]   act_chan;
+  wire              data_clk_a;  // data clock (AD9361_A)
+  wire              data_clk_b;  // data clock (AD9361_B)
 
   // internal signals (clock config)
 
@@ -200,13 +199,13 @@ module osdr_q10_top #(
 
   // internal signals (data bus)
 
-  wire              tx_done_a;
-  wire              tx_done_b;
-  wire              rx_done_a;
-  wire              rx_done_b;
-
-  wire              tx_done;
   wire              rx_done;
+  wire              tx_done;
+
+  wire              tx_ready;
+  wire              rx_valid;
+
+  wire    [  3:0]   act_chan;
 
   // internal signals (FIFO interface)
 
@@ -298,14 +297,14 @@ module osdr_q10_top #(
     .cfg_wdata (cfg_wdata_a),
     .cfg_rdata (cfg_rdata_a),
     .cfg_rdy (cfg_rdy_a),
-    .d_clk (d_clk_a),
-    .lock (lock_a),
-    .tx_done (tx_done_a),
+    .clk_out (s_clk),  // chip A's global data clock is used as master sample clock
+    .lock (),
+    .tx_done (tx_done),
     .tx_data_i0 (tx_data_i0),
     .tx_data_q0 (tx_data_q0),
     .tx_data_i1 (tx_data_i1),
     .tx_data_q1 (tx_data_q1),
-    .rx_done (rx_done_a),
+    .rx_done (rx_done),
     .rx_data_i0 (rx_data_i0),
     .rx_data_q0 (rx_data_q0),
     .rx_data_i1 (rx_data_i1),
@@ -351,14 +350,14 @@ module osdr_q10_top #(
     .cfg_wdata (cfg_wdata_b),
     .cfg_rdata (cfg_rdata_b),
     .cfg_rdy (cfg_rdy_b),
-    .d_clk (d_clk_b),
-    .lock (lock_b),
-    .tx_done (tx_done_b),
+    .clk_out (),
+    .lock (),
+    .tx_done (),
     .tx_data_i0 (tx_data_i2),
     .tx_data_q0 (tx_data_q2),
     .tx_data_i1 (tx_data_i3),
     .tx_data_q1 (tx_data_q3),
-    .rx_done (rx_done_b),
+    .rx_done (),
     .rx_data_i0 (rx_data_i2),
     .rx_data_q0 (rx_data_q2),
     .rx_data_i1 (rx_data_i3),
@@ -401,78 +400,69 @@ module osdr_q10_top #(
     .dest_out (sync_out)
   );
 
-  /* Chip A FIFOs.
+  /* AD9361 to core clock conversion FIFOs.
    */
 
   axis_fifo_async #(
     .MEMORY_TYPE ("distributed"),
-    .DATA_WIDTH (48),
+    .DATA_WIDTH (96),
     .READ_WIDTH (),
     .FIFO_DEPTH (16)
-  ) axis_fifo_async_a_tx (
+  ) axis_fifo_async_tx (
     .s_axis_clk (c_clk),
     .s_axis_rst (1'b0),
-    .m_axis_clk (d_clk_a),
+    .m_axis_clk (s_clk),
     .s_axis_tvalid (1'b1),
-    .s_axis_tready (tx_done),
-    .s_axis_tdata ({tx_samp_i0, tx_samp_q0, tx_samp_i1, tx_samp_q1}),
+    .s_axis_tready (tx_ready),
+    .s_axis_tdata ({tx_samp_i0,
+                    tx_samp_q0,
+                    tx_samp_i1,
+                    tx_samp_q1,
+                    tx_samp_i2,
+                    tx_samp_q2,
+                    tx_samp_i3,
+                    tx_samp_q3}),
     .m_axis_tvalid (),
-    .m_axis_tready (tx_done_a),
-    .m_axis_tdata ({tx_data_i0, tx_data_q0, tx_data_i1, tx_data_q1})
+    .m_axis_tready (tx_done),
+    .m_axis_tdata ({tx_data_i0,
+                    tx_data_q0,
+                    tx_data_i1,
+                    tx_data_q1,
+                    tx_data_i2,
+                    tx_data_q2,
+                    tx_data_i3,
+                    tx_data_q3})
   );
 
   axis_fifo_async #(
     .MEMORY_TYPE ("distributed"),
-    .DATA_WIDTH (48),
+    .DATA_WIDTH (96),
     .READ_WIDTH (),
     .FIFO_DEPTH (16)
-  ) axis_fifo_async_a_rx (
-    .s_axis_clk (d_clk_a),
+  ) axis_fifo_async_rx (
+    .s_axis_clk (s_clk),
     .s_axis_rst (1'b0),
     .m_axis_clk (c_clk),
-    .s_axis_tvalid (rx_done_a),
+    .s_axis_tvalid (rx_done),
     .s_axis_tready (),
-    .s_axis_tdata ({rx_data_i0, rx_data_q0, rx_data_i1, rx_data_q1}),
-    .m_axis_tvalid (rx_done),
+    .s_axis_tdata ({rx_data_i0,
+                    rx_data_q0,
+                    rx_data_i1,
+                    rx_data_q1,
+                    rx_data_i2,
+                    rx_data_q2,
+                    rx_data_i3,
+                    rx_data_q3}),
+    .m_axis_tvalid (rx_valid),
     .m_axis_tready (1'b1),
-    .m_axis_tdata ({rx_samp_i0, rx_samp_q0, rx_samp_i1, rx_samp_q1})
-  );
-
-  /* Chip B FIFOs.
-   */
-
-  axis_fifo_async #(
-    .MEMORY_TYPE ("distributed"),
-    .DATA_WIDTH (48),
-    .READ_WIDTH (),
-    .FIFO_DEPTH (16)
-  ) axis_fifo_async_b_tx (
-    .s_axis_clk (c_clk),
-    .s_axis_rst (1'b0),
-    .m_axis_clk (d_clk_b),
-    .s_axis_tvalid (1'b1),
-    .s_axis_tready (),
-    .s_axis_tdata ({tx_samp_i2, tx_samp_q2, tx_samp_i3, tx_samp_q3}),
-    .m_axis_tvalid (),
-    .m_axis_tready (tx_done_b),
-    .m_axis_tdata ({tx_data_i2, tx_data_q2, tx_data_i3, tx_data_q3})
-  );
-
-  axis_fifo_async #(
-    .MEMORY_TYPE ("distributed"),
-    .DATA_WIDTH (48),
-    .READ_WIDTH (),
-    .FIFO_DEPTH (16)
-  ) axis_fifo_async_b_rx (
-    .s_axis_clk (d_clk_b),
-    .s_axis_rst (1'b0),
-    .m_axis_clk (c_clk),
-    .s_axis_tvalid (rx_done_b),
-    .s_axis_tready (),
-    .s_axis_tdata ({rx_data_i2, rx_data_q2, rx_data_i3, rx_data_q3}),
-    .m_axis_tvalid (),  //rx_done_slave
-    .m_axis_tready (1'b1),
-    .m_axis_tdata ({rx_samp_i2, rx_samp_q2, rx_samp_i3, rx_samp_q3})
+    .m_axis_tdata ({rx_samp_i0,
+                    rx_samp_q0,
+                    rx_samp_i1,
+                    rx_samp_q1,
+                    rx_samp_i2,
+                    rx_samp_q2,
+                    rx_samp_i3,
+                    rx_samp_q3})
   );
 
   /* Core control module.
@@ -481,6 +471,7 @@ module osdr_q10_top #(
   osdr_q10_ctrl #()
   osdr_q10_ctrl (
     .clk (c_clk),
+    .fifo_rst (c_rst),
     .cfg_rst (cfg_rst),
     .cfg_ena_a (cfg_ena_a),
     .cfg_wen_a (cfg_wen_a),
@@ -494,7 +485,7 @@ module osdr_q10_top #(
     .cfg_wdata_b (cfg_wdata_b),
     .cfg_rdata_b (cfg_rdata_b),
     .cfg_rdy_b (cfg_rdy_b),
-    .tx_done (tx_done),
+    .tx_ready (tx_ready),
     .tx_data_i0 (tx_samp_i0),
     .tx_data_q0 (tx_samp_q0),
     .tx_data_i1 (tx_samp_i1),
@@ -503,7 +494,7 @@ module osdr_q10_top #(
     .tx_data_q2 (tx_samp_q2),
     .tx_data_i3 (tx_samp_i3),
     .tx_data_q3 (tx_samp_q3),
-    .rx_done (rx_done),
+    .rx_valid (rx_valid),
     .rx_data_i0 (rx_samp_i0),
     .rx_data_q0 (rx_samp_q0),
     .rx_data_i1 (rx_samp_i1),
@@ -523,7 +514,6 @@ module osdr_q10_top #(
     .ebi_nwre (ebi_nwre),
     .ebi_irq (),
     .ebi_data (ebi_data),
-    .fifo_rst (c_rst),
     .act_chan (act_chan)
   );
 
@@ -591,7 +581,7 @@ module osdr_q10_top #(
   
   assign led_out[7] = ~usb_txe_n;
   assign led_out[6] = ~usb_rxf_n;
-  assign led_out[5] = 1'b0;
+  assign led_out[5] = s_clk;
   assign led_out[4] = cfg_rst;
 
   assign led_out[3:0] = act_chan;

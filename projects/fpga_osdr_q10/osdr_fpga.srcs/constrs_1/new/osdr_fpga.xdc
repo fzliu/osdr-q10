@@ -33,8 +33,6 @@ set_input_jitter [get_clocks a_data_clk] $AD9361_CLOCK_JITTER
 set_input_jitter [get_clocks b_data_clk] $AD9361_CLOCK_JITTER
 set_input_jitter [get_clocks usb_clk] $FT600_CLOCK_JITTER
 
-set_clock_groups -asynchronous -group {*_data_clk} -group {ref_clk} -group {ebi_clk} -group {usb_clk}
-
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets a_data_clk_p]
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets b_data_clk_p]
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets ref_clk]
@@ -42,6 +40,23 @@ set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets usb_clk]
 
 create_generated_clock -name a_fb_clk -source [get_ports a_data_clk_p] -divide_by 1 [get_ports a_fb_clk_p]
 create_generated_clock -name b_fb_clk -source [get_ports b_data_clk_p] -divide_by 1 [get_ports b_fb_clk_p]
+
+create_generated_clock -name fb_clk_ebi [get_pins {osdr_q10_clk_gen/clock_gen_ebi/plle2_adv/CLKFBOUT}]
+create_generated_clock -name fb_clk_ref [get_pins {osdr_q10_clk_gen/clock_gen_ref/plle2_adv/CLKFBOUT}]
+create_generated_clock -name fb_clk_usb [get_pins {osdr_q10_clk_gen/clock_gen_usb/plle2_adv/CLKFBOUT}]
+create_generated_clock -name fb_clk_data_a [get_pins {ad9361_lvds_if_a/clock_gen/mmcme2_adv/CLKFBOUT}]
+create_generated_clock -name fb_clk_data_b [get_pins {ad9361_lvds_if_b/clock_gen/mmcme2_adv/CLKFBOUT}]
+create_generated_clock -name clk_sig_a [get_pins {ad9361_lvds_if_a/clock_gen/mmcme2_adv/CLKOUT0}]
+create_generated_clock -name clk_sig_b [get_pins {ad9361_lvds_if_b/clock_gen/mmcme2_adv/CLKOUT0}]
+create_generated_clock -name c_clk [get_pins {osdr_q10_clk_gen/clock_gen_ebi/plle2_adv/CLKOUT0}]
+create_generated_clock -name r_clk [get_pins {osdr_q10_clk_gen/clock_gen_ref/plle2_adv/CLKOUT0}]
+create_generated_clock -name u_clk [get_pins {osdr_q10_clk_gen/clock_gen_usb/plle2_adv/CLKOUT0}]
+create_generated_clock -name delay_clk [get_pins {osdr_q10_clk_gen/clock_gen_ref/plle2_adv/CLKOUT1}]
+create_generated_clock -name s_clk [get_pins {ad9361_lvds_if_a/clock_gen/mmcme2_adv/CLKOUT1}]
+create_generated_clock -name d_clk_a [get_pins {ad9361_lvds_if_a/clock_gen/clock_buf_0/BUFR/O}]
+create_generated_clock -name d_clk_b [get_pins {ad9361_lvds_if_b/clock_gen/clock_buf_0/BUFR/O}]
+
+set_multicycle_path 2 -from [get_clocks d_clk_b] -to [get_clocks s_clk]
 
 # FPGA configuration
 
